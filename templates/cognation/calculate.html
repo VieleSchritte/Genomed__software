@@ -1,0 +1,205 @@
+{% extends "../base.html" %}
+
+{% block html_title %}
+    {{ block.super }} — Cognation Results
+{% endblock %}
+
+{% block title %}
+    Cognation Results
+{% endblock title %}
+
+{% block content %}
+    {{ block.super }}
+    <table class="table" id="resultTable">
+        <thead>
+            <tr>
+                <th>Локус</th>
+
+                {% block results_header %}
+                    <th>Генотип А</th>
+                    <th>Генотип Б</th>
+                {% endblock results_header %}
+
+                <th>LR</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key in order %}
+                {% if key in result %}
+                {% with value=result|get_value:key %}
+                <tr{% if value.lr == 0 %} class="bg-secondary text-light"{% endif %}>
+                    <td>{{ key }}</td>
+
+                    {% block results_row %}
+                        <td>{{ value.ab }}</td>
+                        <td>{{ value.cd }}</td>
+                    {% endblock results_row %}
+
+                    <td class="lr-cell">
+                        {{ value.lr|floatformat:2 }}
+                    </td>
+                </tr>
+                {% endwith %}
+                {% endif %}
+            {% endfor %}
+
+            {% for key, value in result.items %}
+                {% if value.exception %}
+                <tr class="bg-warning" >
+                    <td colspan="{{ participants|add:1 }}">{{ value.line }}</td>
+                    <td>
+                        {{ value.exception }}<br />
+                        {% if value.exception.locus %}
+                            <button class="btn btn-light btn-add-allele"
+                                    data-locus="{{ value.exception.locus }}"
+                                    data-sat="{{ value.exception.sat }}"
+                                    data-toggle="modal"
+                                    data-target="#addAlleleModal">
+                                ADD
+                            </button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="{{ participants|add:1 }}">Индекс отцовства (Combined Paternity Index)</td>
+                <td>
+                    CPI=<span class="fair-result" data-result="{{ cpi|floatformat:0 }}">{% if mutations %}0{% else %}{{ cpi|floatformat:0 }}{% endif %}</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="{{ participants|add:1 }}">Вероятность отцовства</td>
+                <td>P=<span class="fair-result" data-result="{{ prob }}">{% if mutations %}0{% else %}{{ prob }}{% endif %}</span></td>
+            </tr>
+            <tr>
+                <td colspan="{{ participants|add:2 }}">Использовались референсные частоты аллелей для русских</td>
+            </tr>
+            {% if mutations %}
+            <tr>
+                <td colspan="{{ participants|add:2 }}">
+                    <button class="btn btn-primary btn-mutations">Рассчитать CPI без учета локусов в которых обнаружены мутации</button>
+                </td>
+            </tr>
+            {% endif %}
+
+        </tfoot>
+    </table>
+    <a href="{% url 'cognation:index' %}" class="btn btn-dark">Start Over</a>
+    <a href="#" class="btn btn-dark" id="saveResults">Save results</a>
+{% endblock content %}
+
+{% block footer %}
+
+    {{ block.super }}
+    <div class="modal fade" id="addAlleleModal" tabindex="-1" role="dialog" aria-labelledby="addAlleleFormTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addAlleleFormTitle">Add allele</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{% url 'cognation:save_allele' %}" id="addAlleleForm">
+                        {% csrf_token %}
+                        <div class="form-group row">
+                            <label for="addAlleleLocus" class="col-sm-2 col-form-label">Locus:</label>
+                            <div class="col-sm-10">
+                                <input type="text" readonly class="form-control" id="addAlleleLocus" name="locus" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="addAlleleSat" class="col-sm-2 col-form-label">Sat:</label>
+                            <div class="col-sm-10">
+                                <input type="text" readonly class="form-control" id="addAlleleSat" name="sat" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="addAlleleFreq" class="col-sm-2 col-form-label">Freq:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="addAlleleFreq" name="freq" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="text-danger invisible" id="addAlleleError">Save error <span class="error-text"></span></div>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock footer %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+<script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.btn-mutations').on('click', function (event) {
+        $('.fair-result').each(function() {
+            $(this).html($(this).data('result'));
+        });
+        $('.btn-mutations').hide();
+    });
+
+    $('#addAlleleModal').on('show.bs.modal', function (event) {
+        const button = $(event.relatedTarget);
+        const locus = button.data('locus');
+        const sat = button.data('sat');
+
+        const modal = $(this);
+        modal.find('.modal-body input[name*="locus"]').val(locus);
+        modal.find('.modal-body input[name*="sat"]').val(sat);
+        modal.find('.modal-body input[name*="freq"]').val('');
+    });
+
+    $("#addAlleleForm").validate({
+        debug: true,
+        errorClass: "text-danger",
+        validClass: "",
+        errorElement: "em",
+        rules: {
+            freq: {
+                required: true,
+                number: true,
+            }
+        },
+        submitHandler: function(frm) {
+            const form = $(frm);
+            $('#addAlleleError').addClass('invisible');
+
+            $.ajax({
+                url: form.attr('action'),
+                method: form.attr('method'),
+                data: form.serialize(),
+            })
+            .done(function(data) {
+                console.log('Success ' + data);
+                $('#addAlleleModal').modal('hide');
+            })
+            .fail(function(jqXHR, textStatus, textError) {
+                $('#addAlleleError .error-text').html(textError);
+                $('#addAlleleError').removeClass('invisible');
+            });
+        }
+    });
+
+    $('#addAlleleModal .btn-primary').on('click', function () {
+        $('#addAlleleForm').submit();
+    });
+
+    $('#saveResults').on('click', function(event) {
+        event.preventDefault();
+        let tbl = document.getElementById('resultTable');
+        let wb = XLSX.utils.table_to_book(tbl, {raw: true});
+        XLSX.writeFile(wb, 'Results.xlsx');
+    });
+});
+</script>
+{% endblock scripts %}

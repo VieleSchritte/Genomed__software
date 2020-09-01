@@ -1,0 +1,32 @@
+{% extends "../base.html" %}
+
+{% block html_title %}
+    {{ block.super }} — Cognation
+{% endblock %}
+
+{% block title %}
+    Cognation
+{% endblock title %}
+
+{% block content %}
+    {{ block.super }}
+    <form action="{% url 'cognation:calculate' %}" method="post" id="cognationForm">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+          <label class="btn btn-secondary">
+            <input type="radio" name="type" id="typeParent" autocomplete="off" value="1" checked /> Parent
+          </label>
+          <label class="btn btn-secondary">
+            <input type="radio" name="type" id="typeGrandparent" autocomplete="off" value="2" /> Grandparent
+          </label>
+          <label class="btn btn-secondary">
+            <input type="radio" name="type" id="typeSibling" autocomplete="off" value="3" /> Sibling
+          </label>
+        </div>
+        <div style="margin:10px 0;">
+            <label for="dataId"></label>
+            <textarea style="background:gainsboro;" id="dataId" name="data" cols="120" rows="24" class="form-control"></textarea>
+        </div>
+        {% csrf_token %}
+        <input type="submit" class="btn btn-dark" title="Submit"/>
+    </form>
+{% endblock content %}

@@ -1,0 +1,13 @@
+{% extends '../calculate.html' %}
+
+{% block results_header %}
+    <th>Установленный генотип<br/>проверяемого лица (ребенок 1)</th>
+    <th>Установленный генотип<br/>предполагаемого родителя</th>
+    <th>Установленный генотип<br/>предполагаемого брата/сестры</th>
+{% endblock results_header %}
+
+{% block results_row %}
+    {{ block.super }}
+    <td>{{ value.ef }}</td>
+{% endblock results_row %}
+
