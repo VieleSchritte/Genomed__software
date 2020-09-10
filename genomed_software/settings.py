@@ -26,8 +26,8 @@ SECRET_KEY = '595qt8=yf*%mp%3e0y+w3t^m&fs-*3u82w0k#-0ldn!b1-6w*5'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    u'192.168.100.5',
-    u'127.0.0.1',
+#    u'192.168.100.5',
+#    u'127.0.0.1',
 #    u'104.248.249.103',
     'localhost',
     'genomed-paternity.ru',
