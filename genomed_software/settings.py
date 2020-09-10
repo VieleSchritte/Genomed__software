@@ -30,6 +30,7 @@ ALLOWED_HOSTS = [
     u'127.0.0.1',
     u'104.248.249.103',
     'localhost',
+    'genomed-paternity.ru',
 ]
 
 
