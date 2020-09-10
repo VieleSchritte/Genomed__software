@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     u'192.168.100.5',
     u'127.0.0.1',
-    u'104.248.249.103',
+#    u'104.248.249.103',
     'localhost',
     'genomed-paternity.ru',
 ]
