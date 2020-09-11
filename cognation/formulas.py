@@ -9,6 +9,9 @@ from collections import Counter, OrderedDict
 FORMULA_TYPE_PARENT = 1
 FORMULA_TYPE_GRANDPARENT = 2
 FORMULA_TYPE_SIBLING = 3
+FORMULA_TYPE_UNCLE = 4
+FORMULA_TYPE_COUSIN = 5
+FORMULA_TYPE_STEPBROTHER = 6
 
 def formula_builder(type, data):
     normalized_type = int(type)
@@ -479,3 +482,19 @@ class SiblingFormula(Formula):
         divider = self.prob_not_c_ab(p, a, b)
         return 0 if divider == 0 else \
             self._2_pa_pb(p, b, d) / self._2pa_sub_pa2(p, d) / divider
+
+# FORMULA_TYPE_UNCLE
+class UncleFormula(Formula):
+    def calculate_relation(self, row_values):
+        if len(row_values) < 3:
+            raise LineFormatException()
+
+
+
+
+# FORMULA_TYPE_COUSIN
+class CousinFormula(Formula):
+
+
+# FORMULA_TYPE_STEPBROTHER
+class StepbrotherFormula(Formula):
