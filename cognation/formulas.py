@@ -9,9 +9,10 @@ from collections import Counter, OrderedDict
 FORMULA_TYPE_PARENT = 1
 FORMULA_TYPE_GRANDPARENT = 2
 FORMULA_TYPE_SIBLING = 3
-FORMULA_TYPE_UNCLE = 4
-FORMULA_TYPE_COUSIN = 5
-FORMULA_TYPE_STEPBROTHER = 6
+
+#FORMULA_TYPE_UNCLE = 4
+#FORMULA_TYPE_COUSIN = 5
+#FORMULA_TYPE_STEPBROTHER = 6
 
 #Tells pyhton what to do in every formula case (FORMULA_...)
 def formula_builder(type, data):
@@ -22,14 +23,14 @@ def formula_builder(type, data):
         return GrandParentFormula(data)
     elif normalized_type == FORMULA_TYPE_SIBLING:
         return SiblingFormula(data)
-    elif normalized_type == FORMULA_TYPE_UNCLE:
-        return SiblingFormula(data)
-    elif normalized_type == FORMULA_TYPE_COUSIN:
-        return SiblingFormula(data)
-    elif normalized_type == FORMULA_TYPE_STEPBROTHER:
-        return SiblingFormula(data)
-    else:
-        raise UnknownFormulaException(type)
+    #elif normalized_type == FORMULA_TYPE_UNCLE:
+    #    return SiblingFormula(data)
+    #elif normalized_type == FORMULA_TYPE_COUSIN:
+    #    return SiblingFormula(data)
+    #elif normalized_type == FORMULA_TYPE_STEPBROTHER:
+    #    return SiblingFormula(data)
+    #else:
+    #    raise UnknownFormulaException(type)
 
 
 # Exception - if something isn't right in data format
@@ -492,17 +493,17 @@ class SiblingFormula(Formula):
             self._2_pa_pb(p, b, d) / self._2pa_sub_pa2(p, d) / divider
 
 # FORMULA_TYPE_UNCLE
-class UncleFormula(Formula):
-    def calculate_relation(self, row_values):
-        if len(row_values) < 3:
-            raise LineFormatException()
+#class UncleFormula(Formula):
+    #def calculate_relation(self, row_values):
+    #    if len(row_values) < 3:
+    #        raise LineFormatException()
 
 
 
 
 # FORMULA_TYPE_COUSIN
-class CousinFormula(Formula):
+#class CousinFormula(Formula):
 
 
 # FORMULA_TYPE_STEPBROTHER
-class StepbrotherFormula(Formula):
+#class StepbrotherFormula(Formula):
