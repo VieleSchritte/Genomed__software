@@ -13,6 +13,7 @@ FORMULA_TYPE_UNCLE = 4
 FORMULA_TYPE_COUSIN = 5
 FORMULA_TYPE_STEPBROTHER = 6
 
+#Tells pyhton what to do in every formula case (FORMULA_...)
 def formula_builder(type, data):
     normalized_type = int(type)
     if normalized_type == FORMULA_TYPE_PARENT:
@@ -21,11 +22,17 @@ def formula_builder(type, data):
         return GrandParentFormula(data)
     elif normalized_type == FORMULA_TYPE_SIBLING:
         return SiblingFormula(data)
+    elif normalized_type == FORMULA_TYPE_UNCLE:
+        return SiblingFormula(data)
+    elif normalized_type == FORMULA_TYPE_COUSIN:
+        return SiblingFormula(data)
+    elif normalized_type == FORMULA_TYPE_STEPBROTHER:
+        return SiblingFormula(data)
     else:
         raise UnknownFormulaException(type)
 
 
-# Exception
+# Exception - if something isn't right in data format
 class UnknownFormulaException(Exception):
     def __init__(self, formula_type):
         self.formula_type = formula_type
@@ -71,6 +78,7 @@ class Formula(abc.ABC):
 
         return result
 
+    # getting allele frequencies from DB
     def get_frequencies(self, locus, sat_list):
         result = {}
         for sat in sat_list:
