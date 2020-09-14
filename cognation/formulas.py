@@ -10,6 +10,11 @@ FORMULA_TYPE_PARENT = 1
 FORMULA_TYPE_GRANDPARENT = 2
 FORMULA_TYPE_SIBLING = 3
 
+FORMULA_TYPE_UNCLE = 4
+FORMULA_TYPE_COUSIN = 5
+FORMULA_TYPE_STEPBROTHER = 6
+
+#Tells pyhton what to do in every formula case (FORMULA_...)
 def formula_builder(type, data):
     normalized_type = int(type)
     if normalized_type == FORMULA_TYPE_PARENT:
@@ -18,11 +23,17 @@ def formula_builder(type, data):
         return GrandParentFormula(data)
     elif normalized_type == FORMULA_TYPE_SIBLING:
         return SiblingFormula(data)
-    else:
-        raise UnknownFormulaException(type)
+    #elif normalized_type == FORMULA_TYPE_UNCLE:
+    #    return SiblingFormula(data)
+    #elif normalized_type == FORMULA_TYPE_COUSIN:
+    #    return SiblingFormula(data)
+    #elif normalized_type == FORMULA_TYPE_STEPBROTHER:
+    #    return SiblingFormula(data)
+    #else:
+    #    raise UnknownFormulaException(type)
 
 
-# Exception
+# Exception - if something isn't right in data format
 class UnknownFormulaException(Exception):
     def __init__(self, formula_type):
         self.formula_type = formula_type
@@ -68,6 +79,7 @@ class Formula(abc.ABC):
 
         return result
 
+    # getting allele frequencies from DB
     def get_frequencies(self, locus, sat_list):
         result = {}
         for sat in sat_list:
@@ -140,35 +152,38 @@ class ParentFormula(Formula):
         if len(row_values) < 3:
             raise LineFormatException()
 
-        raw_cd = row_values.pop()
-        raw_ab = row_values.pop()
-        locus = ' '.join(row_values)
+        child_alleles = self.split_sat(row_values.pop())
+        parent_alleles = self.split_sat(row_values.pop())
+        locus = ' '.join(row_values)  # for loci names contain space
 
-        split_ab = self.split_sat(raw_ab)
-        split_cd = self.split_sat(raw_cd)
-
-        if len(split_ab) < 2 or len(split_ab) > 3 or len(split_cd) < 2 or len(split_cd) > 3:
+        if len(parent_alleles) != 2 or len(child_alleles) != 2:
             raise AllelesException()
 
-        ab = set(split_ab)
-        cd = set(split_cd)
+        parent_set = set(parent_alleles)  # unique parent alleles
+        child_set = set(child_alleles)  # unique child alleles
 
         relation = 0
-        freq_dict = self.get_frequencies(locus, list(ab & cd))
+        freq_dict = self.get_frequencies(locus, list(parent_set & child_set))
+        # i, j     i, j
         if len(freq_dict) == 2:
             divider = 4
             dividend = 0
             for key in freq_dict:
                 divider = divider * freq_dict[key]
                 dividend = dividend + freq_dict[key]
+            # (f1 + f2) / 4 * f1 * f2
 
-            relation = 0 if divider == 0 else dividend / divider
+            if divider != 0:
+                relation = dividend / divider
         elif len(freq_dict) == 1:
+            # i, j    i, n
+            # i, i    i, n
+            # i, j    j, n
+            # 1 / {1,2}*{1,2}*f
             freq = next(iter(freq_dict.values()))
-            mul = min(len(ab), 2) * min(len(cd), 2)
-            relation = 1 / (mul * freq)
+            relation = 1 / (len(parent_set)*len(child_set) * freq)
 
-        return self.make_result(locus, raw_ab, raw_cd, relation)
+        return self.make_result(locus, '/'.join(parent_alleles), '/'.join(child_alleles), relation)
 
 
 # FORMULA_TYPE_GRANDPARENT
@@ -479,3 +494,19 @@ class SiblingFormula(Formula):
         divider = self.prob_not_c_ab(p, a, b)
         return 0 if divider == 0 else \
             self._2_pa_pb(p, b, d) / self._2pa_sub_pa2(p, d) / divider
+
+#FORMULA_TYPE_UNCLE
+class UncleFormula(Formula):
+    def calculate_relation(self, row_values):
+        if len(row_values) < 3:
+            raise LineFormatException()
+
+
+
+
+#FORMULA_TYPE_COUSIN
+#class CousinFormula(Formula):
+
+
+#FORMULA_TYPE_STEPBROTHER
+#class StepbrotherFormula(Formula):
