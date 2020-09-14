@@ -180,7 +180,7 @@ class ParentFormula(Formula):
             # i, i    i, n
             # i, j    j, n
             # 1 / {1,2}*{1,2}*f
-            freq = next(iter(freq_dict.values()))
+            freq = freq_dict.values()[0]
             relation = 1 / (len(parent_set)*len(child_set) * freq)
 
         return self.make_result(locus, '/'.join(parent_alleles), '/'.join(child_alleles), relation)
