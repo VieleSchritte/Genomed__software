@@ -193,57 +193,54 @@ class GrandParentFormula(Formula):
             # skip line with warning
             raise LineFormatException()
 
-        raw_cd = row_values.pop()
-        raw_ab = row_values.pop()
+        grandchild_alleles = self.split_sat(row_values.pop())
+        grandparent_alleles = self.split_sat(row_values.pop())
         locus = ' '.join(row_values)
 
-        ab = self.split_sat(raw_ab)
-        cd = self.split_sat(raw_cd)
-
-        if len(ab) != 2 or len(cd) != 2:
+        if len(grandchild_alleles) != 2 or len(grandparent_alleles) != 2:
             # skip line with warning
             raise AllelesException()
-
-        b = ab.pop()
-        a = ab.pop()
-        d = cd.pop()
-        c = cd.pop()
+        # GC - grandchild, GP - grandparent
+        GC_allele1 = grandchild_alleles.pop()
+        GC_allele2 = grandchild_alleles.pop()
+        GP_allele2 = grandparent_alleles.pop()
+        GP_allele1 = grandparent_alleles.pop()
 
         lr = 0
         # Child AA
-        if a == b:
+        if GC_allele2 == GC_allele1:
             # Grand parent AA
-            if c == a and d == a:
-                lr = self.gen_aa_aa(locus, a)
+            if GP_allele1 == GC_allele2 and GP_allele2 == GC_allele2:
+                lr = self.gen_aa_aa(locus, GC_allele2)
             # Grand parent AB
-            elif c == a or d == a:
-                lr = self.gen_aa_ab(locus, a)
+            elif GP_allele1 == GC_allele2 or GP_allele2 == GC_allele2:
+                lr = self.gen_aa_ab(locus, GC_allele2)
             # Grand parent BB or BC
             else:
-                lr = self.gen_aa_bc(locus, a)
+                lr = self.gen_aa_bc(locus, GC_allele2)
         # Child AB
-        elif c == d:
+        elif GP_allele1 == GP_allele2:
             # GrandParent AA
-            if a == c:
-                lr = self.gen_ab_aa(locus, c, b)
+            if GC_allele2 == GP_allele1:
+                lr = self.gen_ab_aa(locus, GP_allele1, GC_allele1)
             # GrandParent AA
-            elif b == c:
-                lr = self.gen_ab_aa(locus, c, a)
+            elif GC_allele1 == GP_allele1:
+                lr = self.gen_ab_aa(locus, GP_allele1, GC_allele2)
             # GrandParent CC
             else:
-                lr = self.gen_ab_cd(locus, a, b)
+                lr = self.gen_ab_cd(locus, GC_allele2, GC_allele1)
         # GrandParent AB
-        elif (a == c and b == d) or (a == d and b == c):
-            lr = self.gen_ab_ab(locus, a, b)
+        elif (GC_allele2 == GP_allele1 and GC_allele1 == GP_allele2) or (GC_allele2 == GP_allele2 and GC_allele1 == GP_allele1):
+            lr = self.gen_ab_ab(locus, GC_allele2, GC_allele1)
         else:
-            if a == c or a == d:
-                lr = self.gen_ab_ac(locus, a, b)
-            elif b == c or b == d:
-                lr = self.gen_ab_ac(locus, b, a)
+            if GC_allele2 == GP_allele1 or GC_allele2 == GP_allele2:
+                lr = self.gen_ab_ac(locus, GC_allele2, GC_allele1)
+            elif GC_allele1 == GP_allele1 or GC_allele1 == GP_allele2:
+                lr = self.gen_ab_ac(locus, GC_allele1, GC_allele2)
             else:
-                lr = self.gen_ab_cd(locus, a, b)
+                lr = self.gen_ab_cd(locus, GC_allele2, GC_allele1)
 
-        return self.make_result(locus, raw_ab, raw_cd, lr)
+        return self.make_result(locus, grandparent_alleles, grandchild_alleles, lr)
 
     # Child AA Formulas
     def gen_aa_aa(self, locus, a):
@@ -501,12 +498,27 @@ class UncleFormula(Formula):
         if len(row_values) < 3:
             raise LineFormatException()
 
+        nephiew_alleles = self.split_sat(row_values.pop())
+        uncle_alleles = self.split_sat(row_values.pop())
+        locus = ''.join(row_values)
 
-
+        if len(nephiew_alleles) != 2 of len(uncle_alleles) != 2:
+            raise AllelesException()
 
 #FORMULA_TYPE_COUSIN
-#class CousinFormula(Formula):
+class CousinFormula(Formula):
+    def calculate_relation(self, row_values):
+        if len(row_values) < 3:
+            raise LineFormatException()
 
+        cousin2_alleles = self.split_sat(row_values.pop())
+        cousin1_alleles = self.split_sat(row_alleles.pop())
 
 #FORMULA_TYPE_STEPBROTHER
-#class StepbrotherFormula(Formula):
+class StepbrotherFormula(Formula):
+    def calculate_relation(self, row_values):
+        if len(row_values) < 3:
+            raise LineFormatException()
+
+        stbrother2_alleles = self.split_sat(row_values.pop())
+        stbrother1_alleles = self.split_sat(row_values.pop())
