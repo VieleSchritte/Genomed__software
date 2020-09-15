@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from django.db import models
 
-
 class Locus (models.Model):
     locus = models.CharField(max_length=32)
     sat = models.FloatField()
