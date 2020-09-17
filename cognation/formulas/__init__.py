@@ -4,6 +4,7 @@ from .sibling import SiblingFormula
 from .uncle import UncleFormula
 from .cousin import CousinFormula
 from .stepbrother import StepbrotherFormula
+from .base import UnknownFormulaException
 
 FORMULA_TYPE_PARENT = 1
 FORMULA_TYPE_GRANDPARENT = 2
@@ -25,8 +26,8 @@ def formula_builder(type, data):
     elif normalized_type == FORMULA_TYPE_UNCLE:
         return UncleFormula(data)
     elif normalized_type == FORMULA_TYPE_COUSIN:
-        return SiblingFormula(data)
-    #elif normalized_type == FORMULA_TYPE_STEPBROTHER:
-    #    return SiblingFormula(data)
-    #else:
-    #    raise UnknownFormulaException(type)
+        return CousinFormula(data)
+    elif normalized_type == FORMULA_TYPE_STEPBROTHER:
+        return StepbrotherFormula(data)
+    else:
+        raise UnknownFormulaException(type)
