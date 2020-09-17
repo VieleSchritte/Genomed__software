@@ -8,7 +8,6 @@ from django.template.defaultfilters import register
 from .formulas import formula_builder
 from .models import Locus
 
-
 def index(request):
     return render(request, 'cognation/index.html')
 

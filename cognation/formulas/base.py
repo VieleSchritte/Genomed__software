@@ -1,53 +1,23 @@
 from __future__ import unicode_literals
 
-from .models import Locus
+from cognation.models import Locus
 
 import abc
 import re
 from collections import Counter, OrderedDict
-
-FORMULA_TYPE_PARENT = 1
-FORMULA_TYPE_GRANDPARENT = 2
-FORMULA_TYPE_SIBLING = 3
-
-FORMULA_TYPE_UNCLE = 4
-FORMULA_TYPE_COUSIN = 5
-FORMULA_TYPE_STEPBROTHER = 6
-
-#Tells pyhton what to do in every formula case (FORMULA_...)
-def formula_builder(type, data):
-    normalized_type = int(type)
-    if normalized_type == FORMULA_TYPE_PARENT:
-        return ParentFormula(data)
-    elif normalized_type == FORMULA_TYPE_GRANDPARENT:
-        return GrandParentFormula(data)
-    elif normalized_type == FORMULA_TYPE_SIBLING:
-        return SiblingFormula(data)
-    #elif normalized_type == FORMULA_TYPE_UNCLE:
-    #    return SiblingFormula(data)
-    #elif normalized_type == FORMULA_TYPE_COUSIN:
-    #    return SiblingFormula(data)
-    #elif normalized_type == FORMULA_TYPE_STEPBROTHER:
-    #    return SiblingFormula(data)
-    #else:
-    #    raise UnknownFormulaException(type)
-
 
 # Exception - if something isn't right in data format
 class UnknownFormulaException(Exception):
     def __init__(self, formula_type):
         self.formula_type = formula_type
 
-
 class LineFormatException(Exception):
     def __str__(self):
         return 'Wrong line format'
 
-
 class AllelesException(Exception):
     def __str__(self):
         return "Alleles count doesn't look right"
-
 
 class UnknownAlleleException(Exception):
     def __init__(self, locus, sat):
@@ -67,7 +37,7 @@ class Formula(abc.ABC):
         result = OrderedDict()
         lines = self.user_data.splitlines()
         for line in lines:
-            line = line.strip(' \t\n\r')
+            line = line.strip()
             if len(line) == 0:
                 continue
 
@@ -145,16 +115,16 @@ class Formula(abc.ABC):
     def calculate_relation(self, row_values):
         """ Abstract method to calculate """
 
-
+"""
 # FORMULA_TYPE_PARENT
 class ParentFormula(Formula):
-    def calculate_relation(self, row_values):
-        if len(row_values) < 3:
+    def calculate_relation(self, raw_values):
+        if len(raw_values) < 3:
             raise LineFormatException()
 
-        child_alleles = self.split_sat(row_values.pop())
-        parent_alleles = self.split_sat(row_values.pop())
-        locus = ' '.join(row_values)  # for loci names contain space
+        child_alleles = self.split_sat(raw_values.pop())
+        parent_alleles = self.split_sat(raw_values.pop())
+        locus = ' '.join(raw_values)  # for loci names contain space
 
         if len(parent_alleles) != 2 or len(child_alleles) != 2:
             raise AllelesException()
@@ -176,11 +146,11 @@ class ParentFormula(Formula):
             if divider != 0:
                 relation = dividend / divider
         elif len(freq_dict) == 1:
-            # i, j    i, n
+            # i, j    i, nё
             # i, i    i, n
             # i, j    j, n
             # 1 / {1,2}*{1,2}*f
-            freq = freq_dict.values()[0]
+            freq = list(freq_dict.values())[0]
             relation = 1 / (len(parent_set)*len(child_set) * freq)
 
         return self.make_result(locus, '/'.join(parent_alleles), '/'.join(child_alleles), relation)
@@ -188,14 +158,14 @@ class ParentFormula(Formula):
 
 # FORMULA_TYPE_GRANDPARENT
 class GrandParentFormula(Formula):
-    def calculate_relation(self, row_values):
-        if len(row_values) < 3:
+    def calculate_relation(self, raw_values):
+        if len(raw_values) < 3:
             # skip line with warning
             raise LineFormatException()
 
-        grandchild_alleles = self.split_sat(row_values.pop())
-        grandparent_alleles = self.split_sat(row_values.pop())
-        locus = ' '.join(row_values)
+        grandchild_alleles = self.split_sat(raw_values.pop())
+        grandparent_alleles = self.split_sat(raw_values.pop())
+        locus = ' '.join(raw_values)
 
         if len(grandchild_alleles) != 2 or len(grandparent_alleles) != 2:
             # skip line with warning
@@ -291,14 +261,14 @@ class GrandParentFormula(Formula):
 
 # FORMULA_TYPE_SIBLING
 class SiblingFormula(Formula):
-    def calculate_relation(self, row_values):
-        if len(row_values) < 4:
+    def calculate_relation(self, raw_values):
+        if len(raw_values) < 4:
             raise LineFormatException()
 
-        raw_ef = row_values.pop()
-        raw_cd = row_values.pop()
-        raw_ab = row_values.pop()
-        locus = ' '.join(row_values)
+        raw_ef = raw_values.pop()
+        raw_cd = raw_values.pop()
+        raw_ab = raw_values.pop()
+        locus = ' '.join(raw_values)
 
         split_ab = self.split_sat(raw_ab)
         split_cd = self.split_sat(raw_cd)
@@ -494,31 +464,33 @@ class SiblingFormula(Formula):
 
 #FORMULA_TYPE_UNCLE
 class UncleFormula(Formula):
-    def calculate_relation(self, row_values):
-        if len(row_values) < 3:
+    def calculate_relation(self, raw_values):
+        if len(raw_values) < 3:
             raise LineFormatException()
 
-        nephiew_alleles = self.split_sat(row_values.pop())
-        uncle_alleles = self.split_sat(row_values.pop())
-        locus = ''.join(row_values)
+        nephiew_alleles = self.split_sat(raw_values.pop())
+        uncle_alleles = self.split_sat(raw_values.pop())
+        locus = ''.join(raw_values)
 
-        if len(nephiew_alleles) != 2 of len(uncle_alleles) != 2:
+        if len(nephiew_alleles) != 2 or len(uncle_alleles) != 2:
             raise AllelesException()
 
 #FORMULA_TYPE_COUSIN
 class CousinFormula(Formula):
-    def calculate_relation(self, row_values):
-        if len(row_values) < 3:
+    def calculate_relation(self, raw_values):
+        if len(raw_values) < 3:
             raise LineFormatException()
 
-        cousin2_alleles = self.split_sat(row_values.pop())
-        cousin1_alleles = self.split_sat(row_alleles.pop())
+        cousin2_alleles = self.split_sat(raw_values.pop())
+        cousin1_alleles = self.split_sat(raw_values.pop())
 
 #FORMULA_TYPE_STEPBROTHER
 class StepbrotherFormula(Formula):
-    def calculate_relation(self, row_values):
-        if len(row_values) < 3:
+    def calculate_relation(self, raw_values):
+        if len(raw_values) < 3:
             raise LineFormatException()
 
-        stbrother2_alleles = self.split_sat(row_values.pop())
-        stbrother1_alleles = self.split_sat(row_values.pop())
+        stbrother2_alleles = self.split_sat(raw_values.pop())
+        stbrother1_alleles = self.split_sat(raw_values.pop())
+
+"""
