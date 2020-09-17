@@ -22,10 +22,10 @@ def formula_builder(type, data):
         return GrandParentFormula(data)
     elif normalized_type == FORMULA_TYPE_SIBLING:
         return SiblingFormula(data)
-    #elif normalized_type == FORMULA_TYPE_UNCLE:
-    #    return SiblingFormula(data)
-    #elif normalized_type == FORMULA_TYPE_COUSIN:
-    #    return SiblingFormula(data)
+    elif normalized_type == FORMULA_TYPE_UNCLE:
+        return UncleFormula(data)
+    elif normalized_type == FORMULA_TYPE_COUSIN:
+        return SiblingFormula(data)
     #elif normalized_type == FORMULA_TYPE_STEPBROTHER:
     #    return SiblingFormula(data)
     #else:
