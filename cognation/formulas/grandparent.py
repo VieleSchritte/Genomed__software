@@ -15,10 +15,13 @@ class GrandParentFormula(Formula):
             # skip line with warning
             raise AllelesException()
         # GC - grandchild, GP - grandparent
-        GC_allele1 = grandchild_alleles.pop()
-        GC_allele2 = grandchild_alleles.pop()
-        GP_allele2 = grandparent_alleles.pop()
-        GP_allele1 = grandparent_alleles.pop()
+        GC_allele1 = grandchild_alleles[0]
+        GC_allele2 = grandchild_alleles[1]
+        GP_allele2 = grandparent_alleles[1]
+        GP_allele1 = grandparent_alleles[0]
+
+        GC_genotype = GC_allele1+'/'+GC_allele2
+        GP_genotype = GP_allele1 + '/' + GP_allele2
 
         lr = 0
         # Child AA
@@ -54,7 +57,7 @@ class GrandParentFormula(Formula):
             else:
                 lr = self.gen_ab_cd(locus, GC_allele2, GC_allele1)
 
-        return self.make_result(locus, grandparent_alleles, grandchild_alleles, lr)
+        return self.make_result(locus, GP_genotype, GC_genotype, lr)
 
     # Child AA Formulas
     def gen_aa_aa(self, locus, a):

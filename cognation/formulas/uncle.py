@@ -7,9 +7,10 @@ class UncleFormula(Formula):
         if len(raw_values) < 3:
             raise LineFormatException()
 
-        nephew_alleles = self.split_sat(raw_values.pop())
         uncle_alleles = self.split_sat(raw_values.pop())
-        locus = ''.join(raw_values)
+        nephew_alleles = self.split_sat(raw_values.pop())
+        locus = ' '.join(raw_values)
+        print(locus)
 
         if len(nephew_alleles) != 2 or len(uncle_alleles) != 2:
             raise AllelesException()
@@ -23,7 +24,7 @@ class UncleFormula(Formula):
         if len(intersection_list) == 0:
             lr = 0.5
 
-        # case 0 - two common alleles, both are heterozigous
+        # case 0 - two common alleles, both participants are heterozigous
         elif len(intersection_list) == 2:
             freq1 = freq_dict[intersection_list[0]]
             freq2 = freq_dict[intersection_list[1]]
@@ -38,12 +39,13 @@ class UncleFormula(Formula):
                 lr = 0.5 + 1/(2 * freq)
 
             # case 2 - uncle is homozigous, nephew is heterozigous
-            elif len(uncle_set) == 1 and len(nephew_set) == 2:
+            elif len(uncle_set) != len(nephew_set):
                 lr = 0.5 + 1/(4 * freq)
 
             # case 3 - both are heterozigous
             elif len(uncle_set) == len(nephew_set) == 2:
                 lr = 0.5 + 1/(8 * freq)
 
-        return self.make_result(locus, '/'.join(uncle_alleles), '/'.join(nephew_alleles), lr)
+
+        return self.make_result(locus, '/'.join(nephew_alleles), '/'.join(uncle_alleles), lr)
 

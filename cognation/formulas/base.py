@@ -37,7 +37,7 @@ class Formula(abc.ABC):
         result = OrderedDict()
         lines = self.user_data.splitlines()
         for line in lines:
-            line = line.strip()
+            line = line.strip(' \t\n\r')
             if len(line) == 0:
                 continue
 
