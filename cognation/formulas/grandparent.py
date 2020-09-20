@@ -1,6 +1,75 @@
 from __future__ import unicode_literals
 from .base import Formula, LineFormatException, AllelesException
 
+
+class GrandParentFormula(Formula):
+    def calculate_relation(self, raw_values):
+        if len(raw_values) < 3:
+            # skip line with warning
+            raise LineFormatException()
+        # GC = grandchild, GP = grandparent
+        gc_alleles = self.split_sat(raw_values.pop())
+        gp_alleles = self.split_sat(raw_values.pop())
+        locus = ' '.join(raw_values)
+
+        intersection = set(gc_alleles) & set(gp_alleles)
+        len_inter = len(intersection)
+        len_gp_set = len(set(gp_alleles))
+        len_gc_set = len(set(gc_alleles))
+        gc_set = set(gc_alleles)
+
+        freq_dict = self.get_frequencies(locus, list(gc_set))
+
+        if len(gc_alleles) != 2 or len(gp_alleles) != 2:
+            raise AllelesException()
+
+        if len_gc_set == 1:
+            freq = freq_dict[list(gc_set)[0]]
+            confirmation = self.homozygous_gc(freq, len_gp_set, len_inter)[0]
+            refutation = self.homozygous_gc(freq, len_gp_set, len_inter)[1]
+        else:
+            freq1 = freq_dict[gc_alleles[0]]
+            freq2 = freq_dict[gc_alleles[1]]
+            confirmation = self.heterozygous_gc(freq1, freq2, len_inter, len_gp_set)[0]
+            refutation = self.heterozygous_gc(freq1, freq2, len_inter, len_gp_set)[1]
+
+        lr = confirmation / refutation
+
+        return self.make_result(locus, '/'.join(gp_alleles), '/'.join(gc_alleles), lr)
+
+    @staticmethod
+    def homozygous_gc(freq, len_gp_set, len_inter):
+        confirmation = 0
+        refutation = (freq * (2 - freq)) ** 2
+
+        if len_inter == 0:
+            confirmation = (freq ** 2) * (2 - freq)
+        elif len_inter == 1:
+            if len_gp_set == len_inter:
+                confirmation = freq * (2 - freq)
+            elif len_gp_set != len_inter:
+                confirmation = (0.5 + 0.5 * freq) * (freq * (2 - freq))
+
+        return confirmation, refutation
+
+    @staticmethod
+    def heterozygous_gc(freq1, freq2, len_inter, len_gp_set):
+        confirmation = 0
+        refutation = 2 * freq1 * (2 - freq1) * freq2 * (2 - freq2) - (2 * freq1 * freq2) ** 2
+
+        if len_inter == 0:
+            confirmation = freq1 * freq2 * (2 - freq2) + freq2 * freq1 * (2-freq1)
+        elif len_inter == 2:
+            confirmation = (0.5 + 0.5 * freq1) * freq2 * (2 - freq2) + (0.5 + 0.5 * freq2) * freq1 * (2 - freq1) - 0.5 * (freq1 + freq2) * 2 * freq1 * freq2
+        elif len_inter == 1:
+            if len_gp_set == len_inter:
+                confirmation = freq2 * (2 - freq2) + freq2 * (freq1 * (2-freq1) - 2 * freq1 * freq2)
+            elif len_gp_set != len_inter:
+                confirmation = (0.5 + 0.5 * freq1) * (freq2 * (2 - freq2) + freq1 * freq2 * (2 - freq1) - 0.5 * freq2 * 2 * freq1 * freq2)
+
+        return confirmation, refutation
+
+"""
 class GrandParentFormula(Formula):
     def calculate_relation(self, raw_values):
         if len(raw_values) < 3:
@@ -104,5 +173,4 @@ class GrandParentFormula(Formula):
         divider = self.prob_not_c_ab(p, a, b)
         return 0 if divider == 0 else \
             (p[a] * self._2pa_sub_pa2(p, b) + p[b] * self._2pa_sub_pa2(p, a)) / divider
-
-
+"""
