@@ -5,69 +5,78 @@ from .base import Formula, LineFormatException, AllelesException
 class GrandParentFormula(Formula):
     def calculate_relation(self, raw_values):
         if len(raw_values) < 3:
-            # skip line with warning
             raise LineFormatException()
-        # GC = grandchild, GP = grandparent
+
+        # gc - grandchild, gp - grandparent
         gc_alleles = self.split_sat(raw_values.pop())
         gp_alleles = self.split_sat(raw_values.pop())
-        locus = ' '.join(raw_values)
+        locus = ' '.join(raw_values)  # for loci names contain space
 
-        intersection = set(gc_alleles) & set(gp_alleles)
-        len_inter = len(intersection)
-        len_gp_set = len(set(gp_alleles))
-        len_gc_set = len(set(gc_alleles))
-        gc_set = set(gc_alleles)
-
-        freq_dict = self.get_frequencies(locus, list(gc_set))
-
-        if len(gc_alleles) != 2 or len(gp_alleles) != 2:
+        if len(gp_alleles) != 2 or len(gc_alleles) != 2:
             raise AllelesException()
 
+        gc_set = set(gc_alleles)  # unique grandparent alleles
+        gp_set = set(gp_alleles)  # unique grandchild alleles
+        intersection = list(gc_set & gp_set)
+
+        len_gc_set = len(gc_set)
+        len_gp_set = len(gp_set)
+        len_inter = len(intersection)
+
+        freq_dict = self.get_frequencies(locus, gc_alleles)
+
         if len_gc_set == 1:
-            freq = freq_dict[list(gc_set)[0]]
-            confirmation = self.homozygous_gc(freq, len_gp_set, len_inter)[0]
-            refutation = self.homozygous_gc(freq, len_gp_set, len_inter)[1]
+            freq = freq_dict[gc_alleles[0]]  # in this case gc is homozygous => no matter what allele will be used
+            confirmation = self.gc_homozygous(freq, len_inter, len_gp_set)[0]
+            refutation = self.gc_homozygous(freq, len_inter, len_gp_set)[1]
         else:
             freq1 = freq_dict[gc_alleles[0]]
             freq2 = freq_dict[gc_alleles[1]]
-            confirmation = self.heterozygous_gc(freq1, freq2, len_inter, len_gp_set)[0]
-            refutation = self.heterozygous_gc(freq1, freq2, len_inter, len_gp_set)[1]
-
+            confirmation = self.gc_heterozygous(freq1, freq2, len_inter, len_gp_set)[0]
+            refutation = self.gc_heterozygous(freq1, freq2, len_inter, len_gp_set)[1]
         lr = confirmation / refutation
 
         return self.make_result(locus, '/'.join(gp_alleles), '/'.join(gc_alleles), lr)
 
     @staticmethod
-    def homozygous_gc(freq, len_gp_set, len_inter):
-        confirmation = 0
-        refutation = (freq * (2 - freq)) ** 2
+    # Will be used in case grandchild's homozygosity ('aa' genotype)
+    def gc_homozygous(freq, len_inter, len_gp_set):
+        refutation = (freq * (2 - freq))**2
 
         if len_inter == 0:
-            confirmation = (freq ** 2) * (2 - freq)
-        elif len_inter == 1:
-            if len_gp_set == len_inter:
+            # no common alleles
+            confirmation = (freq**2) * (2 - freq)
+        else:
+            if len_gp_set == 1:
+                # both are identical homozygotes
                 confirmation = freq * (2 - freq)
-            elif len_gp_set != len_inter:
-                confirmation = (0.5 + 0.5 * freq) * (freq * (2 - freq))
+            else:
+                # one common allele, gp is heterozygous
+                confirmation = 0.5 * freq * (1 + freq) * (2 - freq)
 
         return confirmation, refutation
 
     @staticmethod
-    def heterozygous_gc(freq1, freq2, len_inter, len_gp_set):
-        confirmation = 0
-        refutation = 2 * freq1 * (2 - freq1) * freq2 * (2 - freq2) - (2 * freq1 * freq2) ** 2
+    # Will be used in case grandchild's heterozygosity ('ab' genotype)
+    def gc_heterozygous(freq1, freq2, len_inter, len_gp_set):
+        refutation = 2 * freq1 * freq2 * (4 - 2 * (freq1 + freq2) - freq1 * freq2)
 
         if len_inter == 0:
-            confirmation = freq1 * freq2 * (2 - freq2) + freq2 * freq1 * (2-freq1)
+            # no common alleles
+            confirmation = freq1 * freq2 * (2 - freq1 - freq2)
         elif len_inter == 2:
-            confirmation = (0.5 + 0.5 * freq1) * freq2 * (2 - freq2) + (0.5 + 0.5 * freq2) * freq1 * (2 - freq1) - 0.5 * (freq1 + freq2) * 2 * freq1 * freq2
-        elif len_inter == 1:
-            if len_gp_set == len_inter:
-                confirmation = freq2 * (2 - freq2) + freq2 * (freq1 * (2-freq1) - 2 * freq1 * freq2)
-            elif len_gp_set != len_inter:
-                confirmation = (0.5 + 0.5 * freq1) * (freq2 * (2 - freq2) + freq1 * freq2 * (2 - freq1) - 0.5 * freq2 * 2 * freq1 * freq2)
+            # both are identical heterozygotes
+            confirmation = 2 * freq1 * freq2 + (freq1 + freq2) * (1 - 1.5 * freq1 * freq2)
+        else:
+            if len_gp_set == 1:
+                # gp is homozygous, one common allele
+                confirmation = freq2 * (2 - freq2) + freq2 * (freq1 * (2 - freq1) - 2 * freq1 * freq2)
+            else:
+                # gp is heterozygous, one common allele
+                confirmation = freq2 * (1 - freq2 + 4 * freq1 - 2 * freq1 * freq2 - freq1**2)
 
         return confirmation, refutation
+
 
 """
 class GrandParentFormula(Formula):
