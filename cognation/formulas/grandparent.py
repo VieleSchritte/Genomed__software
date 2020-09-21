@@ -26,56 +26,51 @@ class GrandParentFormula(Formula):
         freq_dict = self.get_frequencies(locus, gc_alleles)
 
         if len_gc_set == 1:
-            freq = freq_dict[gc_alleles[0]]  # in this case gc is homozygous => no matter what allele will be used
-            confirmation = self.gc_homozygous(freq, len_inter, len_gp_set)[0]
-            refutation = self.gc_homozygous(freq, len_inter, len_gp_set)[1]
+            # Homozygous grandchild
+            freq = freq_dict[gc_alleles[0]]
+            refutation = self._F_(freq)**2
+            if len_inter == 0:
+                # no common alleles
+                confirmation = freq * self._Q_(freq)
+            else:
+                if len_gp_set == 1:
+                    # homozygous grandparent
+                    confirmation = self._F_(freq)
+                else:
+                    # heterozygous grandparent
+                    confirmation = self._F_(freq) * self._Q_(freq)
         else:
+            # heterozygous grandchild
             freq1 = freq_dict[gc_alleles[0]]
             freq2 = freq_dict[gc_alleles[1]]
-            confirmation = self.gc_heterozygous(freq1, freq2, len_inter, len_gp_set)[0]
-            refutation = self.gc_heterozygous(freq1, freq2, len_inter, len_gp_set)[1]
+            refutation = 2 * self._F_(freq1) * self._F_(freq2) - (2 * freq1 * freq2)**2
+
+            if len_inter == 0:
+                # no common alleles
+                confirmation = freq1 * self._F_(freq2) + freq2 * self._F_(freq1)
+            elif len_inter == 2:
+                # both heterozygous, 2 common alleles
+                confirmation = self._Q_(freq1) * self._F_(freq2) + self._Q_(freq2) * self._F_(freq1) - freq1 * freq2 * (freq1 + freq2)
+            else:
+                if len_gp_set == 1:
+                    # homozygous grandparent
+                    confirmation = self._F_(freq2) + freq2 * (self._F_(freq1) - 2 * freq1 * freq2)
+                else:
+                    # heterozygous grandparent
+                    confirmation = self._Q_(freq1) * self._F_(freq2) + freq2 * self._F_(freq1) - freq1 * (freq2) **2
+
         lr = confirmation / refutation
 
-        return self.make_result(locus, '/'.join(gp_alleles), '/'.join(gc_alleles), lr)
+        return self.make_result(locus, '/'.join(gc_alleles), '/'.join(gp_alleles), lr)
+
+    # Helpers for frequently used patterns
+    @staticmethod
+    def _F_(freq):
+        return freq * (2 - freq)
 
     @staticmethod
-    # Will be used in case grandchild's homozygosity ('aa' genotype)
-    def gc_homozygous(freq, len_inter, len_gp_set):
-        refutation = (freq * (2 - freq))**2
-
-        if len_inter == 0:
-            # no common alleles
-            confirmation = (freq**2) * (2 - freq)
-        else:
-            if len_gp_set == 1:
-                # both are identical homozygotes
-                confirmation = freq * (2 - freq)
-            else:
-                # one common allele, gp is heterozygous
-                confirmation = 0.5 * freq * (1 + freq) * (2 - freq)
-
-        return confirmation, refutation
-
-    @staticmethod
-    # Will be used in case grandchild's heterozygosity ('ab' genotype)
-    def gc_heterozygous(freq1, freq2, len_inter, len_gp_set):
-        refutation = 2 * freq1 * freq2 * (4 - 2 * (freq1 + freq2) - freq1 * freq2)
-
-        if len_inter == 0:
-            # no common alleles
-            confirmation = freq1 * freq2 * (2 - freq1 - freq2)
-        elif len_inter == 2:
-            # both are identical heterozygotes
-            confirmation = 2 * freq1 * freq2 + (freq1 + freq2) * (1 - 1.5 * freq1 * freq2)
-        else:
-            if len_gp_set == 1:
-                # gp is homozygous, one common allele
-                confirmation = freq2 * (2 - freq2) + freq2 * (freq1 * (2 - freq1) - 2 * freq1 * freq2)
-            else:
-                # gp is heterozygous, one common allele
-                confirmation = freq2 * (1 - freq2 + 4 * freq1 - 2 * freq1 * freq2 - freq1**2)
-
-        return confirmation, refutation
+    def _Q_(freq):
+        return 0.5 + 0.5 * freq
 
 
 """
