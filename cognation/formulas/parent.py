@@ -6,8 +6,8 @@ class ParentFormula(Formula):
         if len(raw_values) < 3:
             raise LineFormatException()
 
-        child_alleles = self.split_sat(raw_values.pop())
         parent_alleles = self.split_sat(raw_values.pop())
+        child_alleles = self.split_sat(raw_values.pop())
         locus = ' '.join(raw_values)  # for loci names contain space
 
         if len(parent_alleles) != 2 or len(child_alleles) != 2:
@@ -25,9 +25,9 @@ class ParentFormula(Formula):
             for key in freq_dict:
                 divider = divider * freq_dict[key]
                 dividend = dividend + freq_dict[key]
-            # (f1 + f2) / 4 * f1 * f2
 
             if divider != 0:
+                # (f1 + f2) / 4 * f1 * f2
                 relation = dividend / divider
         elif len(freq_dict) == 1:
             # only 1 allele in common
