@@ -6,8 +6,8 @@ class ParentFormula(Formula):
         if len(raw_values) < 3:
             raise LineFormatException()
 
-        parent_alleles = self.split_sat(raw_values.pop())
         child_alleles = self.split_sat(raw_values.pop())
+        parent_alleles = self.split_sat(raw_values.pop())
         locus = ' '.join(raw_values)  # for loci names contain space
 
         if len(parent_alleles) != 2 or len(child_alleles) != 2:

@@ -16,23 +16,22 @@ class TestParentFormula(TestCase):
         print("setUp: Run once for every test method to setup clean data.")
         pass
 
-    def testParentFormula(self):
+    def get_data_parent1(self):
         test_dict = {}
-        self.cpi = 0
-        self.p = 0.0
+        cpi = 0
+        p = 0.0
         with open('cognation/scripts/tests/test_cases/parent_cases/test_data_parent1.txt', 'r') as parent1_data:
             for line in parent1_data:
                 line = line.strip().split('\t')
                 if len(line) != 1:
-                    locus = line.pop(0)
-                    lr = line.pop()
+                    locus = line[0]
+                    lr = line[3]
                     test_dict[locus] = lr
                 else:
                     line = line[0].split('=')
                     if line[0] == 'CPI':
-                        self.cpi = int(line[1])
+                        cpi = int(line[1])
                     elif line[0] == 'P':
                         self.p = float(line[1])
 
-        result_string = ParentFormula(Formula)
-        print(result_string)
+        return test_dict, cpi, p
