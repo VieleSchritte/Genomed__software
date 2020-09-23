@@ -22,12 +22,15 @@ def calculate(request):
     cpi = 1
     participants = 0
     mutations = 0
+
     for key in result:
         if participants == 0:
             participants = 3 if "ef" in result[key] else 2
 
         if "lr" in result[key]:
-            if result[key]["lr"] > 0:
+            if result[key]["lr"] == '-':
+                continue
+            elif result[key]["lr"] > 0:
                 cpi = cpi * result[key]["lr"]
             else:
                 mutations = mutations + 1
@@ -81,7 +84,7 @@ def make_order_cordis():
 
 
 def make_order_verifiler():
-    return ['AMEL', 'D3S1358', 'vWA', 'D16S539', 'CSF1PO', 'TPOX', 'D8S1179', 'D21S11', 'D18S51', 'Penta E', 'D2S441',
+    return ['AMEL', 'Yindel', 'D3S1358', 'vWA', 'D16S539', 'CSF1PO', 'TPOX', 'D8S1179', 'D21S11', 'D18S51', 'Penta E', 'D2S441',
             'D19S433', 'TH01', 'FGA', 'D22S1045', 'D5S818', 'D13S317', 'D7S820', 'D6S1043', 'D10S1248', 'D1S1656',
             'D12S391', 'D2S1338', 'Penta D']
 
