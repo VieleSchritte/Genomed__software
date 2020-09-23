@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from django.test import TestCase
 from ...formulas.parent import ParentFormula
+from ...formulas.base import Formula
 
 
 class TestParentFormula(TestCase):
@@ -17,18 +18,21 @@ class TestParentFormula(TestCase):
 
     def testParentFormula(self):
         test_dict = {}
-        cpi = 0
-        p = 0.0
-        with open('./test_cases/parent_cases/test_data_parent1.txt', 'r') as parent1_data:
+        self.cpi = 0
+        self.p = 0.0
+        with open('cognation/scripts/tests/test_cases/parent_cases/test_data_parent1.txt', 'r') as parent1_data:
             for line in parent1_data:
-                line_list = line.strip().split('\t')
-                if len(line) != 0:
-                    locus = line[0]
-                    lr = line[3]
+                line = line.strip().split('\t')
+                if len(line) != 1:
+                    locus = line.pop(0)
+                    lr = line.pop()
                     test_dict[locus] = lr
                 else:
                     line = line[0].split('=')
                     if line[0] == 'CPI':
-                        cpi = int(line[1])
-                    elif line[1] == 'P':
-                        p = float(line[1])
+                        self.cpi = int(line[1])
+                    elif line[0] == 'P':
+                        self.p = float(line[1])
+
+        result_string = ParentFormula(Formula)
+        print(result_string)
