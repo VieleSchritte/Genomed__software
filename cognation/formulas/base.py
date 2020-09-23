@@ -46,7 +46,6 @@ class Formula(abc.ABC):
                 result[relation['locus']] = relation
             except (LineFormatException, AllelesException, UnknownAlleleException) as exception:
                 result[hash(line)] = {'exception': exception, 'line': line}
-
         return result
 
     # getting allele frequencies from DB
