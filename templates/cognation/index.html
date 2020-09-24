@@ -11,6 +11,13 @@
 {% block content %}
     {{ block.super }}
     <form action="{% url 'cognation:calculate' %}" method="post" id="cognationForm">
+        <div class="label-notion">
+            <h1>Input order:</h1>
+            <ol>
+              <li>Father / grandfather etc</li>
+              <li>Inspected person (child / grandchild etc)</li>
+            </ol>
+        </div>
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
           <label class="btn btn-secondary">
             <input type="radio" name="type" id="typeParent" autocomplete="off" value="1" checked /> Parent
