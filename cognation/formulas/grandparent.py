@@ -2,135 +2,64 @@ from __future__ import unicode_literals
 from .base import Formula, LineFormatException, AllelesException
 
 
+# FORMULA_TYPE_GRANDPARENT
 class GrandParentFormula(Formula):
-    def calculate_relation(self, raw_values):
-        if len(raw_values) < 3:
-            raise LineFormatException()
-
-        # gc - grandchild, gp - grandparent
-        gc_alleles = self.split_sat(raw_values.pop())
-        gp_alleles = self.split_sat(raw_values.pop())
-        locus = ' '.join(raw_values)  # for loci names contain space
-
-        if len(gp_alleles) != 2 or len(gc_alleles) != 2:
-            raise AllelesException()
-
-        gc_set = set(gc_alleles)  # unique grandparent alleles
-        gp_set = set(gp_alleles)  # unique grandchild alleles
-        intersection = list(gc_set & gp_set)
-
-        len_gc_set = len(gc_set)
-        len_gp_set = len(gp_set)
-        len_inter = len(intersection)
-
-        freq_dict = self.get_frequencies(locus, gc_alleles)
-
-        if len_gc_set == 1:
-            # Homozygous grandchild
-            freq = freq_dict[gc_alleles[0]]
-            refutation = self._F_(freq)**2
-            if len_inter == 0:
-                # no common alleles
-                confirmation = freq * self._Q_(freq)
-            else:
-                if len_gp_set == 1:
-                    # homozygous grandparent
-                    confirmation = self._F_(freq)
-                else:
-                    # heterozygous grandparent
-                    confirmation = self._F_(freq) * self._Q_(freq)
-        else:
-            # heterozygous grandchild
-            freq1 = freq_dict[gc_alleles[0]]
-            freq2 = freq_dict[gc_alleles[1]]
-            refutation = 2 * self._F_(freq1) * self._F_(freq2) - (2 * freq1 * freq2)**2
-
-            if len_inter == 0:
-                # no common alleles
-                confirmation = freq1 * self._F_(freq2) + freq2 * self._F_(freq1)
-            elif len_inter == 2:
-                # both heterozygous, 2 common alleles
-                confirmation = self._Q_(freq1) * self._F_(freq2) + self._Q_(freq2) * self._F_(freq1) - freq1 * freq2 * (freq1 + freq2)
-            else:
-                if len_gp_set == 1:
-                    # homozygous grandparent
-                    confirmation = self._F_(freq2) + freq2 * (self._F_(freq1) - 2 * freq1 * freq2)
-                else:
-                    # heterozygous grandparent
-                    confirmation = self._Q_(freq1) * self._F_(freq2) + freq2 * self._F_(freq1) - freq1 * (freq2) **2
-
-        lr = confirmation / refutation
-
-        return self.make_result(locus, '/'.join(gc_alleles), '/'.join(gp_alleles), lr)
-
-    # Helpers for frequently used patterns
-    @staticmethod
-    def _F_(freq):
-        return freq * (2 - freq)
-
-    @staticmethod
-    def _Q_(freq):
-        return 0.5 + 0.5 * freq
-
-
-"""
-class GrandParentFormula(Formula):
-    def calculate_relation(self, raw_values):
-        if len(raw_values) < 3:
+    def calculate_relation(self, row_values):
+        if len(row_values) < 3:
             # skip line with warning
             raise LineFormatException()
 
-        grandchild_alleles = self.split_sat(raw_values.pop())
-        grandparent_alleles = self.split_sat(raw_values.pop())
-        locus = ' '.join(raw_values)
+        raw_ab = row_values.pop()
+        raw_cd = row_values.pop()
+        locus = ' '.join(row_values)
 
-        if len(grandchild_alleles) != 2 or len(grandparent_alleles) != 2:
+        ab = self.split_sat(raw_ab)
+        cd = self.split_sat(raw_cd)
+
+        if len(ab) != 2 or len(cd) != 2:
             # skip line with warning
             raise AllelesException()
-        # GC - grandchild, GP - grandparent
-        GC_allele1 = grandchild_alleles[0]
-        GC_allele2 = grandchild_alleles[1]
-        GP_allele2 = grandparent_alleles[1]
-        GP_allele1 = grandparent_alleles[0]
 
-        GC_genotype = GC_allele1+'/'+GC_allele2
-        GP_genotype = GP_allele1 + '/' + GP_allele2
+        b = ab.pop()
+        a = ab.pop()
+        d = cd.pop()
+        c = cd.pop()
 
         lr = 0
         # Child AA
-        if GC_allele2 == GC_allele1:
+        if a == b:
             # Grand parent AA
-            if GP_allele1 == GC_allele2 and GP_allele2 == GC_allele2:
-                lr = self.gen_aa_aa(locus, GC_allele2)
+            if c == a and d == a:
+                lr = self.gen_aa_aa(locus, a)
             # Grand parent AB
-            elif GP_allele1 == GC_allele2 or GP_allele2 == GC_allele2:
-                lr = self.gen_aa_ab(locus, GC_allele2)
+            elif c == a or d == a:
+                lr = self.gen_aa_ab(locus, a)
             # Grand parent BB or BC
             else:
-                lr = self.gen_aa_bc(locus, GC_allele2)
+                lr = self.gen_aa_bc(locus, a)
         # Child AB
-        elif GP_allele1 == GP_allele2:
+        elif c == d:
             # GrandParent AA
-            if GC_allele2 == GP_allele1:
-                lr = self.gen_ab_aa(locus, GP_allele1, GC_allele1)
+            if a == c:
+                lr = self.gen_ab_aa(locus, c, b)
             # GrandParent AA
-            elif GC_allele1 == GP_allele1:
-                lr = self.gen_ab_aa(locus, GP_allele1, GC_allele2)
+            elif b == c:
+                lr = self.gen_ab_aa(locus, c, a)
             # GrandParent CC
             else:
-                lr = self.gen_ab_cd(locus, GC_allele2, GC_allele1)
+                lr = self.gen_ab_cd(locus, a, b)
         # GrandParent AB
-        elif (GC_allele2 == GP_allele1 and GC_allele1 == GP_allele2) or (GC_allele2 == GP_allele2 and GC_allele1 == GP_allele1):
-            lr = self.gen_ab_ab(locus, GC_allele2, GC_allele1)
+        elif (a == c and b == d) or (a == d and b == c):
+            lr = self.gen_ab_ab(locus, a, b)
         else:
-            if GC_allele2 == GP_allele1 or GC_allele2 == GP_allele2:
-                lr = self.gen_ab_ac(locus, GC_allele2, GC_allele1)
-            elif GC_allele1 == GP_allele1 or GC_allele1 == GP_allele2:
-                lr = self.gen_ab_ac(locus, GC_allele1, GC_allele2)
+            if a == c or a == d:
+                lr = self.gen_ab_ac(locus, a, b)
+            elif b == c or b == d:
+                lr = self.gen_ab_ac(locus, b, a)
             else:
-                lr = self.gen_ab_cd(locus, GC_allele2, GC_allele1)
+                lr = self.gen_ab_cd(locus, a, b)
 
-        return self.make_result(locus, GP_genotype, GC_genotype, lr)
+        return self.make_result(locus, raw_ab, raw_cd, lr)
 
     # Child AA Formulas
     def gen_aa_aa(self, locus, a):
@@ -177,4 +106,3 @@ class GrandParentFormula(Formula):
         divider = self.prob_not_c_ab(p, a, b)
         return 0 if divider == 0 else \
             (p[a] * self._2pa_sub_pa2(p, b) + p[b] * self._2pa_sub_pa2(p, a)) / divider
-"""
