@@ -43,5 +43,4 @@ class ParentFormula(Formula):
                 freq = list(freq_dict.values())[0]
                 relation = 1 / (len(parent_set)*len(child_set) * freq)
 
-        print(self.make_result(locus, '/'.join(parent_alleles), '/'.join(child_alleles), relation))
         return self.make_result(locus, '/'.join(parent_alleles), '/'.join(child_alleles), relation)
