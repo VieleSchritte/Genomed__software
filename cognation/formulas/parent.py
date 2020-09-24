@@ -9,8 +9,8 @@ class ParentFormula(Formula):
 
         if raw_values[0] == 'Yindel':
             locus = raw_values[0]
-            child_alleles = raw_values[1].split('/')
-            parent_alleles = raw_values[2].split('/')
+            child_alleles = raw_values[2].split('/')
+            parent_alleles = raw_values[1].split('/')
 
             relation = '-'
         else:
