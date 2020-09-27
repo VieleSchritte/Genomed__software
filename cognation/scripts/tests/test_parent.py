@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-import django
 import unittest
-import os
 import re
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "genomed_software.settings")
 from ...formulas.parent import ParentFormula
 from django.test import TestCase
-django.setup()
 
 # all possible test cases
 doc_refnames_list = ['parent1/reference_data_parent1.txt', 'parent2/reference_data_parent2.txt', 'parent3/reference_data_parent3_veri.txt']
@@ -87,10 +83,7 @@ class TestParentFormula(TestCase):
     def setUp(self):
         pass
 
-    def tearDown(self):
-        pass
-
-    def FinalAssertion(self):
+    def test_final_assertion(self):
         for i in range(len(doc_refnames_list)):
             doc_ref_path = doc_refnames_list[i]
             doc_test_path = doc_testnames_list[i]
@@ -112,6 +105,9 @@ class TestParentFormula(TestCase):
                 lr_ref = dict_loci_lrs_ref[key]
                 lr_test = dict_loci_lrs_test[key]
                 self.assertEqual(lr_ref, lr_test)
+
+    def tearDown(self):
+        pass
 
 
 if __name__ == '__main__':
