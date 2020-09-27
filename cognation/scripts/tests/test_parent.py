@@ -2,9 +2,9 @@
 from __future__ import unicode_literals
 import django
 import unittest
-#import os
+import os
 import re
-#os.environ.setdefault("DJANGO_SETTINGS_MODULE", "genomed_software.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "genomed_software.settings")
 from ...formulas.parent import ParentFormula
 from django.test import TestCase
 django.setup()
@@ -26,11 +26,21 @@ class GetParentsData(ParentFormula):
         with open('cognation/scripts/tests/test_cases/parent_cases/' + doc_name, 'r') as parentx_data:
             for line in parentx_data:
                 line = line.strip().split('\t')
-                if len(line) != 1:
+
+                # locus Yindel case - there's no lr
+                if len(line[0]) == 3:
+                    locus = line[0]
+                    lr = ' '
+                    ref_dict[locus] = lr
+
+                # other loci - there is int meaning of lr
+                elif len(line) == 4:
                     locus = line[0]
                     lr = line[3]
                     ref_dict[locus] = lr
-                else:
+
+                # case for getting cpi and p meanings
+                elif len(line) == 1 and line[0] != '':
                     line = line[0].split('=')
                     if line[0] == 'CPI':
                         cpi = int(line[1])
@@ -44,15 +54,19 @@ class GetParentsData(ParentFormula):
         test_dict = {}
         test_cpi = 1
         with open('cognation/scripts/tests/test_cases/parent_cases/' + doc_name, 'r') as parentx:
-            print(doc_name)
             for line in parentx:
-                print(line)
-                print(re.split(r'[\s\t]+', line))
+                line = line.strip()
                 parent_formula_dict = self.calculate_relation(re.split(r'[\s\t]+', line))
                 locus = parent_formula_dict['locus']
-                lr = float(parent_formula_dict['lr'])
-                test_cpi *= lr
+                lr = parent_formula_dict['lr']
                 test_dict[locus] = lr
+
+                # if it's not Yindel locus
+                if lr != '-':
+                    lr = float(lr)
+                    test_cpi *= lr
+                else:
+                    continue
 
         test_cpi = int(test_cpi)
         test_p = (test_cpi / (1 + test_cpi)) * 100
@@ -102,4 +116,3 @@ class TestParentFormula(TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-    
