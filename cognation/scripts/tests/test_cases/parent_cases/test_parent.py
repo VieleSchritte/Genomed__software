@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 import unittest
 import re
-from ...formulas.parent import ParentFormula
+from cognation.formulas.parent import ParentFormula
 from django.test import TestCase
 
 # all possible test cases
