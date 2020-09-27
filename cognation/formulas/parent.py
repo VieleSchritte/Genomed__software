@@ -3,7 +3,6 @@ from .base import Formula, LineFormatException, AllelesException
 
 class ParentFormula(Formula):
     def calculate_relation(self, raw_values):
-        locus = ''
         if len(raw_values) < 3:
             raise LineFormatException()
 

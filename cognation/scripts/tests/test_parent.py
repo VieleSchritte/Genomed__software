@@ -2,14 +2,17 @@
 from __future__ import unicode_literals
 import django
 import unittest
-import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "genomed_software.settings")
+#import os
+import re
+#os.environ.setdefault("DJANGO_SETTINGS_MODULE", "genomed_software.settings")
 from ...formulas.parent import ParentFormula
 from django.test import TestCase
 django.setup()
 
 # all possible test cases
-doc_names_list = ['parent1/reference_data_parent1.txt', 'parent2/reference_data_parent2.txt', 'parent3/reference_data_parent3_veri.txt']
+doc_refnames_list = ['parent1/reference_data_parent1.txt', 'parent2/reference_data_parent2.txt', 'parent3/reference_data_parent3_veri.txt']
+doc_testnames_list = ['parent1/test_data_parent1.txt', 'parent2/test_data_parent2.txt', 'parent3/test_data_parent3_veri.txt']
+
 overall_ref_dict = {}
 overall_test_dict = {}
 
@@ -41,8 +44,11 @@ class GetParentsData(ParentFormula):
         test_dict = {}
         test_cpi = 1
         with open('cognation/scripts/tests/test_cases/parent_cases/' + doc_name, 'r') as parentx:
+            print(doc_name)
             for line in parentx:
-                parent_formula_dict = ParentFormula.calculate_relation(self, line)
+                print(line)
+                print(re.split(r'[\s\t]+', line))
+                parent_formula_dict = self.calculate_relation(re.split(r'[\s\t]+', line))
                 locus = parent_formula_dict['locus']
                 lr = float(parent_formula_dict['lr'])
                 test_cpi *= lr
@@ -54,17 +60,46 @@ class GetParentsData(ParentFormula):
         return test_dict, test_cpi, test_p
 
     def prep(self):
-        for i in range(len(doc_names_list)):
-            doc_path = doc_names_list[i]
-            overall_ref_dict[doc_path] = GetParentsData.get_reference_data_parentx(doc_path)
-            overall_test_dict[doc_path] = self.get_test_data_parentx(doc_path)
+        for i in range(len(doc_refnames_list)):
+            doc_ref_path = doc_refnames_list[i]
+            overall_ref_dict[doc_ref_path] = GetParentsData.get_reference_data_parentx(doc_ref_path)
+            doc_test_path = doc_testnames_list[i]
+            overall_test_dict[doc_test_path] = self.get_test_data_parentx(doc_test_path)
 
 instance = GetParentsData(ParentFormula)
 instance.prep()
 
 class TestParentFormula(TestCase):
-    for i in range()
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def FinalAssertion(self):
+        for i in range(len(doc_refnames_list)):
+            doc_ref_path = doc_refnames_list[i]
+            doc_test_path = doc_testnames_list[i]
+
+            parent_ref_tuple = overall_ref_dict[doc_ref_path]
+            parent_test_tuple = overall_test_dict[doc_test_path]
+
+            cpi_ref = parent_ref_tuple[1]
+            cpi_test = parent_test_tuple[1]
+            self.assertEqual(cpi_ref, cpi_test)
+
+            p_ref = parent_ref_tuple[2]
+            p_test = parent_test_tuple[2]
+            self.assertEqual(p_ref, p_test)
+
+            dict_loci_lrs_ref = parent_ref_tuple[0]
+            dict_loci_lrs_test = parent_test_tuple[0]
+            for key in dict_loci_lrs_ref.keys():
+                lr_ref = dict_loci_lrs_ref[key]
+                lr_test = dict_loci_lrs_test[key]
+                self.assertEqual(lr_ref, lr_test)
 
 
 if __name__ == '__main__':
     unittest.main()
+    
