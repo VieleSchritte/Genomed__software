@@ -53,12 +53,17 @@ class GetParentsData(ParentFormula):
 
         return test_dict, test_cpi, test_p
 
-    for i in range(len(doc_names_list)):
-        doc_path = doc_names_list[i]
-        overall_ref_dict[doc_path] = get_reference_data_parentx(doc_path)
-        overall_test_dict[doc_path] = self.get_test_data_parentx(doc_path)
+    def prep(self):
+        for i in range(len(doc_names_list)):
+            doc_path = doc_names_list[i]
+            overall_ref_dict[doc_path] = GetParentsData.get_reference_data_parentx(doc_path)
+            overall_test_dict[doc_path] = self.get_test_data_parentx(doc_path)
 
+instance = GetParentsData(ParentFormula)
+instance.prep()
 
+class TestParentFormula(TestCase):
+    for i in range()
 
 
 if __name__ == '__main__':
