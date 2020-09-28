@@ -26,7 +26,7 @@ class GetParentsData(ParentFormula):
                 # locus Yindel case - there's no lr
                 if len(line) == 3:
                     locus = line[0]
-                    lr = ' '
+                    lr = '-'
                     ref_dict[locus] = lr
 
                 # other loci - there is int meaning of lr
@@ -42,7 +42,6 @@ class GetParentsData(ParentFormula):
                         cpi = int(line[1])
                     elif line[0] == 'P':
                         p = float(line[1])
-
         return ref_dict, cpi, p
 
     # getting similar data from each patient's test data
@@ -98,17 +97,18 @@ class TestParentFormula(TestCase):
             for key in dict_loci_lrs_ref.keys():
                 lr_ref = dict_loci_lrs_ref[key]
                 lr_test = dict_loci_lrs_test[key]
-                print(key, 'lr_ref = ', lr_ref, 'lr_test = ', lr_test)
                 self.assertEqual(lr_ref, lr_test)
 
             cpi_ref = parent_ref_tuple[1]
             cpi_test = parent_test_tuple[1]
-            self.assertEqual(cpi_ref, cpi_test)
 
-            p_ref = parent_ref_tuple[2]
-            p_test = parent_test_tuple[2]
-            print(p_ref, p_test)
-            #self.assertEqual(p_ref, p_test)
+            # There can be changes in the last digit of the large number, so this case would be submitted
+            cond_exp = abs(cpi_test - cpi_ref) <=1
+            self.assertTrue(cond_exp, True)
+
+            p_ref = int(parent_ref_tuple[2] * 100) / 100
+            p_test = int(parent_test_tuple[2] * 100) / 100
+            self.assertEqual(p_ref, p_test)
 
     def tearDown(self):
         pass
