@@ -6,25 +6,27 @@ class ParentFormula(Formula):
         if len(raw_values) < 3:
             raise LineFormatException()
 
-        if raw_values[0] == 'Yindel':
-            locus = raw_values[0]
-            child_alleles = raw_values[2].split('/')
-            parent_alleles = raw_values[1].split('/')
+        alleles_locus_tuple = self.getting_alleles_locus(raw_values)
 
-            relation = '-'
+        child_alleles = alleles_locus_tuple[0]
+        parent_alleles = alleles_locus_tuple[1]
+        locus = alleles_locus_tuple[2]
+        child_set = alleles_locus_tuple[3]
+        parent_set = alleles_locus_tuple[4]
+        intersection = alleles_locus_tuple[5]
+
+        # Function in base.py for checking out if the locus is gender-specific; if yes it returnes lr
+        gender_check = self.gender_specific(locus)
+
+        if gender_check != None:
+            relation = gender_check
         else:
-            child_alleles = self.split_sat(raw_values.pop())
-            parent_alleles = self.split_sat(raw_values.pop())
-            locus = ' '.join(raw_values)  # for loci names contain space
 
             if len(parent_alleles) != 2 or len(child_alleles) != 2:
                 raise AllelesException()
 
-            parent_set = set(parent_alleles)  # unique parent alleles
-            child_set = set(child_alleles)  # unique child alleles
-
             relation = 0
-            freq_dict = self.get_frequencies(locus, list(parent_set & child_set))
+            freq_dict = self.get_frequencies(locus, intersection)
             # i, j     i, j
             if len(freq_dict) == 2:
                 divider = 4

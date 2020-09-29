@@ -6,18 +6,22 @@ import abc
 import re
 from collections import Counter, OrderedDict
 
+
 # Exception - if something isn't right in data format
 class UnknownFormulaException(Exception):
     def __init__(self, formula_type):
         self.formula_type = formula_type
 
+
 class LineFormatException(Exception):
     def __str__(self):
         return 'Wrong line format'
 
+
 class AllelesException(Exception):
     def __str__(self):
         return "Alleles count doesn't look right"
+
 
 class UnknownAlleleException(Exception):
     def __init__(self, locus, sat):
@@ -32,6 +36,30 @@ class UnknownAlleleException(Exception):
 class Formula(abc.ABC):
     def __init__(self, user_data):
         self.user_data = str(user_data)
+
+    # Checking out if the locus is gender-specific (so we don't need to add it to cpi calculation)
+    @staticmethod
+    def gender_specific(locus):
+        gender_specific_loci = ['AMEL', 'SRY', 'DYS391', 'Yindel']
+        for i in range(len(gender_specific_loci)):
+            if locus == gender_specific_loci[i]:
+                if locus == 'AMEL':
+                    lr = 1.00
+                else:
+                    lr = '-'
+                return lr
+
+    def getting_alleles_locus(self, raw_values):
+        # child/grandchild for example
+        pat1_alleles = self.split_sat(raw_values.pop())
+        # parent/grandparent...
+        pat2_alleles = self.split_sat(raw_values.pop())
+        locus = ' '.join(raw_values)  # for loci names contain space
+        pat1_set = list(set(pat1_alleles)) # unique alleles
+        pat2_set = list(set(pat2_alleles))
+        intersection = list(set(pat1_alleles) & set(pat2_alleles)) # common unique alleles
+
+        return pat1_alleles, pat2_alleles, locus, pat1_set, pat2_set, intersection
 
     def calculate(self):
         result = OrderedDict()

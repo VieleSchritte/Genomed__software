@@ -9,27 +9,34 @@ class GrandParentFormula(Formula):
             # skip line with warning
             raise LineFormatException()
 
-        gc_alleles = self.split_sat(raw_values.pop())
-        gp_alleles = self.split_sat(raw_values.pop())
-        locus = ' '.join(raw_values)
+        alleles_locus_tuple = self.getting_alleles_locus(raw_values)
 
-        gc_set = list(set(gc_alleles))
-        gp_set = list(set(gp_alleles))
-        intersection = list(set(gc_alleles) & set(gp_alleles))
-        freq_dict = self.get_frequencies(locus, gc_set)
+        gc_alleles = alleles_locus_tuple[0]
+        gp_alleles = alleles_locus_tuple[1]
+        locus = alleles_locus_tuple[2]
+        gc_set = alleles_locus_tuple[3]
+        gp_set = alleles_locus_tuple[4]
+        intersection = alleles_locus_tuple[5]
 
-        inst = Calculations()
-
-        if len(gc_set) == 1:
-            freq = freq_dict[gc_set[0]]
-            refutation = inst.homo_gc_refutation(freq)
-            confirmation = inst.homo_gc_confirmation(freq, intersection, gp_set)
+        # Checking gender specificity of locus
+        gender_check = self.gender_specific(locus)
+        if gender_check != None:
+            lr = gender_check
         else:
-            freq1 = freq_dict[gc_set[0]]
-            freq2 = freq_dict[gc_set[1]]
-            refutation = inst.hetero_gc_refutation(freq1, freq2)
-            confirmation = inst.hetero_gc_confirmation(freq1, freq2, intersection, gp_set)
-        lr = confirmation / refutation
+            freq_dict = self.get_frequencies(locus, gc_set)
+
+            inst = Calculations()
+
+            if len(gc_set) == 1:
+                freq = freq_dict[gc_set[0]]
+                refutation = inst.homo_gc_refutation(freq)
+                confirmation = inst.homo_gc_confirmation(freq, intersection, gp_set)
+            else:
+                freq1 = freq_dict[gc_set[0]]
+                freq2 = freq_dict[gc_set[1]]
+                refutation = inst.hetero_gc_refutation(freq1, freq2)
+                confirmation = inst.hetero_gc_confirmation(freq1, freq2, intersection, gp_set)
+            lr = confirmation / refutation
 
         return self.make_result(locus, '/'.join(gp_alleles), '/'.join(gc_alleles), lr)
 
