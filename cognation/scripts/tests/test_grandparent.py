@@ -20,7 +20,6 @@ class GetGrandParentsData(GrandParentFormula):
         cpi = 0
         p = 0.0
         with open('cognation/scripts/tests/test_cases/grandparent_cases/' + doc_name, 'r') as grandparentx_data:
-            print('DOCNAME: ', doc_name)
             for line in grandparentx_data:
                 line = line.strip().split('\t')
                 locus = line[0]
@@ -69,8 +68,9 @@ class GetGrandParentsData(GrandParentFormula):
                     test_dict[locus] = lr
                     continue
 
-        test_cpi = int(test_cpi)
+        test_cpi = float(test_cpi)
         test_p = (test_cpi / (1 + test_cpi)) * 100
+        test_cpi = round(test_cpi)
 
         return test_dict, test_cpi, test_p
 
@@ -109,13 +109,11 @@ class TestGrandParentFormula(TestCase):
 
             # There can be changes in the last digit of the large number, so this case would be submitted
             cond_exp = abs(cpi_test - cpi_ref) <=1
-            print('cpi_ref = ', cpi_ref, 'cpi_test = ', cpi_test)
             self.assertTrue(cond_exp, True)
 
             p_ref = int(grandparent_ref_tuple[2] * 100) / 100
             p_test = int(grandparent_test_tuple[2] * 100) / 100
-            print('p_ref = ', p_ref, 'p_test = ', p_test)
-            #self.assertEqual(p_ref, p_test)
+            self.assertEqual(p_ref, p_test)
 
     def tearDown(self):
         pass
