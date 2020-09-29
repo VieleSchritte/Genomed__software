@@ -20,7 +20,6 @@ class GetGrandParentsData(GrandParentFormula):
         cpi = 0
         p = 0.0
         with open('cognation/scripts/tests/test_cases/grandparent_cases/' + doc_name, 'r') as grandparentx_data:
-            print('DOCNAME: ', doc_name)
             for line in grandparentx_data:
                 line = line.strip().split('\t')
                 locus = line[0]
