@@ -14,11 +14,9 @@ class GrandParentFormula(Formula):
         locus = ' '.join(raw_values)
 
         gc_set = list(set(gc_alleles))
-        print('GC_SET: ',gc_set)
         gp_set = list(set(gp_alleles))
         intersection = list(set(gc_alleles) & set(gp_alleles))
         freq_dict = self.get_frequencies(locus, gc_set)
-        print('frequencies: ', freq_dict)
 
         inst = Calculations()
 
