@@ -12,6 +12,7 @@ doc_testnames_list = ['grandparent1/test_data_grandparent1.txt', 'grandparent2/t
 overall_ref_dict = {}
 overall_test_dict = {}
 
+
 class GetGrandParentsData(GrandParentFormula):
     # getting loci and lrs in the dictionary and also CPI and P from each patient's reference data
     @staticmethod
@@ -81,8 +82,10 @@ class GetGrandParentsData(GrandParentFormula):
             doc_test_path = doc_testnames_list[i]
             overall_test_dict[doc_test_path] = self.get_test_data_grandparentx(doc_test_path)
 
+
 instance = GetGrandParentsData(GrandParentFormula)
 instance.prep()
+
 
 class TestGrandParentFormula(TestCase):
     def setUp(self):
@@ -106,10 +109,7 @@ class TestGrandParentFormula(TestCase):
 
             cpi_ref = grandparent_ref_tuple[1]
             cpi_test = grandparent_test_tuple[1]
-
-            # There can be changes in the last digit of the large number, so this case would be submitted
-            cond_exp = abs(cpi_test - cpi_ref) <=1
-            self.assertTrue(cond_exp, True)
+            self.assertEqual(cpi_ref, cpi_test)
 
             p_ref = int(grandparent_ref_tuple[2] * 100) / 100
             p_test = int(grandparent_test_tuple[2] * 100) / 100
