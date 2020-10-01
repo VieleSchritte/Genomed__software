@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 import unittest
 import re
-from ...formulas.grandparent import GrandParentFormula
+from cognation.formulas.grandparent import GrandParentFormula
 from django.test import TestCase
 
 # all possible test cases
@@ -21,7 +21,9 @@ class GetGrandParentsData(GrandParentFormula):
         p = 0.0
         with open('cognation/scripts/tests/test_cases/grandparent_cases/' + doc_name, 'r') as grandparentx_data:
             for line in grandparentx_data:
+                print(line)
                 line = line.strip().split('\t')
+                print('==LINE', line)
                 locus = line[0]
 
                 # There is no case to print the Yindel result, so now we skip it
@@ -102,14 +104,11 @@ class TestGrandParentFormula(TestCase):
             for key in dict_loci_lrs_ref.keys():
                 lr_ref = dict_loci_lrs_ref[key]
                 lr_test = dict_loci_lrs_test[key]
-                # self.assertEqual(lr_ref, lr_test)
+                self.assertEqual(lr_ref, lr_test)
 
             cpi_ref = grandparent_ref_tuple[1]
             cpi_test = grandparent_test_tuple[1]
-
-            # There can be changes in the last digit of the large number, so this case would be submitted
-            cond_exp = abs(cpi_test - cpi_ref) <=1
-            self.assertTrue(cond_exp, True)
+            self.assertEqual(cpi_ref, cpi_test)
 
             p_ref = int(grandparent_ref_tuple[2] * 100) / 100
             p_test = int(grandparent_test_tuple[2] * 100) / 100
