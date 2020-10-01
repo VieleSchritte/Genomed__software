@@ -1,20 +1,20 @@
 from __future__ import unicode_literals
-from .base import Formula, LineFormatException, AllelesException
+from .base import Formula, AllelesException
 
 
 # FORMULA_TYPE_GRANDPARENT
 class GrandParentFormula(Formula):
     def calculate_relation(self, raw_values):
-        alleles_locus_tuple = self.getting_alleles_locus(raw_values)
-        (gc_alleles, gp_alleles, locus, gc_set, gp_set, intersection) = alleles_locus_tuple
+        (gc_alleles, gp_alleles, locus, gc_set, gp_set, intersection) = self.getting_alleles_locus(raw_values)
 
         # Checking gender specificity of locus
         lr = self.gender_specific(locus)
         
-        if lr == None:
+        if lr is None:
+            if len(gc_alleles) != 2 or len(gp_alleles) != 2:
+                raise AllelesException()
 
             freq_dict = self.get_frequencies(locus, gc_set)
-
             call_calc = Calculations()
 
             if len(gc_set) == 1:
@@ -28,7 +28,7 @@ class GrandParentFormula(Formula):
                 confirmation = call_calc.hetero_gc_confirmation(freq1, freq2, intersection, gp_set)
             lr = confirmation / refutation
 
-        return self.make_result(locus, '/'.join(gp_alleles), '/'.join(gc_alleles), lr)
+        return self.make_result(locus, '/'.join(gc_alleles), '/'.join(gp_alleles), lr)
 
 
 class Calculations:

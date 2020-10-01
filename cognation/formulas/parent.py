@@ -1,16 +1,15 @@
 from __future__ import unicode_literals
 from .base import Formula, AllelesException
 
+
 class ParentFormula(Formula):
     def calculate_relation(self, raw_values):
-        alleles_locus_tuple = self.getting_alleles_locus(raw_values)
-        (child_alleles, parent_alleles, locus, child_set, parent_set, intersection) = alleles_locus_tuple
+        (child_alleles, parent_alleles, locus, child_set, parent_set, intersection) = self.getting_alleles_locus(raw_values)
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr
         relation = self.gender_specific(locus)
 
-        if relation == None:
-
+        if relation is None:
             if len(parent_alleles) != 2 or len(child_alleles) != 2:
                 raise AllelesException()
 
