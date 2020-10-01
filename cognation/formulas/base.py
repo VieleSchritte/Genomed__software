@@ -47,10 +47,15 @@ class Formula(abc.ABC):
                 return lr_gender
 
     def getting_alleles_locus(self, raw_values):
+        if len(raw_values) < 3:
+            # Skip line with warning
+            raise LineFormatException()
+
         # child/grandchild for example
         pat1_alleles = self.split_sat(raw_values.pop())
         # parent/grandparent...
         pat2_alleles = self.split_sat(raw_values.pop())
+
         locus = ' '.join(raw_values)  # for loci names contain space
         pat1_set = list(set(pat1_alleles)) # unique alleles
         pat2_set = list(set(pat2_alleles))

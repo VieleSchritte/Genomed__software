@@ -1,26 +1,15 @@
 from __future__ import unicode_literals
-from .base import Formula, LineFormatException, AllelesException
+from .base import Formula, AllelesException
 
 class ParentFormula(Formula):
     def calculate_relation(self, raw_values):
-        if len(raw_values) < 3:
-            raise LineFormatException()
-
         alleles_locus_tuple = self.getting_alleles_locus(raw_values)
+        (child_alleles, parent_alleles, locus, child_set, parent_set, intersection) = alleles_locus_tuple
 
-        child_alleles = alleles_locus_tuple[0]
-        parent_alleles = alleles_locus_tuple[1]
-        locus = alleles_locus_tuple[2]
-        child_set = alleles_locus_tuple[3]
-        parent_set = alleles_locus_tuple[4]
-        intersection = alleles_locus_tuple[5]
+        # Function in base.py for checking out if the locus is gender-specific; if yes return lr
+        relation = self.gender_specific(locus)
 
-        # Function in base.py for checking out if the locus is gender-specific; if yes it returnes lr
-        gender_check = self.gender_specific(locus)
-
-        if gender_check != None:
-            relation = gender_check
-        else:
+        if relation == None:
 
             if len(parent_alleles) != 2 or len(child_alleles) != 2:
                 raise AllelesException()
