@@ -51,6 +51,7 @@ def calculate(request):
             'data': data,
         }
     }
+    print(ctx)
 
     return render(request, formula.get_template(), ctx)
 

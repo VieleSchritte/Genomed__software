@@ -21,9 +21,7 @@ class GetGrandParentsData(GrandParentFormula):
         p = 0.0
         with open('cognation/scripts/tests/test_cases/grandparent_cases/' + doc_name, 'r') as grandparentx_data:
             for line in grandparentx_data:
-                print(line)
                 line = line.strip().split('\t')
-                print('==LINE', line)
                 locus = line[0]
 
                 # There is no case to print the Yindel result, so now we skip it

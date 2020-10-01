@@ -39,12 +39,12 @@ class Formula(abc.ABC):
 
     # Checking out if the locus is gender-specific (so we don't need to add it to cpi calculation)
     @staticmethod
-    def gender_specific(locus):
+    def is_gender_specific(locus):
         gender_specific_loci = ['SRY', 'DYS391', 'Yindel']
-        lr_gender = '-'
         for i in range(len(gender_specific_loci)):
             if locus == gender_specific_loci[i]:
-                return lr_gender
+                return True
+        return False
 
     def getting_alleles_locus(self, raw_values):
         if len(raw_values) < 3:

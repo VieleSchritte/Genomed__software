@@ -8,25 +8,25 @@ class GrandParentFormula(Formula):
         (gc_alleles, gp_alleles, locus, gc_set, gp_set, intersection) = self.getting_alleles_locus(raw_values)
 
         # Checking gender specificity of locus
-        lr = self.gender_specific(locus)
-        
-        if lr is None:
-            if len(gc_alleles) != 2 or len(gp_alleles) != 2:
-                raise AllelesException()
+        if self.is_gender_specific(locus):
+            return self.make_result(locus, '/'.join(gc_alleles), '/'.join(gp_alleles), '-')
 
-            freq_dict = self.get_frequencies(locus, gc_set)
-            call_calc = Calculations()
+        if len(gc_alleles) != 2 or len(gp_alleles) != 2:
+            raise AllelesException()
 
-            if len(gc_set) == 1:
-                freq = freq_dict[gc_set[0]]
-                refutation = call_calc.homo_gc_refutation(freq)
-                confirmation = call_calc.homo_gc_confirmation(freq, intersection, gp_set)
-            else:
-                freq1 = freq_dict[gc_set[0]]
-                freq2 = freq_dict[gc_set[1]]
-                refutation = call_calc.hetero_gc_refutation(freq1, freq2)
-                confirmation = call_calc.hetero_gc_confirmation(freq1, freq2, intersection, gp_set)
-            lr = confirmation / refutation
+        freq_dict = self.get_frequencies(locus, gc_set)
+        call_calc = Calculations()
+
+        if len(gc_set) == 1:
+            freq = freq_dict[gc_set[0]]
+            refutation = call_calc.homo_gc_refutation(freq)
+            confirmation = call_calc.homo_gc_confirmation(freq, intersection, gp_set)
+        else:
+            freq1 = freq_dict[gc_set[0]]
+            freq2 = freq_dict[gc_set[1]]
+            refutation = call_calc.hetero_gc_refutation(freq1, freq2)
+            confirmation = call_calc.hetero_gc_confirmation(freq1, freq2, intersection, gp_set)
+        lr = confirmation / refutation
 
         return self.make_result(locus, '/'.join(gc_alleles), '/'.join(gp_alleles), lr)
 
@@ -57,7 +57,7 @@ class Calculations:
         else:
             if len(gp_set) == 1:
                 confirmation = self.F(freq)
-            else:
+            elif len(gp_set) == 2:
                 confirmation = self.F(freq) * self.Q(freq)
 
         return confirmation
@@ -71,7 +71,7 @@ class Calculations:
         else:
             if len(gp_set) == 2:
                 confirmation = self.F(freq2) + freq2 * (self.F(freq1) - 2 * freq1 * freq2)
-            else:
+            elif len(gp_set) == 1:
                 confirmation = self.Q(freq1) * self.F(freq2) + freq2 * self.F(freq1) - freq1 * freq2 ** 2
 
         return confirmation
