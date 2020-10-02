@@ -5,6 +5,7 @@ from .base import Formula, AllelesException
 # FORMULA_TYPE_GRANDPARENT
 class GrandParentFormula(Formula):
     def calculate_relation(self, raw_values):
+        lr = 0
         (gc_alleles, gp_alleles, locus, gc_set, gp_set, intersection) = self.getting_alleles_locus(raw_values)
 
         # Checking gender specificity of locus
@@ -15,17 +16,17 @@ class GrandParentFormula(Formula):
             raise AllelesException()
 
         freq_dict = self.get_frequencies(locus, gc_set)
-        call_calc = Calculations()
+        calc = Calculations()
 
         if len(gc_set) == 1:
             freq = freq_dict[gc_set[0]]
-            refutation = call_calc.homo_gc_refutation(freq)
-            confirmation = call_calc.homo_gc_confirmation(freq, intersection, gp_set)
+            refutation = calc.homo_gc_refutation(freq)
+            confirmation = calc.homo_gc_confirmation(freq, intersection, gp_set)
         else:
             freq1 = freq_dict[gc_set[0]]
             freq2 = freq_dict[gc_set[1]]
-            refutation = call_calc.hetero_gc_refutation(freq1, freq2)
-            confirmation = call_calc.hetero_gc_confirmation(freq1, freq2, intersection, gp_set)
+            refutation = calc.hetero_gc_refutation(freq1, freq2)
+            confirmation = calc.hetero_gc_confirmation(freq1, freq2, intersection, gp_set)
         lr = confirmation / refutation
 
         return self.make_result(locus, '/'.join(gc_alleles), '/'.join(gp_alleles), lr)
@@ -53,25 +54,33 @@ class Calculations:
     # Probability of relation theory confirmation in case of grandchild's homozygosity
     def homo_gc_confirmation(self, freq, intersection, gp_set):
         if len(intersection) == 0:
-            confirmation = freq * self.Q(freq)
-        else:
-            if len(gp_set) == 1:
-                confirmation = self.F(freq)
-            elif len(gp_set) == 2:
-                confirmation = self.F(freq) * self.Q(freq)
+            print('case no common alleles gc is homo')
+            return freq * self.Q(freq)
 
-        return confirmation
+        if len(gp_set) == 1:
+            print('case aa aa')
+            return self.F(freq)
+
+        print('case aa ab')
+        return self.F(freq) * self.Q(freq)
 
     # Probability of relation theory confirmation in case of grandchild's heterozygosity
     def hetero_gc_confirmation(self, freq1, freq2, intersection, gp_set):
         if len(intersection) == 0:
-            confirmation = freq1 * self.F(freq2) + freq2 * self.F(freq1)
-        elif len(intersection) == 2:
-            confirmation = self.Q(freq1) * self.F(freq2) + self.Q(freq2) * self.F(freq1) - freq1 * freq2 * (freq1 + freq2)
-        else:
-            if len(gp_set) == 2:
-                confirmation = self.F(freq2) + freq2 * (self.F(freq1) - 2 * freq1 * freq2)
-            elif len(gp_set) == 1:
-                confirmation = self.Q(freq1) * self.F(freq2) + freq2 * self.F(freq1) - freq1 * freq2 ** 2
+            # case ab nn (nk) - EDITED
+            print('case no common alleles gc is hetero')
+            return freq1 * self.F(freq2) + freq2 * self.F(freq1)
 
-        return confirmation
+        if len(intersection) == 2:
+            # case ab ab - EDITED
+            print('case ab ab')
+            return self.Q(freq1) * self.F(freq2) + self.Q(freq2) * self.F(freq1) - freq1 * freq2 * (freq1 + freq2)
+
+        if len(gp_set) == 2:
+            # case ab an - EDITED
+            print('case ab an')
+            return self.Q(freq1) * self.F(freq2) + freq2 * self.F(freq1) - freq1 * (freq2 ** 2)
+
+        # defaults is only one intersection
+        print('default case - ab aa')
+        return self.F(freq2) + freq2 * (self.F(freq1) - 2 * freq1 * freq2)
