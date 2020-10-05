@@ -63,6 +63,18 @@ class Formula(abc.ABC):
 
         return pat1_alleles, pat2_alleles, locus, pat1_set, pat2_set, intersection
 
+    @staticmethod
+    def freq_order(intersection, freq_dict, gc_set):
+        (freq1, freq2) = (freq_dict[gc_set[0]], freq_dict[gc_set[1]])
+
+        if len(intersection) == 1 and freq1 != freq2:
+            freq1 = freq_dict[intersection[0]]
+            for key in freq_dict.keys():
+                if key != intersection[0]:
+                    freq2 = freq_dict[key]
+
+        return freq1, freq2
+
     def calculate(self):
         result = OrderedDict()
         lines = self.user_data.splitlines()
