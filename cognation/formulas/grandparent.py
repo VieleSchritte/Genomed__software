@@ -24,8 +24,15 @@ class GrandParentFormula(Formula):
         else:
             (freq1, freq2) = self.freq_order(intersection, freq_dict, gc_set)
             refutation = calc.hetero_gc_refutation(freq2, freq1)
-            confirmation = calc.hetero_gc_confirmation(freq2, freq1, intersection, gp_set)
+            confirmation = calc.hetero_gc_confirmation(freq1, freq2, intersection, gp_set)
         lr = confirmation / refutation
+
+        print(locus)
+        print('GC: ', gc_alleles)
+        print('GP: ', gp_alleles)
+        print(freq_dict)
+        print(confirmation, refutation, lr)
+        print()
 
         return self.make_result(locus, '/'.join(gc_alleles), '/'.join(gp_alleles), lr)
 
@@ -62,16 +69,16 @@ class Calculations:
     # Probability of relation theory confirmation in case of grandchild's heterozygosity
     def hetero_gc_confirmation(self, freq1, freq2, intersection, gp_set):
         if len(intersection) == 0:
-            # case ab nn (nk) - EDITED
+            # case ab nn (nk)
             return freq1 * self.F(freq2) + freq2 * self.F(freq1)
 
         if len(intersection) == 2:
-            # case ab ab - EDITED
+            # case ab ab
             return self.Q(freq1) * self.F(freq2) + self.Q(freq2) * self.F(freq1) - freq1 * freq2 * (freq1 + freq2)
 
         if len(gp_set) == 2:
-            # case ab an - EDITED
-            return self.Q(freq1) * self.F(freq2) + freq2 * self.F(freq1) - freq1 * (freq2 ** 2)
+            # case ab an
+            return self.Q(freq1) * self.F(freq2) + freq2 * self.F(freq1) - freq1 * freq2 ** 2
 
-        # defaults is only one intersection
+        # default is ab aa case
         return self.F(freq2) + freq2 * (self.F(freq1) - 2 * freq1 * freq2)

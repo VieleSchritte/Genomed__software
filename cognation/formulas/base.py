@@ -65,13 +65,14 @@ class Formula(abc.ABC):
 
     @staticmethod
     def freq_order(intersection, freq_dict, gc_set):
-        (freq1, freq2) = (freq_dict[gc_set[0]], freq_dict[gc_set[1]])
+        freq1 = freq_dict[gc_set[0]]
+        freq2 = freq_dict[gc_set[1]]
 
         if len(intersection) == 1 and freq1 != freq2:
             freq1 = freq_dict[intersection[0]]
-            for key in freq_dict.keys():
-                if key != intersection[0]:
-                    freq2 = freq_dict[key]
+            for i in range(len(gc_set)):
+                if gc_set[i] != intersection[0]:
+                    freq2 = freq_dict[gc_set[i]]
 
         return freq1, freq2
 
