@@ -55,14 +55,14 @@ class GetParentsData(ParentFormula):
                 locus = parent_formula_dict['locus']
                 lr = parent_formula_dict['lr']
 
-                # if it's not Yindel locus
-                if lr != '-':
+                # if it's not gender-specific locus we can calculate cpi using lr meaning
+                if lr == '-':
+                    test_dict[locus] = lr
+                    continue
+                else:
                     test_cpi *= lr
                     lr = float("{0:.2f}".format(lr))
                     test_dict[locus] = lr
-                else:
-                    test_dict[locus] = lr
-                    continue
 
         test_cpi = int(test_cpi)
         test_p = (test_cpi / (1 + test_cpi)) * 100

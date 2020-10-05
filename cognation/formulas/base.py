@@ -6,18 +6,22 @@ import abc
 import re
 from collections import Counter, OrderedDict
 
+
 # Exception - if something isn't right in data format
 class UnknownFormulaException(Exception):
     def __init__(self, formula_type):
         self.formula_type = formula_type
 
+
 class LineFormatException(Exception):
     def __str__(self):
         return 'Wrong line format'
 
+
 class AllelesException(Exception):
     def __str__(self):
         return "Alleles count doesn't look right"
+
 
 class UnknownAlleleException(Exception):
     def __init__(self, locus, sat):
@@ -32,6 +36,32 @@ class UnknownAlleleException(Exception):
 class Formula(abc.ABC):
     def __init__(self, user_data):
         self.user_data = str(user_data)
+
+    # Checking out if the locus is gender-specific (so we don't need to add it to cpi calculation)
+    @staticmethod
+    def is_gender_specific(locus):
+        gender_specific_loci = ['SRY', 'DYS391', 'Yindel']
+        for i in range(len(gender_specific_loci)):
+            if locus == gender_specific_loci[i]:
+                return True
+        return False
+
+    def getting_alleles_locus(self, raw_values):
+        if len(raw_values) < 3:
+            # Skip line with warning
+            raise LineFormatException()
+
+        # child/grandchild for example
+        pat1_alleles = self.split_sat(raw_values.pop())
+        # parent/grandparent...
+        pat2_alleles = self.split_sat(raw_values.pop())
+
+        locus = ' '.join(raw_values)  # for loci names contain space
+        pat1_set = set(pat1_alleles)  # unique alleles
+        pat2_set = set(pat2_alleles)
+        intersection = pat1_set & pat2_set  # common unique alleles
+
+        return pat1_alleles, pat2_alleles, locus, pat1_set, pat2_set, intersection
 
     def calculate(self):
         result = OrderedDict()
@@ -49,9 +79,9 @@ class Formula(abc.ABC):
         return result
 
     # getting allele frequencies from DB
-    def get_frequencies(self, locus, sat_list):
+    def get_frequencies(self, locus, sat_set):
         result = {}
-        for sat in sat_list:
+        for sat in sat_set:
             try:
                 locus_object = Locus.objects.get(locus=locus, sat=self.normalize_sat(sat))
                 result[sat] = locus_object.freq

@@ -34,10 +34,14 @@
                         <td>{{ value.ab }}</td>
                         <td>{{ value.cd }}</td>
                     {% endblock results_row %}
-
                     <td class="lr-cell">
+                    {% if value.lr == '-' %}
+                        -
+                    {% else %}
                         {{ value.lr|floatformat:2 }}
+                    {% endif %}
                     </td>
+
                 </tr>
                 {% endwith %}
                 {% endif %}

@@ -1,108 +1,84 @@
 from __future__ import unicode_literals
-from .base import Formula, LineFormatException, AllelesException
+from .base import Formula, AllelesException
 
 
 # FORMULA_TYPE_GRANDPARENT
 class GrandParentFormula(Formula):
-    def calculate_relation(self, row_values):
-        if len(row_values) < 3:
-            # skip line with warning
-            raise LineFormatException()
+    def calculate_relation(self, raw_values):
+        (gc_alleles, gp_alleles, locus, gc_set, gp_set, intersection) = self.getting_alleles_locus(raw_values)
 
-        raw_ab = row_values.pop()
-        raw_cd = row_values.pop()
-        locus = ' '.join(row_values)
+        # Checking gender specificity of locus
+        if self.is_gender_specific(locus):
+            return self.make_result(locus, '/'.join(gc_alleles), '/'.join(gp_alleles), '-')
 
-        ab = self.split_sat(raw_ab)
-        cd = self.split_sat(raw_cd)
-
-        if len(ab) != 2 or len(cd) != 2:
-            # skip line with warning
+        if len(gc_alleles) != 2 or len(gp_alleles) != 2:
             raise AllelesException()
 
-        b = ab.pop()
-        a = ab.pop()
-        d = cd.pop()
-        c = cd.pop()
+        freq_dict = self.get_frequencies(locus, gc_set)
+        calc = Calculations()
 
-        lr = 0
-        # Child AA
-        if a == b:
-            # Grand parent AA
-            if c == a and d == a:
-                lr = self.gen_aa_aa(locus, a)
-            # Grand parent AB
-            elif c == a or d == a:
-                lr = self.gen_aa_ab(locus, a)
-            # Grand parent BB or BC
-            else:
-                lr = self.gen_aa_bc(locus, a)
-        # Child AB
-        elif c == d:
-            # GrandParent AA
-            if a == c:
-                lr = self.gen_ab_aa(locus, c, b)
-            # GrandParent AA
-            elif b == c:
-                lr = self.gen_ab_aa(locus, c, a)
-            # GrandParent CC
-            else:
-                lr = self.gen_ab_cd(locus, a, b)
-        # GrandParent AB
-        elif (a == c and b == d) or (a == d and b == c):
-            lr = self.gen_ab_ab(locus, a, b)
-        else:
-            if a == c or a == d:
-                lr = self.gen_ab_ac(locus, a, b)
-            elif b == c or b == d:
-                lr = self.gen_ab_ac(locus, b, a)
-            else:
-                lr = self.gen_ab_cd(locus, a, b)
+        if len(gc_set) == 1:
+            freq = freq_dict[next(iter(gc_set))]  # gets first
+            refutation = calc.homo_gc_refutation(freq)
+            confirmation = calc.homo_gc_confirmation(freq, intersection, gp_set)
+        else:  # gc_set == 2
+            gc1 = gc_alleles[0]
+            gc2 = gc_alleles[1]
 
-        return self.make_result(locus, raw_ab, raw_cd, lr)
+            if gc2 in gp_set:
+                gc1, gc2 = gc2, gc1
+            freq1 = freq_dict[gc1]
+            freq2 = freq_dict[gc2]
 
-    # Child AA Formulas
-    def gen_aa_aa(self, locus, a):
-        p = self.get_frequencies(locus, {a: 0})
-        return 0 if p[a] == 0 else self._2pa_sub_pa2(p, a) / self.prob_not_c_aa(p, a)
+            refutation = calc.hetero_gc_refutation(freq1, freq2)
+            confirmation = calc.hetero_gc_confirmation(freq1, freq2, intersection, gp_set)
+        lr = confirmation / refutation
 
-    def gen_aa_ab(self, locus, a):
-        p = self.get_frequencies(locus, {a: 0})
-        return 0 if p[a] == 0 else self._05_add_05pa(p, a) * self._2pa_sub_pa2(p, a) / self.prob_not_c_aa(p, a)
+        return self.make_result(locus, '/'.join(gc_alleles), '/'.join(gp_alleles), lr)
 
-    def gen_aa_bc(self, locus, a):
-        p = self.get_frequencies(locus, {a: 0})
-        return 0 if p[a] == 0 else p[a] * self._2pa_sub_pa2(p, a) / self.prob_not_c_aa(p, a)
 
-    # Child AB Formulas
-    def gen_ab_aa(self, locus, a, b):
-        p = self.get_frequencies(locus, {a: 0, b: 0})
-        divider = self.prob_not_c_ab(p, a, b)
-        return 0 if divider == 0 else \
-            (self._2pa_sub_pa2(p, b) + p[b] * (self._2pa_sub_pa2(p, a) - self._2_pa_pb(p, a, b))) / divider
+class Calculations:
+    # A helper for the frequently used pattern F(Px) = Px * (2 - Px)
+    @staticmethod
+    def F(freq):
+        return freq * (2 - freq)
 
-    def gen_ab_ab(self, locus, a, b):
-        p = self.get_frequencies(locus, {a: 0, b: 0})
-        divider = self.prob_not_c_ab(p, a, b)
-        return 0 if divider == 0 else \
-            (
-                    self._05_add_05pa(p, a) * self._2pa_sub_pa2(p, b)
-                    + self._05_add_05pa(p, b) * self._2pa_sub_pa2(p, a)
-                    - .5 * (p[a] + p[b]) * self._2_pa_pb(p, a, b)
-            ) / divider
+    # A helper for the frequently used pattern Q(Px) = 0.5 - 0.5 * Px
+    @staticmethod
+    def Q(freq):
+        return 0.5 + 0.5 * freq
 
-    def gen_ab_ac(self, locus, a, b):
-        p = self.get_frequencies(locus, {a: 0, b: 0})
-        divider = self.prob_not_c_ab(p, a, b)
-        return 0 if divider == 0 else \
-            (
-                    self._05_add_05pa(p, a) * self._2pa_sub_pa2(p, b)
-                    + p[b] * self._2pa_sub_pa2(p, a)
-                    - .5 * p[b] * self._2_pa_pb(p, a, b)
-            ) / divider
+    # Probability of relation theory refutation in case of grandchild's homozygosity
+    def homo_gc_refutation(self, freq):
+        return (self.F(freq)) ** 2
 
-    def gen_ab_cd(self, locus, a, b):
-        p = self.get_frequencies(locus, {a: 0, b: 0})
-        divider = self.prob_not_c_ab(p, a, b)
-        return 0 if divider == 0 else \
-            (p[a] * self._2pa_sub_pa2(p, b) + p[b] * self._2pa_sub_pa2(p, a)) / divider
+    # Probability of relation theory refutation in case of grandchild's heterozygosity
+    def hetero_gc_refutation(self, freq1, freq2):
+        return 2 * self.F(freq1) * self.F(freq2) - (2 * freq1 * freq2) ** 2
+
+    # Probability of relation theory confirmation in case of grandchild's homozygosity
+    def homo_gc_confirmation(self, freq, intersection, gp_set):
+        if len(intersection) == 0:
+            return freq * self.F(freq)
+
+        if len(gp_set) == 1:
+            return self.F(freq)
+
+        return self.F(freq) * self.Q(freq)
+
+    # Probability of relation theory confirmation in case of grandchild's heterozygosity
+    def hetero_gc_confirmation(self, freq1, freq2, intersection, gp_set):
+        if len(intersection) == 0:
+            # case ab nn (nk)
+            return freq1 * self.F(freq2) + freq2 * self.F(freq1)
+
+        if len(intersection) == 2:
+            # case ab ab
+            return self.Q(freq1) * self.F(freq2) + self.Q(freq2) * self.F(freq1) - freq1 * freq2 * (freq1 + freq2)
+
+        if len(gp_set) == 2:
+            # case ab an
+            return self.Q(freq1) * self.F(freq2) + freq2 * self.F(freq1) - freq1 * freq2 ** 2
+
+        # default is ab aa case
+        return self.F(freq2) + freq2 * (self.F(freq1) - 2 * freq1 * freq2)
