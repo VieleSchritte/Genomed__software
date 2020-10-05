@@ -57,24 +57,11 @@ class Formula(abc.ABC):
         pat2_alleles = self.split_sat(raw_values.pop())
 
         locus = ' '.join(raw_values)  # for loci names contain space
-        pat1_set = list(set(pat1_alleles)) # unique alleles
-        pat2_set = list(set(pat2_alleles))
-        intersection = list(set(pat1_alleles) & set(pat2_alleles)) # common unique alleles
+        pat1_set = set(pat1_alleles)  # unique alleles
+        pat2_set = set(pat2_alleles)
+        intersection = pat1_set & pat2_set  # common unique alleles
 
         return pat1_alleles, pat2_alleles, locus, pat1_set, pat2_set, intersection
-
-    @staticmethod
-    def freq_order(intersection, freq_dict, gc_set):
-        freq1 = freq_dict[gc_set[0]]
-        freq2 = freq_dict[gc_set[1]]
-
-        if len(intersection) == 1 and freq1 != freq2:
-            freq1 = freq_dict[intersection[0]]
-            for i in range(len(gc_set)):
-                if gc_set[i] != intersection[0]:
-                    freq2 = freq_dict[gc_set[i]]
-
-        return freq1, freq2
 
     def calculate(self):
         result = OrderedDict()
@@ -92,9 +79,9 @@ class Formula(abc.ABC):
         return result
 
     # getting allele frequencies from DB
-    def get_frequencies(self, locus, sat_list):
+    def get_frequencies(self, locus, sat_set):
         result = {}
-        for sat in sat_list:
+        for sat in sat_set:
             try:
                 locus_object = Locus.objects.get(locus=locus, sat=self.normalize_sat(sat))
                 result[sat] = locus_object.freq

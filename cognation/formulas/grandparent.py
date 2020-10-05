@@ -18,21 +18,21 @@ class GrandParentFormula(Formula):
         calc = Calculations()
 
         if len(gc_set) == 1:
-            freq = freq_dict[gc_set[0]]
+            freq = freq_dict[next(iter(gc_set))]  # gets first
             refutation = calc.homo_gc_refutation(freq)
             confirmation = calc.homo_gc_confirmation(freq, intersection, gp_set)
-        else:
-            (freq1, freq2) = self.freq_order(intersection, freq_dict, gc_set)
-            refutation = calc.hetero_gc_refutation(freq2, freq1)
+        else:  # gc_set == 2
+            gc1 = gc_alleles[0]
+            gc2 = gc_alleles[1]
+
+            if gc2 in gp_set:
+                gc1, gc2 = gc2, gc1
+            freq1 = freq_dict[gc1]
+            freq2 = freq_dict[gc2]
+
+            refutation = calc.hetero_gc_refutation(freq1, freq2)
             confirmation = calc.hetero_gc_confirmation(freq1, freq2, intersection, gp_set)
         lr = confirmation / refutation
-
-        print(locus)
-        print('GC: ', gc_alleles)
-        print('GP: ', gp_alleles)
-        print(freq_dict)
-        print(confirmation, refutation, lr)
-        print()
 
         return self.make_result(locus, '/'.join(gc_alleles), '/'.join(gp_alleles), lr)
 
@@ -46,7 +46,7 @@ class Calculations:
     # A helper for the frequently used pattern Q(Px) = 0.5 - 0.5 * Px
     @staticmethod
     def Q(freq):
-        return 0.5 - 0.5 * freq
+        return 0.5 + 0.5 * freq
 
     # Probability of relation theory refutation in case of grandchild's homozygosity
     def homo_gc_refutation(self, freq):
