@@ -7,10 +7,9 @@ class UncleFormula(Formula):
         if len(raw_values) < 3:
             raise LineFormatException()
 
-        uncle_alleles = self.split_sat(raw_values.pop())
         nephew_alleles = self.split_sat(raw_values.pop())
+        uncle_alleles = self.split_sat(raw_values.pop())
         locus = ' '.join(raw_values)
-        print(locus)
 
         if len(nephew_alleles) != 2 or len(uncle_alleles) != 2:
             raise AllelesException()
@@ -45,7 +44,6 @@ class UncleFormula(Formula):
             # case 3 - both are heterozigous
             elif len(uncle_set) == len(nephew_set) == 2:
                 lr = 0.5 + 1/(8 * freq)
-
 
         return self.make_result(locus, '/'.join(nephew_alleles), '/'.join(uncle_alleles), lr)
 
