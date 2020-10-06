@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.test import TestCase
-from ...formulas.uncle import UncleFormula
+from cognation.formulas.uncle import UncleFormula
 
 class TestUncleFormula(TestCase):
 
