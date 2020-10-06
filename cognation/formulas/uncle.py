@@ -1,49 +1,41 @@
 from __future__ import unicode_literals
-from .base import Formula, LineFormatException, AllelesException
+from .base import Formula, AllelesException
 
 class UncleFormula(Formula):
     def calculate_relation(self, raw_values):
-        lr = 0
-        if len(raw_values) < 3:
-            raise LineFormatException()
+        (nephew_alleles, uncle_alleles, locus, nephew_set, uncle_set, intersection) = self.getting_alleles_locus(raw_values)
 
-        nephew_alleles = self.split_sat(raw_values.pop())
-        uncle_alleles = self.split_sat(raw_values.pop())
-        locus = ' '.join(raw_values)
+        # Function in base.py for checking out if the locus is gender-specific; if yes return lr
+        if self.is_gender_specific(locus):
+            return self.make_result(locus, '/'.join(uncle_alleles), '/'.join(nephew_alleles), '-')
 
+        # Skip line with warning if there's incorrect number of alleles
         if len(nephew_alleles) != 2 or len(uncle_alleles) != 2:
             raise AllelesException()
 
-        uncle_set = set(uncle_alleles)  # unique uncle alleles
-        nephew_set = set(nephew_alleles)  # unique nephew alleles
-        intersection_list = list(uncle_set & nephew_set)
-        freq_dict = self.get_frequencies(locus, intersection_list)
+        freq_dict = self.get_frequencies(locus, intersection)
+        inter_list, uncle_set_list, nephew_set_list = list(intersection), list(uncle_set), list(nephew_set)
 
-        # case -1 - no common alleles
-        if len(intersection_list) == 0:
-            lr = 0.5
+        lr = 0.5
+        if len(inter_list) == 0:
+            return self.make_result(locus, '/'.join(nephew_alleles), '/'.join(uncle_alleles), lr)
 
-        # case 0 - two common alleles, both participants are heterozigous
-        elif len(intersection_list) == 2:
-            freq1 = freq_dict[intersection_list[0]]
-            freq2 = freq_dict[intersection_list[1]]
-            lr = 0.5 + (freq1 + freq2)/(8 * freq1 * freq2)
+        if len(inter_list) == 2:
+            freq1 = freq_dict[inter_list[0]]
+            freq2 = freq_dict[inter_list[1]]
+            lr += 0.25 * (freq1 + freq2) / (2 * (freq1 * freq2))
+            return self.make_result(locus, '/'.join(nephew_alleles), '/'.join(uncle_alleles), lr)
 
-        # one common allele
-        elif len(intersection_list) ==1:
-            freq = freq_dict[intersection_list[0]]
+        freq = freq_dict[inter_list[0]]
 
-            # case 1 - both are homozigous
-            if len(uncle_set) == len(nephew_set) == 1:
-                lr = 0.5 + 1/(2 * freq)
+        if len(uncle_set_list) == len(nephew_set_list) == 2:
+            lr += 0.25 / (2 * freq)
 
-            # case 2 - uncle is homozigous, nephew is heterozigous
-            elif len(uncle_set) != len(nephew_set):
-                lr = 0.5 + 1/(4 * freq)
+        if len(uncle_set_list) == len(nephew_set_list) == 1:
+            lr += 0.5 / freq
 
-            # case 3 - both are heterozigous
-            elif len(uncle_set) == len(nephew_set) == 2:
-                lr = 0.5 + 1/(8 * freq)
+        if len(uncle_set_list) != len(nephew_set_list):
+            lr += 0.25 / freq
 
         return self.make_result(locus, '/'.join(nephew_alleles), '/'.join(uncle_alleles), lr)
 
