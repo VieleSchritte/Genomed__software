@@ -1,3 +1,18 @@
+from cognation.formulas.parent import ParentFormula
+from cognation.formulas.grandparent import GrandParentFormula
+from cognation.formulas.uncle import UncleFormula
+from cognation.formulas.cousin import CousinFormula
+from cognation.formulas.sibling import SiblingFormula
+from cognation.formulas.base import Formula
+import re
+
+PARENT_TYPE = 1
+GRANDPARENT_TYPE = 2
+UNCLE_TYPE = 3
+COUSIN_TYPE = 4
+SIBLING_TYPE = 5
+
+
 class GetData:
     @staticmethod
     def get_reference_data(short_path, doc_name):
@@ -30,3 +45,44 @@ class GetData:
                     elif line[0] == 'P':
                         p = float(line[1])
         return ref_dict, cpi, p
+
+    @staticmethod
+    def formula_usage(number):
+        if number == PARENT_TYPE:
+            return ParentFormula(Formula)
+        if number == GRANDPARENT_TYPE:
+            return GrandParentFormula(Formula)
+        if number == UNCLE_TYPE:
+            return UncleFormula(Formula)
+        if number == COUSIN_TYPE:
+            return CousinFormula(Formula)
+        if number == SIBLING_TYPE:
+            return SiblingFormula(Formula)
+
+    def get_test_data(self, short_path, doc_name, number):
+        test_cpi = 1
+        test_dict = {}
+
+        with open(short_path + doc_name, 'r') as test_data:
+            for line in test_data:
+                line = line.strip()
+                case_formula = self.formula_usage(number)
+                parent_formula_dict = case_formula.calculate_relation(re.split(r'[\s\t]+', line))
+                locus = parent_formula_dict['locus']
+                lr = parent_formula_dict['lr']
+
+                if lr != '-':
+                    test_cpi *= lr
+                    lr = float("{0:.2f}".format(lr))
+                    test_dict[locus] = lr
+
+                #  case of gender specific loci
+                else:
+                    test_dict[locus] = lr
+                    continue
+
+            test_cpi = float(test_cpi)
+            test_p = (test_cpi / (1 + test_cpi)) * 100
+            test_cpi = round(test_cpi)
+
+            return test_dict, test_cpi, test_p
