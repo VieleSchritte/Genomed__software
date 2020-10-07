@@ -20,8 +20,8 @@ class GetGrandParentsData(GrandParentFormula):
     def get_test_data_grandparentx(self, doc_name):
         test_dict = {}
         test_cpi = 1
-        with open(short_path + doc_name, 'r') as grandparentx:
-            for line in grandparentx:
+        with open(short_path + doc_name, 'r') as test_data:
+            for line in test_data:
                 line = line.strip()
                 grandparent_formula_dict = self.calculate_relation(re.split(r'[\s\t]+', line))
                 locus = grandparent_formula_dict['locus']
