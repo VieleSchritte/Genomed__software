@@ -4,6 +4,7 @@ import unittest
 import re
 from cognation.formulas.parent import ParentFormula
 from django.test import TestCase
+from cognation.scripts.tests import GetData
 
 # all possible test cases
 doc_refnames_list = ['parent1/reference_data_parent1.txt', 'parent2/reference_data_parent2.txt', 'parent3/reference_data_parent3_veri.txt']
@@ -16,38 +17,7 @@ overall_test_dict = {}
 
 
 class GetParentsData(ParentFormula):
-    # getting loci and lrs in the dictionary and also CPI and P from each patient's reference data
-    @staticmethod
-    def get_reference_data(doc_name):
-        ref_dict = {}
-        cpi = 0
-        p = 0.0
-        with open(short_path + doc_name, 'r') as ref_data:
-            for line in ref_data:
-                line = line.strip().split('\t')
-
-                # locus Yindel case - there's no lr
-                if len(line) == 3:
-                    locus = line[0]
-                    lr = '-'
-                    ref_dict[locus] = lr
-
-                # other loci - there is int meaning of lr
-                elif len(line) == 4:
-                    locus = line[0]
-                    lr = float(line[3]) * 100 / 100
-                    ref_dict[locus] = lr
-
-                # case for getting cpi and p meanings
-                elif len(line) == 1 and line[0] != '':
-                    line = line[0].split('=')
-                    if line[0] == 'CPI':
-                        cpi = int(line[1])
-                    elif line[0] == 'P':
-                        p = float(line[1])
-        return ref_dict, cpi, p
-
-    # getting similar data from each patient's test data
+    # getting test data from each parent's file
     def get_test_data(self, doc_name):
         test_dict = {}
         test_cpi = 1
@@ -58,24 +28,29 @@ class GetParentsData(ParentFormula):
                 locus = parent_formula_dict['locus']
                 lr = parent_formula_dict['lr']
 
-                # if it's not gender-specific locus we can calculate cpi using lr meaning
-                if lr == '-':
-                    test_dict[locus] = lr
-                    continue
-                else:
+                if lr != '-':
                     test_cpi *= lr
                     lr = float("{0:.2f}".format(lr))
                     test_dict[locus] = lr
 
-        test_cpi = int(test_cpi)
+                #  case of gender specific loci
+                else:
+                    test_dict[locus] = lr
+                    continue
+
+        test_cpi = float(test_cpi)
         test_p = (test_cpi / (1 + test_cpi)) * 100
+        test_cpi = round(test_cpi)
 
         return test_dict, test_cpi, test_p
 
+    #  preparing dictionaries for assertion
     def prep(self):
+        get_ref = GetData()
         for i in range(len(doc_refnames_list)):
             doc_ref_path = doc_refnames_list[i]
-            overall_ref_dict[doc_ref_path] = GetParentsData.get_reference_data(doc_ref_path)
+            overall_ref_dict[doc_ref_path] = get_ref.get_reference_data(short_path, doc_ref_path)
+
             doc_test_path = doc_testnames_list[i]
             overall_test_dict[doc_test_path] = self.get_test_data(doc_test_path)
 
@@ -106,10 +81,7 @@ class TestParentFormula(TestCase):
 
             cpi_ref = parent_ref_tuple[1]
             cpi_test = parent_test_tuple[1]
-
-            # There can be changes in the last digit of the large number, so this case would be submitted
-            cond_exp = abs(cpi_test - cpi_ref) <= 1
-            self.assertTrue(cond_exp, True)
+            self.assertEqual(cpi_ref, cpi_test)
 
             p_ref = int(parent_ref_tuple[2] * 100) / 100
             p_test = int(parent_test_tuple[2] * 100) / 100
