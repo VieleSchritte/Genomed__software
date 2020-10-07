@@ -9,9 +9,63 @@ from django.test import TestCase
 doc_refnames_list = ['parent1/reference_data_parent1.txt', 'parent2/reference_data_parent2.txt', 'parent3/reference_data_parent3_veri.txt']
 doc_testnames_list = ['parent1/test_data_parent1.txt', 'parent2/test_data_parent2.txt', 'parent3/test_data_parent3_veri.txt']
 
+short_path = 'cognation/scripts/tests/test_cases/parent_cases/'
+
 overall_ref_dict = {}
 overall_test_dict = {}
 
+
+class GetParentsData(ParentFormula):
+
+    @staticmethod
+    def get_ref_data(ref_name):
+        ref_dict = {}
+        with open(short_path + ref_name, 'r') as refdata:
+            for line in refdata:
+                line.strip().split('\t')
+
+                if len(line) == 4:
+                    locus = line[0]
+                    lr = line[3]
+
+                    if lr == '-':
+                        ref_dict[locus] = lr
+                    else:
+                        lr = float(line[3]) * 100 / 100
+                        ref_dict[locus] = lr
+
+                # case for getting cpi and p meanings
+                if len(line) == 1 and line[0] != '':
+                    line = line[0].split('=')
+
+                    if line[0] == 'CPI':
+                        cpi = int(line[1])
+                    else:
+                        p = float(line[1])
+            return ref_dict, cpi, p
+
+    def get_test_data(self, test_name):
+        test_dict = {}
+        test_cpi = 1
+        with open(short_path + test_name, 'r') as testdata:
+            for line in testdata:
+                parent_formula_dict = self.calculate_relation(re.split(r'[\s\t]+', line))
+                locus = parent_formula_dict['locus']
+                lr = parent_formula_dict['lr']
+
+                #  case of gender-specific locus
+                if lr == '-':
+                    test_dict[locus] = lr
+                    continue
+
+                #  other loci can be used to calculate cpi
+                else:
+                    test_cpi *= lr
+                    lr = float("{0:.2f}".format(lr))
+                    test_dict[locus] = lr
+
+
+"""
 class GetParentsData(ParentFormula):
     # getting loci and lrs in the dictionary and also CPI and P from each patient's reference data
     @staticmethod
@@ -78,6 +132,7 @@ class GetParentsData(ParentFormula):
 
 instance = GetParentsData(ParentFormula)
 instance.prep()
+"""
 
 class TestParentFormula(TestCase):
     def setUp(self):

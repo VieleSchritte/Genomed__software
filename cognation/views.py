@@ -16,6 +16,9 @@ def calculate(request):
     data_type = request.POST.get('type', 0)
     data = request.POST.get('data', '')
 
+    print('data_type: ', data_type)
+    print('data: ', data)
+
     formula = formula_builder(data_type, data)
     result = formula.calculate()
 
