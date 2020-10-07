@@ -1,48 +1,21 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 import unittest
-import re
-from cognation.formulas.grandparent import GrandParentFormula
 from django.test import TestCase
 from cognation.scripts.tests import GetData
 
 # all possible test cases
 doc_refnames_list = ['grandparent1/reference_data_grandparent1.txt', 'grandparent2/reference_data_grandparent2.txt']
 doc_testnames_list = ['grandparent1/test_data_grandparent1.txt', 'grandparent2/test_data_grandparent2.txt']
+short_path = 'cognation/scripts/tests/test_cases/grandparent_cases/'
 
 overall_ref_dict = {}
 overall_test_dict = {}
-short_path = 'cognation/scripts/tests/test_cases/grandparent_cases/'
+
+GRANDPARENT_TYPE = 2
 
 
-class GetGrandParentsData(GrandParentFormula):
-    # getting test data from each grandparent's file
-    def get_test_data_grandparentx(self, doc_name):
-        test_dict = {}
-        test_cpi = 1
-        with open(short_path + doc_name, 'r') as test_data:
-            for line in test_data:
-                line = line.strip()
-                grandparent_formula_dict = self.calculate_relation(re.split(r'[\s\t]+', line))
-                locus = grandparent_formula_dict['locus']
-                lr = grandparent_formula_dict['lr']
-
-                if lr != '-':
-                    test_cpi *= lr
-                    lr = float("{0:.2f}".format(lr))
-                    test_dict[locus] = lr
-
-                #  case of gender specific loci
-                else:
-                    test_dict[locus] = lr
-                    continue
-
-        test_cpi = float(test_cpi)
-        test_p = (test_cpi / (1 + test_cpi)) * 100
-        test_cpi = round(test_cpi)
-
-        return test_dict, test_cpi, test_p
-
+class GetGrandParentsData():
+    #  preparing dictionaries for assertion
     def prep(self):
         get_ref = GetData()
         for i in range(len(doc_refnames_list)):
@@ -50,10 +23,10 @@ class GetGrandParentsData(GrandParentFormula):
             overall_ref_dict[doc_ref_path] = get_ref.get_reference_data(short_path, doc_ref_path)
 
             doc_test_path = doc_testnames_list[i]
-            overall_test_dict[doc_test_path] = self.get_test_data_grandparentx(doc_test_path)
+            overall_test_dict[doc_test_path] = get_ref.get_test_data(short_path, doc_test_path, GRANDPARENT_TYPE)
 
 
-instance = GetGrandParentsData(GrandParentFormula)
+instance = GetGrandParentsData()
 instance.prep()
 
 
