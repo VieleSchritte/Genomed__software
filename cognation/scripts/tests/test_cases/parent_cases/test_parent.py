@@ -16,65 +16,14 @@ overall_test_dict = {}
 
 
 class GetParentsData(ParentFormula):
-
-    @staticmethod
-    def get_ref_data(ref_name):
-        ref_dict = {}
-        with open(short_path + ref_name, 'r') as refdata:
-            for line in refdata:
-                line.strip().split('\t')
-
-                if len(line) == 4:
-                    locus = line[0]
-                    lr = line[3]
-
-                    if lr == '-':
-                        ref_dict[locus] = lr
-                    else:
-                        lr = float(line[3]) * 100 / 100
-                        ref_dict[locus] = lr
-
-                # case for getting cpi and p meanings
-                if len(line) == 1 and line[0] != '':
-                    line = line[0].split('=')
-
-                    if line[0] == 'CPI':
-                        cpi = int(line[1])
-                    else:
-                        p = float(line[1])
-            return ref_dict, cpi, p
-
-    def get_test_data(self, test_name):
-        test_dict = {}
-        test_cpi = 1
-        with open(short_path + test_name, 'r') as testdata:
-            for line in testdata:
-                parent_formula_dict = self.calculate_relation(re.split(r'[\s\t]+', line))
-                locus = parent_formula_dict['locus']
-                lr = parent_formula_dict['lr']
-
-                #  case of gender-specific locus
-                if lr == '-':
-                    test_dict[locus] = lr
-                    continue
-
-                #  other loci can be used to calculate cpi
-                else:
-                    test_cpi *= lr
-                    lr = float("{0:.2f}".format(lr))
-                    test_dict[locus] = lr
-
-
-"""
-class GetParentsData(ParentFormula):
     # getting loci and lrs in the dictionary and also CPI and P from each patient's reference data
     @staticmethod
-    def get_reference_data_parentx(doc_name):
+    def get_reference_data(doc_name):
         ref_dict = {}
         cpi = 0
         p = 0.0
-        with open('cognation/scripts/tests/test_cases/parent_cases/' + doc_name, 'r') as parentx_data:
-            for line in parentx_data:
+        with open(short_path + doc_name, 'r') as ref_data:
+            for line in ref_data:
                 line = line.strip().split('\t')
 
                 # locus Yindel case - there's no lr
@@ -99,11 +48,11 @@ class GetParentsData(ParentFormula):
         return ref_dict, cpi, p
 
     # getting similar data from each patient's test data
-    def get_test_data_parentx(self, doc_name):
+    def get_test_data(self, doc_name):
         test_dict = {}
         test_cpi = 1
-        with open('cognation/scripts/tests/test_cases/parent_cases/' + doc_name, 'r') as parentx:
-            for line in parentx:
+        with open(short_path + doc_name, 'r') as test_data:
+            for line in test_data:
                 line = line.strip()
                 parent_formula_dict = self.calculate_relation(re.split(r'[\s\t]+', line))
                 locus = parent_formula_dict['locus']
@@ -126,13 +75,14 @@ class GetParentsData(ParentFormula):
     def prep(self):
         for i in range(len(doc_refnames_list)):
             doc_ref_path = doc_refnames_list[i]
-            overall_ref_dict[doc_ref_path] = GetParentsData.get_reference_data_parentx(doc_ref_path)
+            overall_ref_dict[doc_ref_path] = GetParentsData.get_reference_data(doc_ref_path)
             doc_test_path = doc_testnames_list[i]
-            overall_test_dict[doc_test_path] = self.get_test_data_parentx(doc_test_path)
+            overall_test_dict[doc_test_path] = self.get_test_data(doc_test_path)
+
 
 instance = GetParentsData(ParentFormula)
 instance.prep()
-"""
+
 
 class TestParentFormula(TestCase):
     def setUp(self):
@@ -158,7 +108,7 @@ class TestParentFormula(TestCase):
             cpi_test = parent_test_tuple[1]
 
             # There can be changes in the last digit of the large number, so this case would be submitted
-            cond_exp = abs(cpi_test - cpi_ref) <=1
+            cond_exp = abs(cpi_test - cpi_ref) <= 1
             self.assertTrue(cond_exp, True)
 
             p_ref = int(parent_ref_tuple[2] * 100) / 100
