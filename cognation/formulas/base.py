@@ -1,6 +1,7 @@
 from cognation.models import Locus
 import abc
 import re
+from collections import Counter
 from collections import OrderedDict
 
 
@@ -110,6 +111,39 @@ class Formula(abc.ABC):
             "cd": cd,
             "lr": lr
         }
+
+    @staticmethod
+    def get_sat_counter(sat_string):
+        return Counter(Formula.split_sat(sat_string))
+
+    @staticmethod
+    def make_result(locus, ab, cd, lr):
+        return {
+            "locus": locus,
+            "ab": ab,
+            "cd": cd,
+            "lr": lr
+        }
+
+    # Calculation Helpers
+    @staticmethod
+    def _2pa_sub_pa2(p, x):
+        return p[x] * (2 - p[x])
+
+    @staticmethod
+    def _05_add_05pa(p, x):
+        return .5 * (1 + p[x])
+
+    @staticmethod
+    def _2_pa_pb(p, a, b):
+        return 2 * p[a] * p[b]
+
+    def prob_not_c_aa(self, p, a):
+        return self._2pa_sub_pa2(p, a) ** 2
+
+    def prob_not_c_ab(self, p, a, b):
+        return 2 * self._2pa_sub_pa2(p, a) * self._2pa_sub_pa2(p, b) \
+               - self._2_pa_pb(p, a, b) * self._2_pa_pb(p, a, b)
 
     # Abstract methods
     @abc.abstractmethod
