@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from .base import Formula, LineFormatException, AllelesException
+from cognation.formulas.base import Formula, LineFormatException, AllelesException
 
 class SiblingFormula(Formula):
     def calculate_relation(self, raw_values):

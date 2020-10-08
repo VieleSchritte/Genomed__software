@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import unittest
 from django.test import TestCase
 from cognation.scripts.tests import GetData
@@ -6,15 +5,15 @@ from cognation.scripts.tests import GetData
 # all possible test cases
 doc_refnames_list = ['Aunt1/aunt_ref.txt']
 doc_testnames_list = ['Aunt1/aunt_test.txt']
-short_path = 'cognation/scripts/tests/test_cases/uncle_cases/'
+short_path = 'cognation/scripts/tests/test_cases/uncle_stepbrother_cases/'
 
 overall_ref_dict = {}
 overall_test_dict = {}
 
-UNCLE_TYPE = 3
+STEPBROTHER_TYPE = 6
 
 
-class GetUncleData:
+class GetStepbrotherData:
     #  preparing dictionaries for assertion
     def prep(self):
         get_ref = GetData()
@@ -23,14 +22,14 @@ class GetUncleData:
             overall_ref_dict[doc_ref_path] = get_ref.get_reference_data(short_path, doc_ref_path)
 
             doc_test_path = doc_testnames_list[i]
-            overall_test_dict[doc_test_path] = get_ref.get_test_data(short_path, doc_test_path, UNCLE_TYPE)
+            overall_test_dict[doc_test_path] = get_ref.get_test_data(short_path, doc_test_path, STEPBROTHER_TYPE)
 
 
-instance = GetUncleData()
+instance = GetStepbrotherData()
 instance.prep()
 
 
-class TestUncleFormula(TestCase):
+class TestStepbrotherFormula(TestCase):
     def setUp(self):
         pass
 

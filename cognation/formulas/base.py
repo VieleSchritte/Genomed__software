@@ -1,10 +1,8 @@
-from __future__ import unicode_literals
-
 from cognation.models import Locus
-
 import abc
 import re
-from collections import Counter, OrderedDict
+from collections import Counter
+from collections import OrderedDict
 
 
 # Exception - if something isn't right in data format
@@ -30,7 +28,6 @@ class UnknownAlleleException(Exception):
 
     def __str__(self):
         return "Unknown allele found: " + str(self.sat)
-
 
 # Abstract parent class
 class Formula(abc.ABC):
@@ -105,6 +102,15 @@ class Formula(abc.ABC):
     @staticmethod
     def split_sat(sat_string):
         return re.split(r'\/', sat_string)
+
+    @staticmethod
+    def make_result(locus, ab, cd, lr):
+        return {
+            "locus": locus,
+            "ab": ab,
+            "cd": cd,
+            "lr": lr
+        }
 
     @staticmethod
     def get_sat_counter(sat_string):
