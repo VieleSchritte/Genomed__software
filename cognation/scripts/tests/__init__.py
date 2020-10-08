@@ -1,9 +1,9 @@
-from cognation.formulas.parent import ParentFormula
-from cognation.formulas.grandparent import GrandParentFormula
-from cognation.formulas.uncle import UncleFormula
-from cognation.formulas.cousin import CousinFormula
-from cognation.formulas.sibling import SiblingFormula
-from cognation.formulas.base import Formula
+from cognation.formulas.for_2_participants.parent import ParentFormula
+from cognation.formulas.for_2_participants.grandparent import GrandParentFormula
+from cognation.formulas.for_2_participants.uncle import UncleFormula
+from cognation.formulas.for_2_participants.cousin import CousinFormula
+from cognation.formulas.for_3_participants.sibling import SiblingFormula
+from cognation.formulas.for_2_participants.base import Formula
 import re
 
 PARENT_TYPE = 1

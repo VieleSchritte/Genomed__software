@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
-from .base import Formula, AllelesException
+from .base import Formula
+from .base import AllelesException
 
 
 class ParentFormula(Formula):
