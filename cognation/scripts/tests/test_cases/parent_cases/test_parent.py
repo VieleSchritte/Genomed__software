@@ -16,11 +16,13 @@ PARENT_TYPE = 1
 
 class GetParentsData:
     #  preparing dictionaries for assertion
-    def prep(self):
+    @staticmethod
+    def prep():
         get_ref = GetData()
+        part_number = 2
         for i in range(len(doc_refnames_list)):
             doc_ref_path = doc_refnames_list[i]
-            overall_ref_dict[doc_ref_path] = get_ref.get_reference_data(short_path, doc_ref_path)
+            overall_ref_dict[doc_ref_path] = get_ref.get_reference_data(short_path, doc_ref_path, part_number)
 
             doc_test_path = doc_testnames_list[i]
             overall_test_dict[doc_test_path] = get_ref.get_test_data(short_path, doc_test_path, PARENT_TYPE)
