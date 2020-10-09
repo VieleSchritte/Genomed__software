@@ -4,7 +4,7 @@ from .base import Formula, AllelesException
 
 class CousinFormula(Formula):
     def calculate_relation(self, raw_values):
-        (cousin1_alleles, cousin2_alleles, locus, cousin1_set, cousin2_set, intersection) = self.getting_alleles_locus(raw_values)
+        (cousin1_alleles, cousin2_alleles, locus, cousin1_set, cousin2_set, intersection) = self.getting_alleles_locus(raw_values, 2)
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr
         if self.is_gender_specific(locus):

@@ -43,22 +43,47 @@ class Formula(abc.ABC):
                 return True
         return False
 
-    def getting_alleles_locus(self, raw_values):
-        if len(raw_values) < 3:
+    def getting_alleles_locus(self, raw_values, part_number):
+        #  case of 2 participants
+        if part_number == 2:
+            if len(raw_values) < 3:
+                # Skip line with warning
+                raise LineFormatException()
+
+            # child/grandchild for example
+            part1_alleles = self.split_sat(raw_values.pop())
+            # parent/grandparent...
+            part2_alleles = self.split_sat(raw_values.pop())
+
+            locus = ' '.join(raw_values)  # for loci names contain space
+            part1_set = set(part1_alleles)  # unique alleles
+            part2_set = set(part2_alleles)
+            intersection = part1_set & part2_set  # common unique alleles
+
+            return part1_alleles, part2_alleles, locus, part1_set, part2_set, intersection
+
+        #  case of 3 participants
+        if len(raw_values) < 4:
             # Skip line with warning
             raise LineFormatException()
 
-        # child/grandchild for example
-        part1_alleles = self.split_sat(raw_values.pop())
-        # parent/grandparent...
+        part3_alleles = self.split_sat(raw_values.pop())
         part2_alleles = self.split_sat(raw_values.pop())
+        part1_alleles = self.split_sat(raw_values.pop())
+        alleles = [part3_alleles, part2_alleles, part1_alleles]
+        locus = ' '.join(raw_values)
 
-        locus = ' '.join(raw_values)  # for loci names contain space
-        part1_set = set(part1_alleles)  # unique alleles
+        part3_set = set(part3_alleles)
         part2_set = set(part2_alleles)
-        intersection = part1_set & part2_set  # common unique alleles
+        part1_set = set(part1_alleles)
+        sets = [part3_set, part2_set, part1_set]
 
-        return part1_alleles, part2_alleles, locus, part1_set, part2_set, intersection
+        intersection12 = part1_set & part2_set
+        intersection13 = part1_set & part3_set
+        intersection23 = part2_set & part3_set
+        intersections = [intersection12, intersection13, intersection23]
+
+        return locus, alleles, sets, intersections
 
     def calculate(self):
         result = OrderedDict()
@@ -117,11 +142,20 @@ class Formula(abc.ABC):
         return Counter(Formula.split_sat(sat_string))
 
     @staticmethod
-    def make_result(locus, ab, cd, lr):
+    def make_result(locus, part1, part2, lr, *part3):
+        if part3:
+            return {
+                "locus": locus,
+                "part1": part1,
+                "part2": part2,
+                "part3": part3[0],
+                "lr": lr
+            }
+
         return {
             "locus": locus,
-            "ab": ab,
-            "cd": cd,
+            "part1": part1,
+            "part2": part2,
             "lr": lr
         }
 

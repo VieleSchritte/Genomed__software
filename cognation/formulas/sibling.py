@@ -1,101 +1,92 @@
 from __future__ import unicode_literals
-from cognation.formulas.base import Formula, LineFormatException, AllelesException
+from cognation.formulas.base import Formula, AllelesException
+
 
 class SiblingFormula(Formula):
     def calculate_relation(self, raw_values):
-        if len(raw_values) < 4:
-            raise LineFormatException()
 
-        raw_ef = raw_values.pop()
-        raw_cd = raw_values.pop()
-        raw_ab = raw_values.pop()
-        locus = ' '.join(raw_values)
+        (locus, alleles_list, sets_list, inter_list) = self.getting_alleles_locus(raw_values, 3)
 
-        split_ab = self.split_sat(raw_ab)
-        split_cd = self.split_sat(raw_cd)
-        split_ef = self.split_sat(raw_ef)
+        child_alleles, parent_alleles, sibling_alleles = alleles_list
+        child_set, parent_set, sibling_set = sets_list
 
-        if len(split_ab) != 2 or len(split_cd) != 2 or len(split_ef) != 2:
+        #  cp = child and parent, cs = child and sibling, ps = parent and sibling
+        intersection_cp, intersection_cs, intersection_ps = inter_list
+
+        if self.is_gender_specific(locus):
+            return self.make_result(locus, '/'.join(child_alleles), '/'.join(parent_alleles), '-', '/'.join(sibling_alleles))
+
+        if len(child_alleles) != 2 or len(parent_alleles) != 2 or len(sibling_alleles) != 2:
             raise AllelesException()
 
-        ab = set(split_ab)
-        cd = set(split_cd)
-        ef = set(split_ef)
-
-        ab_cd = ab & cd
-        ab_ef = ab & ef
-        cd_ef = cd & ef
-
         lr = 0
-        if len(ab) == 1:  # 1 - AA
-            if len(ab_cd) == 1:
-                if len(cd) == 1:  # 2 - AA
-                    if len(cd_ef) == 1:
-                        if len(ef) == 1:  # 3 - AA
-                            lr = self.gen_aa_aa_aa(locus, ab.copy().pop())
+        if len(child_set) == 1:  # 1 - AA
+            if len(intersection_cp) == 1:
+                if len(parent_set) == 1:  # 2 - AA
+                    if len(intersection_ps) == 1:
+                        if len(sibling_set) == 1:  # 3 - AA
+                            lr = self.gen_aa_aa_aa(locus, child_set.copy().pop())
                         else:  # 3 - AB
-                            lr = self.gen_aa_aa_ab(locus, ab.copy().pop(), (ab ^ ef).pop())
+                            lr = self.gen_aa_aa_ab(locus, child_set.copy().pop(), (child_set ^ sibling_set).pop())
                     else:  # 3 - BC or CC
                         pass
-                elif len(cd) == 2:  # 2 - AB
-                    if len(ab_ef) == 1:
-                        if len(ef) == 1:  # 3 - AA
-                            lr = self.gen_aa_ab_aa(locus, ab.copy().pop())
-                        elif len(cd_ef) == 2:  # 3 - AB
-                            lr = self.gen_aa_ab_ab(locus, ab.copy().pop(), (ab ^ cd).pop())
-                        elif len(cd_ef) == 1:  # 3 - AC
-                            lr = self.gen_aa_ab_ac(locus, ab.copy().pop(), (ab ^ ef).pop())
+                elif len(parent_set) == 2:  # 2 - AB
+                    if len(intersection_cs) == 1:
+                        if len(sibling_set) == 1:  # 3 - AA
+                            lr = self.gen_aa_ab_aa(locus, child_set.copy().pop())
+                        elif len(intersection_ps) == 2:  # 3 - AB
+                            lr = self.gen_aa_ab_ab(locus, child_set.copy().pop(), (child_set ^ parent_set).pop())
+                        elif len(intersection_ps) == 1:  # 3 - AC
+                            lr = self.gen_aa_ab_ac(locus, child_set.copy().pop(), (child_set ^ sibling_set).pop())
                     else:  # 3 - CC or CD
                         pass
             else:  # 2 - BC
                 pass
         # 1 - AB
-        elif len(ab_cd) == 1:
-            if len(cd) == 1:  # 2 - AA
-                a = cd.copy().pop()
-                b = (cd ^ ab).pop()
-                if len(ef) == 1 and len(cd_ef) == 1: # 3 - AA
+        elif len(intersection_cp) == 1:
+            if len(parent_set) == 1:  # 2 - AA
+                a = parent_set.copy().pop()
+                b = (parent_set ^ child_set).pop()
+                if len(sibling_set) == 1 and len(intersection_ps) == 1:  # 3 - AA
                     lr = self.gen_ab_aa_aa(locus, a, b)
-                elif len(ef) == 2:
-                    if len(ab_ef) == 2:  # 3 - AB
+                elif len(sibling_set) == 2:
+                    if len(intersection_cs) == 2:  # 3 - AB
                         lr = self.gen_ab_aa_ab(locus, a, b)
-                    elif len(ab_ef) == 1:  # 3 - AC
-                        lr = self.gen_ab_aa_ac(locus, a, b, (cd ^ ef).pop())
+                    elif len(intersection_cs) == 1:  # 3 - AC
+                        lr = self.gen_ab_aa_ac(locus, a, b, (parent_set ^ sibling_set).pop())
                     else:  # 3 - BC
                         pass
                 else:  # 3 - CC
                     pass
             else:  # 2 - AC
-                a = ab_cd.copy().pop()
-                b = (ab_cd ^ ab).pop()
-                c = (ab_cd ^ cd).pop()
-                if len(ef) == 1:
-                    if a in ef:  # 3 - AA
+                a = intersection_cp.copy().pop()
+                b = (intersection_cp ^ child_set).pop()
+                c = (intersection_cp ^ parent_set).pop()
+                if len(sibling_set) == 1:
+                    if a in sibling_set:  # 3 - AA
                         lr = self.gen_ab_ac_aa(locus, a, b)
-                    elif c in ef:  # 3 - CC
+                    elif c in sibling_set:  # 3 - CC
                         lr = self.gen_ab_ac_cc(locus, a, b, c)
                 else:
-                    if len(ab_ef) == 2:  # 3 - AB
+                    if len(intersection_cs) == 2:  # 3 - AB
                         lr = self.gen_ab_ac_ab(locus, a, b)
-                    elif len(cd_ef) == 2:  # 3 - AC
+                    elif len(intersection_ps) == 2:  # 3 - AC
                         lr = self.gen_ab_ac_ac(locus, a, b, c)
-                    elif len(ab_ef) == 1 and a in ef:
-                        lr = self.gen_ab_ac_ad(locus, a, b, (ab_ef ^ ef).pop())
-                    elif b in ef and c in ef:  # 3 - BC
+                    elif len(intersection_cs) == 1 and a in sibling_set:
+                        lr = self.gen_ab_ac_ad(locus, a, b, (intersection_cs ^ sibling_set).pop())
+                    elif b in sibling_set and c in sibling_set:  # 3 - BC
                         lr = self.gen_ab_ac_bc(locus, a, b)
-                    elif len(ab_ef) == 0 and len(cd_ef) == 1:
-                        lr = self.gen_ab_ac_cd(locus, a, b, (cd_ef ^ ef).pop())
-        elif len(ab_cd) == 2:  # 2 - AB
-            if len(ef) == 1 and len(ab_ef) == 1:  # 3 - AA
-                lr = self.gen_ab_ab_aa(locus, ab_ef.pop(), (ab ^ ef).pop())
-            elif len(ef) == 2 and len(ab_ef) == 2:  # 3 - AB
-                lr = self.gen_ab_ab_ab(locus, ab.pop(), ab.pop())
-            elif len(ef) == 2 and len(ab_ef) == 1:  # 3 - AC
-                lr = self.gen_ab_ab_ac(locus, ab_ef.copy().pop(), (ab_ef ^ cd).pop(), (ab_ef ^ ef).pop())
+                    elif len(intersection_cs) == 0 and len(intersection_ps) == 1:
+                        lr = self.gen_ab_ac_cd(locus, a, b, (intersection_ps ^ sibling_set).pop())
+        elif len(intersection_cp) == 2:  # 2 - AB
+            if len(sibling_set) == 1 and len(intersection_cs) == 1:  # 3 - AA
+                lr = self.gen_ab_ab_aa(locus, intersection_cs.pop(), (child_set ^ sibling_set).pop())
+            elif len(sibling_set) == 2 and len(intersection_cs) == 2:  # 3 - AB
+                lr = self.gen_ab_ab_ab(locus, child_set.pop(), child_set.pop())
+            elif len(sibling_set) == 2 and len(intersection_cs) == 1:  # 3 - AC
+                lr = self.gen_ab_ab_ac(locus, intersection_cs.copy().pop(), (intersection_cs ^ parent_set).pop(), (intersection_cs ^ sibling_set).pop())
 
-        result = self.make_result(locus, raw_ab, raw_cd, lr)
-        result["ef"] = raw_ef
-        return result
+        return self.make_result(locus, '/'.join(child_alleles), '/'.join(parent_alleles), lr, '/'.join(sibling_alleles))
 
     def gen_aa_aa_aa(self, locus, a):
         p = self.get_frequencies(locus, {a: 0})
@@ -202,4 +193,3 @@ class SiblingFormula(Formula):
         divider = self.prob_not_c_ab(p, a, b)
         return 0 if divider == 0 else \
             self._2_pa_pb(p, b, d) / self._2pa_sub_pa2(p, d) / divider
-

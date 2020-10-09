@@ -5,7 +5,7 @@ from .base import Formula, AllelesException
 # FORMULA_TYPE_GRANDPARENT
 class GrandParentFormula(Formula):
     def calculate_relation(self, raw_values):
-        (gc_alleles, gp_alleles, locus, gc_set, gp_set, intersection) = self.getting_alleles_locus(raw_values)
+        (gc_alleles, gp_alleles, locus, gc_set, gp_set, intersection) = self.getting_alleles_locus(raw_values, 2)
 
         # Checking gender specificity of locus
         if self.is_gender_specific(locus):

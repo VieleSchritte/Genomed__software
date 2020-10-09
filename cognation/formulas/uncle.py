@@ -1,9 +1,10 @@
 from __future__ import unicode_literals
 from .base import Formula, AllelesException
 
+
 class UncleFormula(Formula):
     def calculate_relation(self, raw_values):
-        (nephew_alleles, uncle_alleles, locus, nephew_set, uncle_set, intersection) = self.getting_alleles_locus(raw_values)
+        (nephew_alleles, uncle_alleles, locus, nephew_set, uncle_set, intersection) = self.getting_alleles_locus(raw_values, 2)
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr
         if self.is_gender_specific(locus):
@@ -38,4 +39,3 @@ class UncleFormula(Formula):
             lr += 0.25 / freq
 
         return self.make_result(locus, '/'.join(nephew_alleles), '/'.join(uncle_alleles), lr)
-

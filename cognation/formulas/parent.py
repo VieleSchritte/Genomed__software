@@ -5,7 +5,7 @@ from .base import AllelesException
 
 class ParentFormula(Formula):
     def calculate_relation(self, raw_values):
-        (child_alleles, parent_alleles, locus, child_set, parent_set, intersection) = self.getting_alleles_locus(raw_values)
+        (child_alleles, parent_alleles, locus, child_set, parent_set, intersection) = self.getting_alleles_locus(raw_values, 2)
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr
         if self.is_gender_specific(locus):
