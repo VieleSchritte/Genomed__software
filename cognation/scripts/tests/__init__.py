@@ -37,7 +37,7 @@ class GetData:
                         continue
                     # case of int lr meanings of loci
                     else:
-                        lr = float(line[3]) * 100 / 100
+                        lr = float(lr) * 100 / 100
                         ref_dict[locus] = lr
 
                 # case for getting cpi and p meanings

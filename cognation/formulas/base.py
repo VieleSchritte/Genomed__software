@@ -49,16 +49,16 @@ class Formula(abc.ABC):
             raise LineFormatException()
 
         # child/grandchild for example
-        pat1_alleles = self.split_sat(raw_values.pop())
+        part1_alleles = self.split_sat(raw_values.pop())
         # parent/grandparent...
-        pat2_alleles = self.split_sat(raw_values.pop())
+        part2_alleles = self.split_sat(raw_values.pop())
 
         locus = ' '.join(raw_values)  # for loci names contain space
-        pat1_set = set(pat1_alleles)  # unique alleles
-        pat2_set = set(pat2_alleles)
-        intersection = pat1_set & pat2_set  # common unique alleles
+        part1_set = set(part1_alleles)  # unique alleles
+        part2_set = set(part2_alleles)
+        intersection = part1_set & part2_set  # common unique alleles
 
-        return pat1_alleles, pat2_alleles, locus, pat1_set, pat2_set, intersection
+        return part1_alleles, part2_alleles, locus, part1_set, part2_set, intersection
 
     def calculate(self):
         result = OrderedDict()
