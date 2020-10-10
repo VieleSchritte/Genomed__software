@@ -29,6 +29,7 @@ class UnknownAlleleException(Exception):
     def __str__(self):
         return "Unknown allele found: " + str(self.sat)
 
+
 # Abstract parent class
 class Formula(abc.ABC):
     def __init__(self, user_data):
@@ -159,27 +160,31 @@ class Formula(abc.ABC):
             "lr": lr
         }
 
-    # Calculation Helpers
-    @staticmethod
-    def _2pa_sub_pa2(p, x):
-        return p[x] * (2 - p[x])
-
-    @staticmethod
-    def _05_add_05pa(p, x):
-        return .5 * (1 + p[x])
-
-    @staticmethod
-    def _2_pa_pb(p, a, b):
-        return 2 * p[a] * p[b]
-
-    def prob_not_c_aa(self, p, a):
-        return self._2pa_sub_pa2(p, a) ** 2
-
-    def prob_not_c_ab(self, p, a, b):
-        return 2 * self._2pa_sub_pa2(p, a) * self._2pa_sub_pa2(p, b) \
-               - self._2_pa_pb(p, a, b) * self._2_pa_pb(p, a, b)
-
     # Abstract methods
     @abc.abstractmethod
     def calculate_relation(self, row_values):
         """ Abstract method to calculate """
+
+
+# Calculation Helpers
+class Calculations:
+    # A helper for the frequently used pattern F(Px) = Px * (2 - Px)
+    @staticmethod
+    def F(freq):
+        return freq * (2 - freq)
+
+        # A helper for the frequently used pattern Q(Px) = 0.5 - 0.5 * Px (for GrandParentFormula)
+
+    @staticmethod
+    def Q(freq):
+        return 0.5 + 0.5 * freq
+
+        #  Probability of relation theory refutation in case of inspected person's homozygosity
+
+    def homo_refutation(self, freq):
+        return (self.F(freq)) ** 2
+
+        #  Probability of relation theory refutation in case of inspected person's heterozygosity
+
+    def hetero_refutation(self, freq1, freq2):
+        return 2 * self.F(freq1) * self.F(freq2) - (2 * freq1 * freq2) ** 2
