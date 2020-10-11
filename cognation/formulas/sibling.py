@@ -30,8 +30,7 @@ class SiblingFormula(Formula):
         if len(child_set) == 1:
 
             freq_dict = self.get_frequencies(locus, child_set)
-            freq = freq_dict[next(iter(child_set))]  # gets first
-            refutation = calc.homo_refutation(freq)
+            refutation = calc.homo_refutation(freq_dict[0])
 
             freq1, freq2 = self.get_frequencies(locus, sibling_set)
 
@@ -39,9 +38,4 @@ class SiblingFormula(Formula):
             if len(sibling_set) == 1 and len(intersection_cs) == 1:
                 return self.make_result(locus, '/'.join(child_alleles), '/'.join(parent_alleles), lr, '/'.join(sibling_alleles))
 
-            if len(parent_set) == len(sibling_set) == len(intersection_ps) == 2:
-                dividend = calc.F(freq)
-                divider = (freq1 + freq2) * (2 - freq1 - freq2)
-                confirmation = dividend / divider
-
-
+            

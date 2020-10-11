@@ -168,23 +168,25 @@ class Formula(abc.ABC):
 
 # Calculation Helpers
 class Calculations:
-    # A helper for the frequently used pattern F(Px) = Px * (2 - Px)
+    #  A helper for the frequently used pattern F(Px) = Px * (2 - Px)
     @staticmethod
     def F(freq):
         return freq * (2 - freq)
 
-        # A helper for the frequently used pattern Q(Px) = 0.5 - 0.5 * Px (for GrandParentFormula)
-
+    #  A helper for the frequently used pattern Q(Px) = 0.5 - 0.5 * Px (for GrandParentFormula)
     @staticmethod
     def Q(freq):
         return 0.5 + 0.5 * freq
 
-        #  Probability of relation theory refutation in case of inspected person's homozygosity
+    #  A helper for the frequently used pattern M(Px, Py) = 2 * Px * Py / F(Px) (for SiblingFormula)
+    @staticmethod
+    def M(freq1, freq2):
+        return 2 * freq1 * freq2 / self.F(freq1)
 
+    #  Probability of relation theory refutation in case of inspected person's homozygosity
     def homo_refutation(self, freq):
         return (self.F(freq)) ** 2
 
-        #  Probability of relation theory refutation in case of inspected person's heterozygosity
-
+    #  Probability of relation theory refutation in case of inspected person's heterozygosity
     def hetero_refutation(self, freq1, freq2):
         return 2 * self.F(freq1) * self.F(freq2) - (2 * freq1 * freq2) ** 2
