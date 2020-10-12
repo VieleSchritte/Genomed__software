@@ -21,7 +21,7 @@ class BrotherFormula(Formula):
         #  Homozygous inspected person
         if len(insp_set) == 1:
             freq_dict = self.get_frequencies(locus, list(insp_set))
-            freq1 = freq_dict[0]
+            freq1 = freq_dict[insp_alleles[0]]
             refutation = calc.F(freq1)
 
             #  One common allele
@@ -54,7 +54,7 @@ class BrotherFormula(Formula):
                 return self.make_result(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), lr)
 
             #  heterozygous brother
-            freq2, freq3 = freq_dict[0], freq_dict[1]
+            freq2, freq3 = freq_dict[brother_alleles[0]], freq_dict[brother_alleles[1]]
             confirmation = 4 * freq1 ** 2 * freq2 * freq3 / (calc.F(freq2) * calc.F(freq3) - 2 * (freq2 * freq3) ** 2)
             lr = confirmation / refutation
             return self.make_result(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), lr)
@@ -67,7 +67,7 @@ class BrotherFormula(Formula):
                 return self.make_result(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), lr)
 
             freq_dict = self.get_frequencies(locus, insp_alleles)
-            freq1, freq2 = freq_dict[0], freq_dict[1]
+            freq1, freq2 = freq_dict[insp_alleles[0]], freq_dict[insp_alleles[1]]
             refutation = 2 * calc.F(freq1) * calc.F(freq2) - (2 * freq1 * freq2) ** 2
 
             #  1 common allele

@@ -179,8 +179,7 @@ class Calculations:
         return 0.5 + 0.5 * freq
 
     #  A helper for the frequently used pattern M(Px, Py) = 2 * Px * Py / F(Px) (for SiblingFormula)
-    @staticmethod
-    def M(freq1, freq2):
+    def M(self, freq1, freq2):
         return 2 * freq1 * freq2 / self.F(freq1)
 
     #  Probability of relation theory refutation in case of inspected person's homozygosity
