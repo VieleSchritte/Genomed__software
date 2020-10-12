@@ -15,106 +15,89 @@ class BrotherFormula(Formula):
         if len(brother_alleles) != 2 or len(insp_alleles) != 2:
             raise AllelesException()
 
+        # In cases aa aa or ab ab lr = 1
+        if len(intersection) == 2 or len(intersection) == len(brother_set) == len(insp_set) == 1:
+            return self.make_result(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), 1)
+
+        freq_dict = self.get_frequencies(locus, insp_alleles + brother_alleles)
+        conf = Confirmations()
         calc = Calculations()
-        lr = 1
 
         #  Homozygous inspected person
         if len(insp_set) == 1:
-            freq_dict = self.get_frequencies(locus, list(insp_set))
-            freq1 = freq_dict[insp_alleles[0]]
-            refutation = calc.F(freq1)
+            freq = freq_dict[insp_alleles[0]]
+            confirmation = conf.homo_insp_conf(freq_dict, intersection, brother_set, brother_alleles, insp_alleles)
+            refutation = calc.homo_refutation(freq)
 
-            #  One common allele
-            if len(intersection) == 1:
-
-                #  Homozygous brother
-                if len(brother_set) == 1:
-                    return self.make_result(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), lr)
-
-                #  Heterozygous brother
-                freq_dict = self.get_frequencies(locus, list(brother_set))
-                freq2 = 0
-                for i in range(len(brother_alleles)):
-                    if brother_alleles[i] not in insp_alleles:
-                        brother_allele = brother_alleles[i]
-                        freq2 = freq_dict[brother_allele]
-
-                confirmation = 2 * freq1 * freq2 * (2 * calc.F(freq1) - freq1 * freq2) / (calc.F(freq1) * calc.F(freq2) - 2 * (freq1 * freq2) ** 2)
-                lr = confirmation / refutation
-                return self.make_result(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), lr)
-
-            #  No common alleles
-            freq_dict = self.get_frequencies(locus, list(brother_set))
-
-            #  homozygous brother
-            if len(brother_set) == 1:
-                freq2 = freq_dict[0]
-                confirmation = (calc.M(freq2, freq1)) ** 2
-                lr = confirmation / refutation
-                return self.make_result(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), lr)
-
-            #  heterozygous brother
-            freq2, freq3 = freq_dict[brother_alleles[0]], freq_dict[brother_alleles[1]]
-            confirmation = 4 * freq1 ** 2 * freq2 * freq3 / (calc.F(freq2) * calc.F(freq3) - 2 * (freq2 * freq3) ** 2)
-            lr = confirmation / refutation
-            return self.make_result(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), lr)
-
-        # Heterozygous inspected person
-        if len(insp_set) == 2:
-
-            #  2 common alleles
-            if len(intersection) == 2:
-                return self.make_result(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), lr)
-
-            freq_dict = self.get_frequencies(locus, insp_alleles)
+        #  Heterozygous inspected person
+        else:
             freq1, freq2 = freq_dict[insp_alleles[0]], freq_dict[insp_alleles[1]]
-            refutation = 2 * calc.F(freq1) * calc.F(freq2) - (2 * freq1 * freq2) ** 2
+            refutation = calc.hetero_refutation(freq1, freq2)
+            confirmation = conf.hetero_insp_conf(freq_dict, intersection, brother_set, brother_alleles, insp_alleles)
 
-            #  1 common allele
-            if len(intersection) == 1:
+        lr = confirmation / refutation
+        return self.make_result(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), lr)
 
-                if len(brother_set) == 1:
-                    #  case ab aa: freq2 is the frequency of allele b - unique inspected person's allele
-                    for allele in insp_alleles:
-                        if allele == brother_alleles[0]:
-                            freq1 = freq_dict[allele]
-                        else:
-                            freq2 = freq_dict[allele]
 
-                    confirmation = (4 * freq1 * freq2 * calc.F(freq1) - (2 * freq1 * freq2) ** 2) / (calc.F(freq1)) ** 2
-                    lr = confirmation / refutation
-                    return self.make_result(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), lr)
+class Confirmations:
+    def homo_insp_conf(self, freq_dict, intersection, brother_set, brother_alleles, insp_alleles):
+        calc = Calculations()
+        freq1 = freq_dict[insp_alleles[0]]
 
-                #  Heterozygous brother
-                freq_dict = self.get_frequencies(locus, insp_alleles + brother_alleles)
-                freq3 = 0
+        #  No common alleles
+        if len(intersection) == 0:
 
-                for allele in brother_alleles:
-                    if allele == list(intersection)[0]:
-                        freq1 = freq_dict[allele]
-                    else:
-                        freq3 = freq_dict[allele]
-
-                for allele in insp_alleles:
-                    if allele not in brother_alleles:
-                        freq2 = freq_dict[allele]
-
-                confirmation = 2 * freq2 * freq3 * (calc.F(freq1) - 2 * freq1 ** 2) / (calc.F(freq1) * calc.F(freq3) - 2 * (freq1 * freq3) ** 2)
-                lr = confirmation / refutation
-                return self.make_result(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), lr)
-
-            #  No common alleles
-            freq_dict = self.get_frequencies(locus, insp_alleles + brother_alleles)
-
-            #  homozygous brother
+            #  Homozygous brother
             if len(brother_set) == 1:
-                freq3 = freq_dict[brother_alleles[0]]
-                confirmation = 2 * calc.M(freq3, freq1) * calc.M(freq3, freq2)
-                lr = confirmation / refutation
-                return self.make_result(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), lr)
+                freq2 = freq_dict[brother_alleles[0]]
+                return (calc.M(freq2, freq1)) ** 2
 
-            #  heterozygous brother
-            freq3, freq4 = freq_dict[brother_alleles[0]], freq_dict[brother_alleles[1]]
-            confirmation = 2 * freq1 * freq2 * freq3 * freq4 / (calc.F(freq3) * calc.F(freq4) - 2 * (freq3 * freq4) ** 2)
-            lr = confirmation / refutation
-            return self.make_result(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), lr)
+            #  Heterozygous brother
+            freq2, freq3 = freq_dict[brother_alleles[0]], freq_dict[brother_alleles[1]]
+            return 4 * freq1 ** 2 * freq2 * freq3 / (calc.F(freq2) * calc.F(freq3) - 2 * (freq2 * freq3) ** 2)
+
+        #  One common allele
+        allele2, allele1 = self.get_alleles_order(brother_alleles, list(intersection))
+        freq1, freq2 = freq_dict[allele1], freq_dict[allele2]
+        return 2 * freq1 * freq2 * (2 * calc.F(freq1) - freq1 * freq2) / (calc.F(freq1) * calc.F(freq2) - 2 * (freq1 * freq2) ** 2)
+
+    def hetero_insp_conf(self, freq_dict, intersection, brother_set, brother_alleles, insp_alleles):
+        calc = Calculations()
+
+        #  1 common allele
+        if len(intersection) == 1:
+            #  Homozygous brother
+            if len(brother_set) == 1:
+                (allele1, allele2) = self.get_alleles_order(insp_alleles, brother_alleles)
+                freq1, freq2 = freq_dict[allele1], freq_dict[allele2]
+                return (4 * freq1 * freq2 * calc.F(freq1) - (2 * freq1 * freq2) ** 2) / (calc.F(freq1)) ** 2
+
+            #  Heterozygous brother a (1) = inter, b (2) = unique insp, c (3) = unique bro
+            (allele2, allele1) = self.get_alleles_order(insp_alleles, list(intersection))
+            (allele3, allele1) = self.get_alleles_order(brother_alleles, list(intersection))
+            freq1, freq2, freq3 = freq_dict[allele1], freq_dict[allele2], freq_dict[allele3]
+            return 2 * freq2 * freq3 * (calc.F(freq1) - 2 * freq1 ** 2) / (calc.F(freq1) * calc.F(freq3) - 2 * (freq1 * freq3) ** 2)
+
+        #  No common alleles
+        #  Homozygous brother
+        if len(brother_set) == 1:
+            freq1, freq2, freq3 = freq_dict[insp_alleles[0]], freq_dict[insp_alleles[1]], freq_dict[brother_alleles[0]]
+            return 2 * calc.M(freq3, freq1) * calc.M(freq3, freq2)
+
+        #  Heterozygous brother
+        freq1, freq2 = freq_dict[insp_alleles[0]], freq_dict[insp_alleles[1]]
+        freq3, freq4 = freq_dict[brother_alleles[0]], freq_dict[brother_alleles[1]]
+        return 2 * freq1 * freq2 * freq3 * freq4 / (calc.F(freq3) * calc.F(freq4) - 2 * (freq3 * freq4) ** 2)
+
+    @staticmethod
+    def get_alleles_order(run_list, check_list):
+        allele1 = ''
+        allele2 = ''
+
+        for allele in run_list:
+            if allele not in check_list:
+                allele1 = allele
+            else:
+                allele2 = allele
+        #  unique allele returns first
+        return allele1, allele2
