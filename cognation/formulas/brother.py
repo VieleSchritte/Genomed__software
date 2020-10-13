@@ -10,14 +10,14 @@ class BrotherFormula(Formula):
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr
         if self.is_gender_specific(locus):
-            return self.make_result(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), '-')
+            return self.make_result2(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), '-')
 
         if len(brother_alleles) != 2 or len(insp_alleles) != 2:
             raise AllelesException()
 
         # In cases aa aa or ab ab lr = 1
         if len(intersection) == 2 or len(intersection) == len(brother_set) == len(insp_set) == 1:
-            return self.make_result(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), 1)
+            return self.make_result2(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), 1)
 
         freq_dict = self.get_frequencies(locus, insp_alleles + brother_alleles)
         conf = Confirmations()
@@ -36,7 +36,7 @@ class BrotherFormula(Formula):
             confirmation = conf.hetero_insp_conf(freq_dict, intersection, brother_set, brother_alleles, insp_alleles)
 
         lr = confirmation / refutation
-        return self.make_result(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), lr)
+        return self.make_result2(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), lr)
 
 
 class Confirmations:

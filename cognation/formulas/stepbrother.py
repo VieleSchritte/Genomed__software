@@ -8,7 +8,7 @@ class StepbrotherFormula(Formula):
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr
         if self.is_gender_specific(locus):
-            return self.make_result(locus, '/'.join(stb2_alleles), '/'.join(stb1_alleles), '-')
+            return self.make_result2(locus, '/'.join(stb2_alleles), '/'.join(stb1_alleles), '-')
 
         # Skip line with warning if there's incorrect number of alleles
         if len(stb1_alleles) != 2 or len(stb2_alleles) != 2:
@@ -19,13 +19,13 @@ class StepbrotherFormula(Formula):
 
         lr = 0.5
         if len(inter_list) == 0:
-            return self.make_result(locus, '/'.join(stb1_alleles), '/'.join(stb2_alleles), lr)
+            return self.make_result2(locus, '/'.join(stb1_alleles), '/'.join(stb2_alleles), lr)
 
         if len(inter_list) == 2:
             freq1 = freq_dict[inter_list[0]]
             freq2 = freq_dict[inter_list[1]]
             lr += 0.25 * (freq1 + freq2) / (2 * (freq1 * freq2))
-            return self.make_result(locus, '/'.join(stb1_alleles), '/'.join(stb2_alleles), lr)
+            return self.make_result2(locus, '/'.join(stb1_alleles), '/'.join(stb2_alleles), lr)
 
         freq = freq_dict[inter_list[0]]
 
@@ -38,4 +38,4 @@ class StepbrotherFormula(Formula):
         if len(uncle_set_list) != len(nephew_set_list):
             lr += 0.25 / freq
 
-        return self.make_result(locus, '/'.join(stb1_alleles), '/'.join(stb2_alleles), lr)
+        return self.make_result2(locus, '/'.join(stb1_alleles), '/'.join(stb2_alleles), lr)

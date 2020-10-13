@@ -10,7 +10,7 @@ class GrandParentFormula(Formula):
 
         # Checking gender specificity of locus
         if self.is_gender_specific(locus):
-            return self.make_result(locus, '/'.join(gc_alleles), '/'.join(gp_alleles), '-')
+            return self.make_result2(locus, '/'.join(gc_alleles), '/'.join(gp_alleles), '-')
 
         if len(gc_alleles) != 2 or len(gp_alleles) != 2:
             raise AllelesException()
@@ -36,7 +36,7 @@ class GrandParentFormula(Formula):
             confirmation = conf.hetero_gc_confirmation(freq1, freq2, intersection, gp_set)
         lr = confirmation / refutation
 
-        return self.make_result(locus, '/'.join(gc_alleles), '/'.join(gp_alleles), lr)
+        return self.make_result2(locus, '/'.join(gc_alleles), '/'.join(gp_alleles), lr)
 
 
 class Confirmations:

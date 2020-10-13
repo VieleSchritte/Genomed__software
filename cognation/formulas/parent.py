@@ -9,7 +9,7 @@ class ParentFormula(Formula):
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr
         if self.is_gender_specific(locus):
-            return self.make_result(locus, '/'.join(parent_alleles), '/'.join(child_alleles), '-')
+            return self.make_result2(locus, '/'.join(parent_alleles), '/'.join(child_alleles), '-')
 
         if len(parent_alleles) != 2 or len(child_alleles) != 2:
             raise AllelesException()
@@ -33,4 +33,4 @@ class ParentFormula(Formula):
             freq = list(freq_dict.values())[0]
             relation = 1 / (len(parent_set)*len(child_set) * freq)
 
-        return self.make_result(locus, '/'.join(parent_alleles), '/'.join(child_alleles), relation)
+        return self.make_result2(locus, '/'.join(parent_alleles), '/'.join(child_alleles), relation)

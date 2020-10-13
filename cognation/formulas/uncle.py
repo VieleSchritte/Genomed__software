@@ -8,7 +8,7 @@ class UncleFormula(Formula):
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr
         if self.is_gender_specific(locus):
-            return self.make_result(locus, '/'.join(uncle_alleles), '/'.join(nephew_alleles), '-')
+            return self.make_result2(locus, '/'.join(uncle_alleles), '/'.join(nephew_alleles), '-')
 
         # Skip line with warning if there's incorrect number of alleles
         if len(nephew_alleles) != 2 or len(uncle_alleles) != 2:
@@ -19,13 +19,13 @@ class UncleFormula(Formula):
 
         lr = 0.5
         if len(inter_list) == 0:
-            return self.make_result(locus, '/'.join(nephew_alleles), '/'.join(uncle_alleles), lr)
+            return self.make_result2(locus, '/'.join(nephew_alleles), '/'.join(uncle_alleles), lr)
 
         if len(inter_list) == 2:
             freq1 = freq_dict[inter_list[0]]
             freq2 = freq_dict[inter_list[1]]
             lr += 0.25 * (freq1 + freq2) / (2 * (freq1 * freq2))
-            return self.make_result(locus, '/'.join(nephew_alleles), '/'.join(uncle_alleles), lr)
+            return self.make_result2(locus, '/'.join(nephew_alleles), '/'.join(uncle_alleles), lr)
 
         freq = freq_dict[inter_list[0]]
 
@@ -38,4 +38,4 @@ class UncleFormula(Formula):
         if len(uncle_set_list) != len(nephew_set_list):
             lr += 0.25 / freq
 
-        return self.make_result(locus, '/'.join(nephew_alleles), '/'.join(uncle_alleles), lr)
+        return self.make_result2(locus, '/'.join(nephew_alleles), '/'.join(uncle_alleles), lr)

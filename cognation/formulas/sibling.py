@@ -93,7 +93,7 @@ class SiblingFormula(Formula):
             elif len(ef) == 2 and len(ab_ef) == 1:  # 3 - AC
                 lr = self.gen_ab_ab_ac(locus, ab_ef.copy().pop(), (ab_ef ^ cd).pop(), (ab_ef ^ ef).pop())
 
-        result = self.make_result(locus, raw_ab, raw_cd, lr)
+        result = self.make_result2(locus, raw_ab, raw_cd, lr)
         result["ef"] = raw_ef
         return result
 

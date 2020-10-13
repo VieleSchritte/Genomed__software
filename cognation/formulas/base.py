@@ -143,20 +143,21 @@ class Formula(abc.ABC):
         return Counter(Formula.split_sat(sat_string))
 
     @staticmethod
-    def make_result(locus, part1, part2, lr, *part3):
-        if part3:
-            return {
-                "locus": locus,
-                "part1": part1,
-                "part2": part2,
-                "part3": part3[0],
-                "lr": lr
-            }
-
+    def make_result2(locus, part1, part2, lr):
         return {
             "locus": locus,
             "part1": part1,
             "part2": part2,
+            "lr": lr
+        }
+
+    @staticmethod
+    def make_result3(locus, part1, part2, part3, lr):
+        return {
+            "locus": locus,
+            "part1": part1,
+            "part2": part2,
+            "part3": part3,
             "lr": lr
         }
 
@@ -189,3 +190,5 @@ class Calculations:
     #  Probability of relation theory refutation in case of inspected person's heterozygosity
     def hetero_refutation(self, freq1, freq2):
         return 2 * self.F(freq1) * self.F(freq2) - (2 * freq1 * freq2) ** 2
+
+    
