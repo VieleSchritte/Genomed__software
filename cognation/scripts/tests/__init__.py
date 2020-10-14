@@ -5,6 +5,7 @@ from cognation.formulas.cousin import CousinFormula
 from cognation.formulas.sibling import SiblingFormula
 from cognation.formulas.base import Formula
 from cognation.formulas.brother import BrotherFormula
+from cognation.formulas.stepbrother import StepbrotherFormula
 import re
 
 PARENT_TYPE = 1
@@ -13,6 +14,7 @@ UNCLE_TYPE = 3
 COUSIN_TYPE = 4
 SIBLING_TYPE = 5
 BROTHER_TYPE = 6
+STEPBROTHER_TYPE = 7
 
 
 class GetData:
@@ -66,6 +68,8 @@ class GetData:
             return SiblingFormula(Formula)
         if number == BROTHER_TYPE:
             return BrotherFormula(Formula)
+        if number == STEPBROTHER_TYPE:
+            return StepbrotherFormula(Formula)
 
     def get_test_data(self, short_path, doc_name, number):
         test_cpi = 1
