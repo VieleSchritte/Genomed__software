@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 from cognation.formulas.base import Formula, LineFormatException, AllelesException
 
+
 class SiblingFormula(Formula):
     def calculate_relation(self, raw_values):
         if len(raw_values) < 4:
@@ -54,7 +55,7 @@ class SiblingFormula(Formula):
             if len(cd) == 1:  # 2 - AA
                 a = cd.copy().pop()
                 b = (cd ^ ab).pop()
-                if len(ef) == 1 and len(cd_ef) == 1: # 3 - AA
+                if len(ef) == 1 and len(cd_ef) == 1:  # 3 - AA
                     lr = self.gen_ab_aa_aa(locus, a, b)
                 elif len(ef) == 2:
                     if len(ab_ef) == 2:  # 3 - AB
@@ -202,4 +203,3 @@ class SiblingFormula(Formula):
         divider = self.prob_not_c_ab(p, a, b)
         return 0 if divider == 0 else \
             self._2_pa_pb(p, b, d) / self._2pa_sub_pa2(p, d) / divider
-
