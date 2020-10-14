@@ -45,12 +45,12 @@ class Formula(abc.ABC):
         return False
 
     def getting_alleles_locus(self, raw_values, part_number):
+        if len(raw_values) < part_number + 1:
+            # Skip line with warning
+            raise LineFormatException()
+
         #  case of 2 participants
         if part_number == 2:
-            if len(raw_values) < 3:
-                # Skip line with warning
-                raise LineFormatException()
-
             # child/grandchild for example
             part1_alleles = self.split_sat(raw_values.pop())
             # parent/grandparent...
@@ -64,25 +64,14 @@ class Formula(abc.ABC):
             return part1_alleles, part2_alleles, locus, part1_set, part2_set, intersection
 
         #  case of 3 participants
-        if len(raw_values) < 4:
-            # Skip line with warning
-            raise LineFormatException()
-
         part3_alleles = self.split_sat(raw_values.pop())
         part2_alleles = self.split_sat(raw_values.pop())
         part1_alleles = self.split_sat(raw_values.pop())
-        alleles = [part3_alleles, part2_alleles, part1_alleles]
+
         locus = ' '.join(raw_values)
-
-        part3_set = set(part3_alleles)
-        part2_set = set(part2_alleles)
-        part1_set = set(part1_alleles)
-        sets = [part3_set, part2_set, part1_set]
-
-        intersection12 = part1_set & part2_set
-        intersection13 = part1_set & part3_set
-        intersection23 = part2_set & part3_set
-        intersections = [intersection12, intersection13, intersection23]
+        alleles = [part3_alleles, part2_alleles, part1_alleles]
+        sets = [set(part3_alleles), set(part2_alleles), set(part1_alleles)]
+        intersections = [part1_set & part2_set, part1_set & part3_set, part2_set & part3_set]
 
         return locus, alleles, sets, intersections
 
