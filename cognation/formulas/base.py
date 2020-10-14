@@ -71,7 +71,7 @@ class Formula(abc.ABC):
         locus = ' '.join(raw_values)
         alleles = [part3_alleles, part2_alleles, part1_alleles]
         sets = [set(part3_alleles), set(part2_alleles), set(part1_alleles)]
-        intersections = [part1_set & part2_set, part1_set & part3_set, part2_set & part3_set]
+        intersections = [sets[2] & sets[1], sets[2] & sets[0], sets[1] & sets[0]]
 
         return locus, alleles, sets, intersections
 
@@ -119,11 +119,21 @@ class Formula(abc.ABC):
         return re.split(r'\/', sat_string)
 
     @staticmethod
-    def make_result(locus, ab, cd, lr):
+    def make_result2(locus, part1, part2, lr):
         return {
             "locus": locus,
-            "ab": ab,
-            "cd": cd,
+            "part1": part1,
+            "part2": part2,
+            "lr": lr
+        }
+
+    @staticmethod
+    def make_result3(locus, part1, part2, part3, lr):
+        return {
+            "locus": locus,
+            "part1": part1,
+            "part2": part2,
+            "part3": part3,
             "lr": lr
         }
 

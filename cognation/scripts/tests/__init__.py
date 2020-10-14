@@ -4,10 +4,7 @@ from cognation.formulas.uncle import UncleFormula
 from cognation.formulas.cousin import CousinFormula
 from cognation.formulas.sibling import SiblingFormula
 from cognation.formulas.base import Formula
-<<<<<<< HEAD
 from cognation.formulas.brother import BrotherFormula
-=======
->>>>>>> master
 from cognation.formulas.stepbrother import StepbrotherFormula
 import re
 
@@ -16,12 +13,8 @@ GRANDPARENT_TYPE = 2
 UNCLE_TYPE = 3
 COUSIN_TYPE = 4
 SIBLING_TYPE = 5
-<<<<<<< HEAD
 BROTHER_TYPE = 6
 STEPBROTHER_TYPE = 7
-=======
-STEPBROTHER_TYPE = 6
->>>>>>> master
 
 
 class GetData:
@@ -73,11 +66,8 @@ class GetData:
             return CousinFormula(Formula)
         if number == SIBLING_TYPE:
             return SiblingFormula(Formula)
-<<<<<<< HEAD
         if number == BROTHER_TYPE:
             return BrotherFormula(Formula)
-=======
->>>>>>> master
         if number == STEPBROTHER_TYPE:
             return StepbrotherFormula(Formula)
 

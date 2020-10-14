@@ -4,15 +4,9 @@ from django.test import TestCase
 from cognation.scripts.tests import GetData
 
 # all possible test cases
-<<<<<<< HEAD:cognation/scripts/tests/test_cases/brother_cases/test_brother.py
 doc_refnames_list = ['sister1/sister1_ref.txt', 'brother1/brother1_ref.txt']
 doc_testnames_list = ['sister1/sister1_test.txt', 'brother1/brother1_test.txt']
 short_path = 'cognation/scripts/tests/test_cases/brother_cases/'
-=======
-doc_refnames_list = ['Aunt1/aunt_ref.txt']
-doc_testnames_list = ['Aunt1/aunt_test.txt']
-short_path = 'cognation/scripts/tests/test_cases/uncle_stepbrother_cases/'
->>>>>>> master:cognation/scripts/tests/test_cases/uncle_stepbrother_cases/test_uncle.py
 
 overall_ref_dict = {}
 overall_test_dict = {}
