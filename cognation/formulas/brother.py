@@ -1,7 +1,5 @@
 from __future__ import unicode_literals
-from .base import Formula
-from .base import AllelesException
-from .base import Calculations
+from .base import Formula, AllelesException, Calculations
 
 
 class BrotherFormula(Formula):
@@ -37,19 +35,18 @@ class BrotherFormula(Formula):
 
         freq_dict = self.get_frequencies(locus, insp_alleles + brother_alleles)
         conf = Confirmations()
-        calc = Calculations()
 
         #  Homozygous inspected person
         if len(insp_set) == 1:
             freq = freq_dict[insp_alleles[0]]
             confirmation = conf.homo_insp_conf(freq_dict, intersection, brother_set, brother_alleles, insp_alleles)
 
-            refutation = calc.homo_refutation(freq)
+            refutation = c.homo_refutation(freq)
 
         #  Heterozygous inspected person
         else:
             freq1, freq2 = freq_dict[insp_alleles[0]], freq_dict[insp_alleles[1]]
-            refutation = calc.hetero_refutation(freq1, freq2)
+            refutation = c.hetero_refutation(freq1, freq2)
             confirmation = conf.hetero_insp_conf(freq_dict, intersection, brother_set, brother_alleles, insp_alleles)
 
         lr = confirmation / refutation
