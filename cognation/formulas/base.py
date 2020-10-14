@@ -29,6 +29,7 @@ class UnknownAlleleException(Exception):
     def __str__(self):
         return "Unknown allele found: " + str(self.sat)
 
+
 # Abstract parent class
 class Formula(abc.ABC):
     def __init__(self, user_data):
@@ -43,22 +44,36 @@ class Formula(abc.ABC):
                 return True
         return False
 
-    def getting_alleles_locus(self, raw_values):
-        if len(raw_values) < 3:
+    def getting_alleles_locus(self, raw_values, part_number):
+        if len(raw_values) < part_number + 1:
             # Skip line with warning
             raise LineFormatException()
 
-        # child/grandchild for example
-        pat1_alleles = self.split_sat(raw_values.pop())
-        # parent/grandparent...
-        pat2_alleles = self.split_sat(raw_values.pop())
+        #  case of 2 participants
+        if part_number == 2:
+            # child/grandchild for example
+            part1_alleles = self.split_sat(raw_values.pop())
+            # parent/grandparent...
+            part2_alleles = self.split_sat(raw_values.pop())
 
-        locus = ' '.join(raw_values)  # for loci names contain space
-        pat1_set = set(pat1_alleles)  # unique alleles
-        pat2_set = set(pat2_alleles)
-        intersection = pat1_set & pat2_set  # common unique alleles
+            locus = ' '.join(raw_values)  # for loci names contain space
+            part1_set = set(part1_alleles)  # unique alleles
+            part2_set = set(part2_alleles)
+            intersection = part1_set & part2_set  # common unique alleles
 
-        return pat1_alleles, pat2_alleles, locus, pat1_set, pat2_set, intersection
+            return part1_alleles, part2_alleles, locus, part1_set, part2_set, intersection
+
+        #  case of 3 participants
+        part3_alleles = self.split_sat(raw_values.pop())
+        part2_alleles = self.split_sat(raw_values.pop())
+        part1_alleles = self.split_sat(raw_values.pop())
+
+        locus = ' '.join(raw_values)
+        alleles = [part3_alleles, part2_alleles, part1_alleles]
+        sets = [set(part3_alleles), set(part2_alleles), set(part1_alleles)]
+        intersections = [sets[2] & sets[1], sets[2] & sets[0], sets[1] & sets[0]]
+
+        return locus, alleles, sets, intersections
 
     def calculate(self):
         result = OrderedDict()
@@ -104,11 +119,21 @@ class Formula(abc.ABC):
         return re.split(r'\/', sat_string)
 
     @staticmethod
-    def make_result(locus, ab, cd, lr):
+    def make_result2(locus, part1, part2, lr):
         return {
             "locus": locus,
-            "ab": ab,
-            "cd": cd,
+            "part1": part1,
+            "part2": part2,
+            "lr": lr
+        }
+
+    @staticmethod
+    def make_result3(locus, part1, part2, part3, lr):
+        return {
+            "locus": locus,
+            "part1": part1,
+            "part2": part2,
+            "part3": part3,
             "lr": lr
         }
 
@@ -117,15 +142,24 @@ class Formula(abc.ABC):
         return Counter(Formula.split_sat(sat_string))
 
     @staticmethod
-    def make_result(locus, ab, cd, lr):
+    def make_result2(locus, part1, part2, lr):
         return {
             "locus": locus,
-            "ab": ab,
-            "cd": cd,
+            "part1": part1,
+            "part2": part2,
             "lr": lr
         }
 
-    # Calculation Helpers
+    @staticmethod
+    def make_result3(locus, part1, part2, part3, lr):
+        return {
+            "locus": locus,
+            "part1": part1,
+            "part2": part2,
+            "part3": part3,
+            "lr": lr
+        }
+
     @staticmethod
     def _2pa_sub_pa2(p, x):
         return p[x] * (2 - p[x])
@@ -149,3 +183,28 @@ class Formula(abc.ABC):
     @abc.abstractmethod
     def calculate_relation(self, row_values):
         """ Abstract method to calculate """
+
+
+# Calculation Helpers
+class Calculations:
+    #  A helper for the frequently used pattern F(Px) = Px * (2 - Px)
+    @staticmethod
+    def F(freq):
+        return freq * (2 - freq)
+
+    #  A helper for the frequently used pattern Q(Px) = 0.5 - 0.5 * Px (for GrandParentFormula)
+    @staticmethod
+    def Q(freq):
+        return 0.5 + 0.5 * freq
+
+    #  A helper for the frequently used pattern M(Px, Py) = 2 * Px * Py / F(Px) (for SiblingFormula)
+    def M(self, freq1, freq2):
+        return 2 * freq1 * freq2 / self.F(freq1)
+
+    #  Probability of relation theory refutation in case of inspected person's homozygosity
+    def homo_refutation(self, freq):
+        return (self.F(freq)) ** 2
+
+    #  Probability of relation theory refutation in case of inspected person's heterozygosity
+    def hetero_refutation(self, freq1, freq2):
+        return 2 * self.F(freq1) * self.F(freq2) - (2 * freq1 * freq2) ** 2

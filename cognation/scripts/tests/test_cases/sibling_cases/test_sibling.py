@@ -4,31 +4,31 @@ from django.test import TestCase
 from cognation.scripts.tests import GetData
 
 # all possible test cases
-doc_refnames_list = ['parent1/reference_data_parent1.txt', 'parent2/reference_data_parent2.txt', 'parent3/reference_data_parent3_veri.txt']
-doc_testnames_list = ['parent1/test_data_parent1.txt', 'parent2/test_data_parent2.txt', 'parent3/test_data_parent3_veri.txt']
-short_path = 'cognation/scripts/tests/test_cases/parent_cases/'
+doc_refnames_list = ['sibling1/sibling1_ref.txt']
+doc_testnames_list = ['sibling1/sibling1_test.txt']
+short_path = 'cognation/scripts/tests/test_cases/sibling_cases/'
 
 overall_ref_dict = {}
 overall_test_dict = {}
 
-PARENT_TYPE = 1
+SIBLING_TYPE = 5
 
 
-class GetParentsData:
+class GetSiblingData:
     #  preparing dictionaries for assertion
     @staticmethod
     def prep():
         get_ref = GetData()
-        part_number = 2
+        part_number = 3
         for i in range(len(doc_refnames_list)):
             doc_ref_path = doc_refnames_list[i]
             overall_ref_dict[doc_ref_path] = get_ref.get_reference_data(short_path, doc_ref_path, part_number)
 
             doc_test_path = doc_testnames_list[i]
-            overall_test_dict[doc_test_path] = get_ref.get_test_data(short_path, doc_test_path, PARENT_TYPE)
+            overall_test_dict[doc_test_path] = get_ref.get_test_data(short_path, doc_test_path, SIBLING_TYPE)
 
 
-instance = GetParentsData()
+instance = GetSiblingData()
 instance.prep()
 
 

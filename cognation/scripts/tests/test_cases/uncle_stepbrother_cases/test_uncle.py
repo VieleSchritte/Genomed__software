@@ -4,33 +4,41 @@ from django.test import TestCase
 from cognation.scripts.tests import GetData
 
 # all possible test cases
+<<<<<<< HEAD:cognation/scripts/tests/test_cases/brother_cases/test_brother.py
+doc_refnames_list = ['sister1/sister1_ref.txt', 'brother1/brother1_ref.txt']
+doc_testnames_list = ['sister1/sister1_test.txt', 'brother1/brother1_test.txt']
+short_path = 'cognation/scripts/tests/test_cases/brother_cases/'
+=======
 doc_refnames_list = ['Aunt1/aunt_ref.txt']
 doc_testnames_list = ['Aunt1/aunt_test.txt']
 short_path = 'cognation/scripts/tests/test_cases/uncle_stepbrother_cases/'
+>>>>>>> master:cognation/scripts/tests/test_cases/uncle_stepbrother_cases/test_uncle.py
 
 overall_ref_dict = {}
 overall_test_dict = {}
 
-UNCLE_TYPE = 3
+BROTHER_TYPE = 6
 
 
-class GetUncleData:
+class GetBrotherData:
     #  preparing dictionaries for assertion
-    def prep(self):
+    @staticmethod
+    def prep():
         get_ref = GetData()
+        part_number = 2
         for i in range(len(doc_refnames_list)):
             doc_ref_path = doc_refnames_list[i]
-            overall_ref_dict[doc_ref_path] = get_ref.get_reference_data(short_path, doc_ref_path)
+            overall_ref_dict[doc_ref_path] = get_ref.get_reference_data(short_path, doc_ref_path, part_number)
 
             doc_test_path = doc_testnames_list[i]
-            overall_test_dict[doc_test_path] = get_ref.get_test_data(short_path, doc_test_path, UNCLE_TYPE)
+            overall_test_dict[doc_test_path] = get_ref.get_test_data(short_path, doc_test_path, BROTHER_TYPE)
 
 
-instance = GetUncleData()
+instance = GetBrotherData()
 instance.prep()
 
 
-class TestUncleFormula(TestCase):
+class TestBrotherFormula(TestCase):
     def setUp(self):
         pass
 

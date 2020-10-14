@@ -12,6 +12,7 @@ overall_ref_dict = {}
 overall_test_dict = {}
 
 GRANDPARENT_TYPE = 2
+part_number = 2
 
 
 class GetGrandParentsData():
@@ -20,7 +21,7 @@ class GetGrandParentsData():
         get_ref = GetData()
         for i in range(len(doc_refnames_list)):
             doc_ref_path = doc_refnames_list[i]
-            overall_ref_dict[doc_ref_path] = get_ref.get_reference_data(short_path, doc_ref_path)
+            overall_ref_dict[doc_ref_path] = get_ref.get_reference_data(short_path, doc_ref_path, part_number)
 
             doc_test_path = doc_testnames_list[i]
             overall_test_dict[doc_test_path] = get_ref.get_test_data(short_path, doc_test_path, GRANDPARENT_TYPE)

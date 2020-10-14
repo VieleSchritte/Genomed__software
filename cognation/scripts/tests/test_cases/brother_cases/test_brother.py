@@ -4,32 +4,35 @@ from django.test import TestCase
 from cognation.scripts.tests import GetData
 
 # all possible test cases
-doc_refnames_list = ['cousin1/cousin1_ref.txt']
-doc_testnames_list = ['cousin1/cousin1_test.txt']
-short_path = 'cognation/scripts/tests/test_cases/cousin_cases/'
+doc_refnames_list = ['sister1/sister1_ref.txt', 'brother1/brother1_ref.txt']
+doc_testnames_list = ['sister1/sister1_test.txt', 'brother1/brother1_test.txt']
+short_path = 'cognation/scripts/tests/test_cases/brother_cases/'
 
 overall_ref_dict = {}
 overall_test_dict = {}
 
-COUSIN_TYPE = 4
+BROTHER_TYPE = 6
 
-class GetCousinData:
+
+class GetBrotherData:
     #  preparing dictionaries for assertion
-    def prep(self):
+    @staticmethod
+    def prep():
         get_ref = GetData()
+        part_number = 2
         for i in range(len(doc_refnames_list)):
             doc_ref_path = doc_refnames_list[i]
-            overall_ref_dict[doc_ref_path] = get_ref.get_reference_data(short_path, doc_ref_path)
+            overall_ref_dict[doc_ref_path] = get_ref.get_reference_data(short_path, doc_ref_path, part_number)
 
             doc_test_path = doc_testnames_list[i]
-            overall_test_dict[doc_test_path] = get_ref.get_test_data(short_path, doc_test_path, COUSIN_TYPE)
+            overall_test_dict[doc_test_path] = get_ref.get_test_data(short_path, doc_test_path, BROTHER_TYPE)
 
 
-instance = GetCousinData()
+instance = GetBrotherData()
 instance.prep()
 
 
-class TestCousinFormula(TestCase):
+class TestBrotherFormula(TestCase):
     def setUp(self):
         pass
 

@@ -4,6 +4,7 @@ from cognation.formulas.uncle import UncleFormula
 from cognation.formulas.cousin import CousinFormula
 from cognation.formulas.sibling import SiblingFormula
 from cognation.formulas.base import Formula
+from cognation.formulas.brother import BrotherFormula
 from cognation.formulas.stepbrother import StepbrotherFormula
 import re
 
@@ -12,12 +13,13 @@ GRANDPARENT_TYPE = 2
 UNCLE_TYPE = 3
 COUSIN_TYPE = 4
 SIBLING_TYPE = 5
-STEPBROTHER_TYPE = 6
+BROTHER_TYPE = 6
+STEPBROTHER_TYPE = 7
 
 
 class GetData:
     @staticmethod
-    def get_reference_data(short_path, doc_name):
+    def get_reference_data(short_path, doc_name, part_number):
         ref_dict = {}
         cpi = 0
         p = 0.0
@@ -25,10 +27,13 @@ class GetData:
             for line in ref_data:
                 line = line.strip().split('\t')
 
-                # other loci - there is int meaning of lr
-                if len(line) == 4:
+                # not gender specific loci - there is int meaning of lr
+                if len(line) != 1:
                     locus = line[0]
-                    lr = line[3]
+                    if part_number == 2:
+                        lr = line[3]
+                    else:
+                        lr = line[4]
 
                     #  case of gender specific loci
                     if lr == '-':
@@ -36,7 +41,7 @@ class GetData:
                         continue
                     # case of int lr meanings of loci
                     else:
-                        lr = float(line[3]) * 100 / 100
+                        lr = float(lr) * 100 / 100
                         ref_dict[locus] = lr
 
                 # case for getting cpi and p meanings
@@ -46,6 +51,7 @@ class GetData:
                         cpi = int(line[1])
                     elif line[0] == 'P':
                         p = float(line[1])
+
         return ref_dict, cpi, p
 
     @staticmethod
@@ -60,6 +66,8 @@ class GetData:
             return CousinFormula(Formula)
         if number == SIBLING_TYPE:
             return SiblingFormula(Formula)
+        if number == BROTHER_TYPE:
+            return BrotherFormula(Formula)
         if number == STEPBROTHER_TYPE:
             return StepbrotherFormula(Formula)
 
