@@ -32,7 +32,7 @@ instance = GetSiblingData()
 instance.prep()
 
 
-class TestParentFormula(TestCase):
+class TestSiblingFormula(TestCase):
     def setUp(self):
         pass
 
