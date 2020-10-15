@@ -142,25 +142,6 @@ class Formula(abc.ABC):
         return Counter(Formula.split_sat(sat_string))
 
     @staticmethod
-    def make_result2(locus, part1, part2, lr):
-        return {
-            "locus": locus,
-            "part1": part1,
-            "part2": part2,
-            "lr": lr
-        }
-
-    @staticmethod
-    def make_result3(locus, part1, part2, part3, lr):
-        return {
-            "locus": locus,
-            "part1": part1,
-            "part2": part2,
-            "part3": part3,
-            "lr": lr
-        }
-
-    @staticmethod
     def _2pa_sub_pa2(p, x):
         return p[x] * (2 - p[x])
 

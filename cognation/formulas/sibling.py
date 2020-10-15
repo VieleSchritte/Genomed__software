@@ -26,10 +26,10 @@ class SiblingFormula(Formula):
         freq_dict = self.get_frequencies(locus, child_alleles)
         parent2_alleles = [0, 0]
 
+        # Refutations are different in case of child's homo- or heterozygosity
         if len(child_set) == 1:
             freq = freq_dict[child_alleles[0]]
             refutation = c.homo_refutation(freq)
-
         else:
             freq1, freq2 = freq_dict[child_alleles[0]], freq_dict[child_alleles[1]]
             refutation = c.hetero_refutation(freq1, freq2)
