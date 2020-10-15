@@ -22,7 +22,6 @@ class SiblingFormula(Formula):
         if sp_intersection == 0 or cp_intersection == 0:
             return self.make_result3(locus, '/'.join(child_alleles), '/'.join(parent_alleles), '/'.join(sibling_alleles), 0)
 
-        # If everything's ok and locus isn't gender-specific, start calculating
         c = Calculations()
         freq_dict = self.get_frequencies(locus, child_alleles)
         parent2_alleles = [0, 0]
@@ -38,8 +37,15 @@ class SiblingFormula(Formula):
         parent2_alleles = self.get_parent2_alleles(parent2_alleles, sibling_alleles, sp_intersection, 0)
         parent2_alleles = self.get_parent2_alleles(parent2_alleles, child_alleles, cp_intersection, 1)
 
+        # If position 1 unfilled, confirmation = 1
+        if parent2_alleles[1] == 0:
+            confirmation = 1
+            lr = confirmation / refutation
+            return self.make_result3(locus, '/'.join(child_alleles), '/'.join(parent_alleles), '/'.join(sibling_alleles), lr)
+
         freq_dict = self.get_frequencies(locus, parent2_alleles)
         freq1, freq2 = freq_dict[parent2_alleles[0]], freq_dict[parent2_alleles[1]]
+
         confirmation = c.M(freq1, freq2)
 
         lr = confirmation / refutation
