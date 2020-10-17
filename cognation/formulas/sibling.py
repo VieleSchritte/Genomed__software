@@ -89,6 +89,7 @@ class SiblingFormula(Formula):
                 lr = confirmation / refutation
                 return self.make_result3(locus, '/'.join(child_alleles), '/'.join(parent_alleles), '/'.join(sibling_alleles), lr)
 
+        # Default is confirmation = M(x,y); x, y = parent2_alleles[0], parent2_alleles[1]
         parent2_alleles = self.get_parent2_alleles(parent2_alleles, sibling_alleles, sp_intersection, 0)
         parent2_alleles = self.get_parent2_alleles(parent2_alleles, child_alleles, cp_intersection, 1)
         freq1, freq2 = freq_dict[parent2_alleles[0]], freq_dict[parent2_alleles[1]]
