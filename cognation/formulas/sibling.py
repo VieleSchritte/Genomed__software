@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from cognation.formulas.base import Formula, AllelesException, Calculations
+from cognation.formulas.base import Formula, Calculations
 
 
 class SiblingFormula(Formula):
@@ -10,22 +10,21 @@ class SiblingFormula(Formula):
         sibling_set, parent_set, child_set = sets
         sp_intersection, sc_intersection, cp_intersection = intersections
 
-        # Function in base.py for checking out if the locus is gender-specific; if yes return lr
+        # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
             return self.make_result3(locus, '/'.join(child_alleles), '/'.join(parent_alleles), '/'.join(sibling_alleles), '-')
 
-        # If it's not a gender specific locus there should be 2 alleles
-        if len(child_alleles) != 2 or len(parent_alleles) != 2 or len(sibling_alleles) != 2:
-            raise AllelesException()
-
         #  If there's no relation then return lr = 0 and start collecting mutations
         if sp_intersection == 0 or cp_intersection == 0:
-            return self.make_result3(locus, '/'.join(child_alleles), '/'.join(parent_alleles), '/'.join(sibling_alleles), 0)
+            lr = 0
+            return self.make_result3(locus, '/'.join(child_alleles), '/'.join(parent_alleles), '/'.join(sibling_alleles), lr)
 
         c = Calculations()
         freq_dict = self.get_frequencies(locus, child_alleles + parent_alleles + sibling_alleles)
-        parent2_alleles = [0, 0]
         confirmation = 1
+
+        # LR calculation is done using genotype of an unavailable parent
+        parent2_alleles = [0, 0]
 
         # Homozygous child
         if len(child_set) == 1:
@@ -37,7 +36,7 @@ class SiblingFormula(Formula):
                 lr = confirmation / refutation
                 return self.make_result3(locus, '/'.join(child_alleles), '/'.join(parent_alleles), '/'.join(sibling_alleles), lr)
 
-            #  A special case aa ab ab for confirmation = F(Pa) / (F(Pa) + F(Pb) - 2 * Pa * Pb)
+            #  A special case for confirmation = F(Pa) / (F(Pa) + F(Pb) - 2 * Pa * Pb) aa ab ab
             if len(parent_set) == 2 and parent_set == sibling_set:
                 freq2 = freq_dict[self.get_unique_allele(parent_alleles, child_alleles)]
                 confirmation = c.F(freq) / (c.F(freq) + c.F(freq2) - 2 * freq * freq2)
@@ -75,26 +74,20 @@ class SiblingFormula(Formula):
             if len(child_set) == len(sibling_set) == 2 and child_set != sibling_set and len(parent_set) == 1:
                 parent2_alleles = self.get_parent2_alleles(parent2_alleles, sibling_alleles, sp_intersection, 0)
                 parent2_alleles[1] = list(sp_intersection)[0]
-                freq1, freq2 = freq_dict[parent2_alleles[0]], freq_dict[parent2_alleles[1]]
-                confirmation = c.M(freq1, freq2)
-                lr = confirmation / refutation
+                lr = self.get_lr(freq_dict, parent2_alleles, refutation)
                 return self.make_result3(locus, '/'.join(child_alleles), '/'.join(parent_alleles), '/'.join(sibling_alleles), lr)
 
             # ab ac aa case confirmation = M(Pa, Pc)
             if len(child_set) == len(parent_set) == 2 and len(sibling_set) == 1 and child_set != parent_set:
                 parent2_alleles[1] = self.get_unique_allele(parent_alleles, child_alleles)
                 parent2_alleles = self.get_parent2_alleles(parent2_alleles, sibling_alleles, sp_intersection, 0)
-                freq1, freq2 = freq_dict[parent2_alleles[0]], freq_dict[parent2_alleles[1]]
-                confirmation = c.M(freq1, freq2)
-                lr = confirmation / refutation
+                lr = self.get_lr(freq_dict, parent2_alleles, refutation)
                 return self.make_result3(locus, '/'.join(child_alleles), '/'.join(parent_alleles), '/'.join(sibling_alleles), lr)
 
         # Default is confirmation = M(x,y); x, y = parent2_alleles[0], parent2_alleles[1]
         parent2_alleles = self.get_parent2_alleles(parent2_alleles, sibling_alleles, sp_intersection, 0)
         parent2_alleles = self.get_parent2_alleles(parent2_alleles, child_alleles, cp_intersection, 1)
-        freq1, freq2 = freq_dict[parent2_alleles[0]], freq_dict[parent2_alleles[1]]
-        confirmation = c.M(freq1, freq2)
-        lr = confirmation / refutation
+        lr = self.get_lr(freq_dict, parent2_alleles, refutation)
         return self.make_result3(locus, '/'.join(child_alleles), '/'.join(parent_alleles), '/'.join(sibling_alleles), lr)
 
     # A method to fill M(freq1, freq2) formula in base.Calculations. Returns list of alleles in required range
@@ -123,3 +116,11 @@ class SiblingFormula(Formula):
         for allele in list1:
             if allele not in list2:
                 return allele
+
+    @staticmethod
+    def get_lr(freq_dict, parent2_alleles, refutation):
+        c = Calculations()
+        freq1, freq2 = freq_dict[parent2_alleles[0]], freq_dict[parent2_alleles[1]]
+        confirmation = c.M(freq1, freq2)
+        lr = confirmation / refutation
+        return lr

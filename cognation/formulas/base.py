@@ -61,14 +61,22 @@ class Formula(abc.ABC):
             part2_set = set(part2_alleles)
             intersection = part1_set & part2_set  # common unique alleles
 
+            if not self.is_gender_specific(locus):
+                if len(part1_alleles) != 2 or len(part2_alleles) != 2:
+                    raise AllelesException()
+
             return part1_alleles, part2_alleles, locus, part1_set, part2_set, intersection
 
         #  case of 3 participants
         part3_alleles = self.split_sat(raw_values.pop())
         part2_alleles = self.split_sat(raw_values.pop())
         part1_alleles = self.split_sat(raw_values.pop())
-
         locus = ' '.join(raw_values)
+
+        if not self.is_gender_specific(locus):
+            if len(part1_alleles) != 2 or len(part2_alleles) != 2 or len(part3_alleles) != 2:
+                raise AllelesException()
+
         alleles = [part3_alleles, part2_alleles, part1_alleles]
         sets = [set(part3_alleles), set(part2_alleles), set(part1_alleles)]
         intersections = [sets[2] & sets[1], sets[2] & sets[0], sets[1] & sets[0]]

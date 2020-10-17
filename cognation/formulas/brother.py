@@ -1,17 +1,14 @@
 from __future__ import unicode_literals
-from .base import Formula, AllelesException, Calculations
+from .base import Formula, Calculations
 
 
 class BrotherFormula(Formula):
     def calculate_relation(self, raw_values):
         (brother_alleles, insp_alleles, locus, brother_set, insp_set, intersection) = self.getting_alleles_locus(raw_values, 2)
 
-        # Function in base.py for checking out if the locus is gender-specific; if yes return lr
+        # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
             return self.make_result2(locus, '/'.join(brother_alleles), '/'.join(insp_alleles), '-')
-
-        if len(brother_alleles) != 2 or len(insp_alleles) != 2:
-            raise AllelesException()
 
         c = Calculations()
         # In cases aa aa or ab ab lr = 1

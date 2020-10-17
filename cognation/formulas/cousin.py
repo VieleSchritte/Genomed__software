@@ -1,17 +1,14 @@
 from __future__ import unicode_literals
-from .base import Formula, AllelesException
+from .base import Formula
 
 
 class CousinFormula(Formula):
     def calculate_relation(self, raw_values):
         (cousin1_alleles, cousin2_alleles, locus, cousin1_set, cousin2_set, intersection) = self.getting_alleles_locus(raw_values, 2)
 
-        # Function in base.py for checking out if the locus is gender-specific; if yes return lr
+        # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
             return self.make_result2(locus, '/'.join(cousin2_alleles), '/'.join(cousin1_alleles), '-')
-
-        if len(cousin1_alleles) != 2 or len(cousin2_alleles) != 2:
-            raise AllelesException()
 
         freq_dict = self.get_frequencies(locus, intersection)
         lr = 0.75

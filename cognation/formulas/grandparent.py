@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from .base import Formula, AllelesException
+from .base import Formula
 from .base import Calculations
 
 
@@ -8,12 +8,9 @@ class GrandParentFormula(Formula):
     def calculate_relation(self, raw_values):
         (gc_alleles, gp_alleles, locus, gc_set, gp_set, intersection) = self.getting_alleles_locus(raw_values, 2)
 
-        # Checking gender specificity of locus
+        # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
             return self.make_result2(locus, '/'.join(gc_alleles), '/'.join(gp_alleles), '-')
-
-        if len(gc_alleles) != 2 or len(gp_alleles) != 2:
-            raise AllelesException()
 
         freq_dict = self.get_frequencies(locus, gc_set)
         calc = Calculations()
