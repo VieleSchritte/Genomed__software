@@ -23,10 +23,7 @@ class SiblingFormula(Formula):
 
         # confirmation = 1
         ab_ab_aa_conf1 = child_set == parent_set and len(child_set) == 2 and len(sibling_set) == 1
-
-        ab_ac_bc_1 = len(child_set) == len(parent_set) == len(sibling_set) == 2
-        ab_ac_bc_2 = child_set != parent_set != sibling_set
-        ab_ac_bc_conf1 = ab_ac_bc_1 and ab_ac_bc_2
+        ab_ac_bc_conf1 = len(child_set) == len(parent_set) == len(sibling_set) == 2 and child_set != parent_set != sibling_set
 
         if child_set == sibling_set or ab_ab_aa_conf1 or ab_ac_bc_conf1:
             freq_dict = self.get_frequencies(locus, child_alleles)
