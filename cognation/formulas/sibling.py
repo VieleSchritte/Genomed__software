@@ -20,24 +20,7 @@ class SiblingFormula(Formula):
             return self.make_result3(locus, '/'.join(child_alleles), '/'.join(parent_alleles), '/'.join(sibling_alleles), lr)
 
         c = Calculations()
-
-        # confirmation = 1
-        ab_ab_aa_conf1 = child_set == parent_set and len(child_set) == 2 and len(sibling_set) == 1
-        ab_ac_bc_conf1 = len(child_set) == len(parent_set) == len(sibling_set) == 2 and child_set != parent_set != sibling_set
-
-        if child_set == sibling_set or ab_ab_aa_conf1 or ab_ac_bc_conf1:
-            freq_dict = self.get_frequencies(locus, child_alleles)
-            if len(child_set) == 1:
-                freq = freq_dict[child_alleles[0]]
-                refutation = c.homo_refutation(freq)
-            else:
-                freq1, freq2 = freq_dict[child_alleles[0]], freq_dict[child_alleles[1]]
-                refutation = c.hetero_refutation(freq1, freq2)
-            lr = 1 / refutation
-            return self.make_result3(locus, '/'.join(child_alleles), '/'.join(parent_alleles), '/'.join(sibling_alleles), lr)
-
         freq_dict = self.get_frequencies(locus, child_alleles + parent_alleles + sibling_alleles)
-
         unavailable_parent_alleles = [0, 0]
 
         # Homozygous child
@@ -58,7 +41,7 @@ class SiblingFormula(Formula):
             refutation = c.hetero_refutation(freq1, freq2)
 
             # A special case for confirmation = M(Pc, Pa) + M(Pc, Pb) ab ab ac
-            if parent_set == 1 and len(sibling_set) == 2:
+            if parent_set == child_set and len(sibling_set) == 2 and sibling_set != parent_set:
                 freq1, freq2 = freq_dict[parent_alleles[0]], freq_dict[parent_alleles[1]]
                 freq3 = freq_dict[self.get_unique_allele(sibling_alleles, parent_alleles)]
                 confirmation = c.M(freq3, freq1) + c.M(freq3, freq2)
@@ -90,6 +73,12 @@ class SiblingFormula(Formula):
         # Default is confirmation = M(x,y); x, y = unavailable_parent_alleles[0], unavailable_parent_alleles[1]
         unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, sibling_alleles, sp_intersection, 0)
         unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, child_alleles, cp_intersection, 1)
+        set_unavailable = set(unavailable_parent_alleles)
+
+        if len(set_unavailable) == 1:
+            lr = 1 / refutation
+            return self.make_result3(locus, '/'.join(child_alleles), '/'.join(parent_alleles), '/'.join(sibling_alleles), lr)
+
         lr = self.get_lr(freq_dict, unavailable_parent_alleles, refutation)
         return self.make_result3(locus, '/'.join(child_alleles), '/'.join(parent_alleles), '/'.join(sibling_alleles), lr)
 

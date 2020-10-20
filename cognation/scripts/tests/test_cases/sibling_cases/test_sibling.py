@@ -4,8 +4,8 @@ from django.test import TestCase
 from cognation.scripts.tests import GetData
 
 # all possible test cases
-doc_refnames_list = ['sibling1/sibling1_ref.txt']
-doc_testnames_list = ['sibling1/sibling1_test.txt']
+doc_refnames_list = ['sibling1/sibling1_ref.txt', 'sibling2/sibling2_ref.txt']
+doc_testnames_list = ['sibling1/sibling1_test.txt', 'sibling2/sibling2_test.txt']
 short_path = 'cognation/scripts/tests/test_cases/sibling_cases/'
 
 overall_ref_dict = {}
@@ -50,6 +50,7 @@ class TestSiblingFormula(TestCase):
             for key in dict_loci_lrs_ref.keys():
                 lr_ref = dict_loci_lrs_ref[key]
                 lr_test = dict_loci_lrs_test[key]
+                print(key, lr_ref, lr_test)
                 self.assertEqual(lr_ref, lr_test)
 
             cpi_ref = parent_ref_tuple[1]
