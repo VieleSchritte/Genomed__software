@@ -124,7 +124,7 @@ class Formula(abc.ABC):
 
     @staticmethod
     def split_sat(sat_string):
-        return re.split(r'\/', sat_string)
+        return re.split(r'/', sat_string)
 
     @staticmethod
     def make_result2(locus, part1, part2, lr):
