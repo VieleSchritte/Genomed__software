@@ -75,6 +75,7 @@ class SiblingFormula(Formula):
         unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, child_alleles, cp_intersection, 1)
         set_unavailable = set(unavailable_parent_alleles)
 
+        # special case for confirmation = 1
         if len(set_unavailable) == 1:
             lr = 1 / refutation
             return self.make_result3(locus, '/'.join(child_alleles), '/'.join(parent_alleles), '/'.join(sibling_alleles), lr)

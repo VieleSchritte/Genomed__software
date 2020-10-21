@@ -18,7 +18,7 @@ class LineFormatException(Exception):
 
 class AllelesException(Exception):
     def __str__(self):
-        return "Alleles count doesn't look right"
+        return "Alleles count doesn't look right: " + str(self.locus)
 
 
 class UnknownAlleleException(Exception):
@@ -27,7 +27,7 @@ class UnknownAlleleException(Exception):
         self.sat = sat
 
     def __str__(self):
-        return "Unknown allele found: " + str(self.sat)
+        return "Unknown allele found: " + str(self.locus) + " " + str(self.sat)
 
 
 # Abstract parent class
@@ -137,6 +137,7 @@ class Formula(abc.ABC):
 
     @staticmethod
     def make_result3(locus, part1, part2, part3, lr):
+        print(locus, lr)
         return {
             "locus": locus,
             "part1": part1,

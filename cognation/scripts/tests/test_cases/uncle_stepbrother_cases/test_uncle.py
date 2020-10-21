@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 import unittest
 from django.test import TestCase
-from cognation.scripts.tests import GetData
+from cognation.scripts.tests import GetData, UNCLE_TYPE
 
 # all possible test cases
-doc_refnames_list = ['Aunt1/aunt_ref.txt']
-doc_testnames_list = ['Aunt1/aunt_test.txt']
+reference_paths_list = ['Aunt1/aunt_ref.txt']
+test_paths_list = ['Aunt1/aunt_test.txt']
 short_path = 'cognation/scripts/tests/test_cases/uncle_stepbrother_cases/'
 
 overall_ref_dict = {}
 overall_test_dict = {}
-
-UNCLE_TYPE = 3
 
 
 class GetUncleData:
@@ -19,13 +17,12 @@ class GetUncleData:
     @staticmethod
     def prep():
         get_ref = GetData()
-        part_number = 2
-        for i in range(len(doc_refnames_list)):
-            doc_ref_path = doc_refnames_list[i]
-            overall_ref_dict[doc_ref_path] = get_ref.get_reference_data(short_path, doc_ref_path, part_number)
+        for i in range(len(reference_paths_list)):
+            ref_path = reference_paths_list[i]
+            overall_ref_dict[ref_path] = get_ref.get_reference_data(short_path, ref_path, 2)
 
-            doc_test_path = doc_testnames_list[i]
-            overall_test_dict[doc_test_path] = get_ref.get_test_data(short_path, doc_test_path, UNCLE_TYPE)
+            test_path = test_paths_list[i]
+            overall_test_dict[test_path] = get_ref.get_test_data(short_path, test_path, UNCLE_TYPE)
 
 
 instance = GetUncleData()
@@ -37,12 +34,12 @@ class TestUncleFormula(TestCase):
         pass
 
     def test_final_assertion(self):
-        for i in range(len(doc_refnames_list)):
-            doc_ref_path = doc_refnames_list[i]
-            doc_test_path = doc_testnames_list[i]
+        for i in range(len(reference_paths_list)):
+            ref_path = reference_paths_list[i]
+            test_path = test_paths_list[i]
 
-            uncle_ref_tuple = overall_ref_dict[doc_ref_path]
-            uncle_test_tuple = overall_test_dict[doc_test_path]
+            uncle_ref_tuple = overall_ref_dict[ref_path]
+            uncle_test_tuple = overall_test_dict[test_path]
 
             dict_loci_lrs_ref = uncle_ref_tuple[0]
             dict_loci_lrs_test = uncle_test_tuple[0]
