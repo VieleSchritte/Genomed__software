@@ -6,34 +6,34 @@ from .base import Calculations
 # FORMULA_TYPE_GRANDPARENT
 class GrandParentFormula(Formula):
     def calculate_relation(self, raw_values):
-        (gc_alleles, gp_alleles, locus, gc_set, gp_set, intersection) = self.getting_alleles_locus(raw_values, 2)
+        (grandchild_alleles, grandparent_alleles, locus, grandchild_set, grandparent_set, intersection, dict_make_result) = self.getting_alleles_locus(raw_values, 2)
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
-            return self.make_result2(locus, '/'.join(gc_alleles), '/'.join(gp_alleles), '-')
+            return self.make_result(locus, '-', **dict_make_result)
 
-        freq_dict = self.get_frequencies(locus, gc_set)
+        freq_dict = self.get_frequencies(locus, grandchild_set)
         calc = Calculations()
         conf = Confirmations()
 
-        if len(gc_set) == 1:
-            freq = freq_dict[next(iter(gc_set))]  # gets first
+        if len(grandchild_set) == 1:
+            freq = freq_dict[next(iter(grandchild_set))]  # gets first
             refutation = calc.homo_refutation(freq)
-            confirmation = conf.homo_gc_confirmation(freq, intersection, gp_set)
-        else:  # gc_set == 2
-            gc1 = gc_alleles[0]
-            gc2 = gc_alleles[1]
+            confirmation = conf.homo_gc_confirmation(freq, intersection, grandparent_set)
+        else:
+            gc1 = grandchild_alleles[0]
+            gc2 = grandchild_alleles[1]
 
-            if gc2 in gp_set:
+            if gc2 in grandparent_set:
                 gc1, gc2 = gc2, gc1
             freq1 = freq_dict[gc1]
             freq2 = freq_dict[gc2]
 
             refutation = calc.hetero_refutation(freq1, freq2)
-            confirmation = conf.hetero_gc_confirmation(freq1, freq2, intersection, gp_set)
+            confirmation = conf.hetero_gc_confirmation(freq1, freq2, intersection, grandparent_set)
         lr = confirmation / refutation
 
-        return self.make_result2(locus, '/'.join(gc_alleles), '/'.join(gp_alleles), lr)
+        return self.make_result(locus, lr, **dict_make_result)
 
 
 class Confirmations:
