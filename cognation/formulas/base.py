@@ -64,7 +64,7 @@ class Formula(abc.ABC):
                 if len(part1_alleles) != 2 or len(part2_alleles) != 2:
                     raise AllelesException()
 
-            dict_make_result = {'part1': '/'.join(part1_alleles), 'part2': '/'.join(part2_alleles)}
+            dict_make_result = {'part1': '/'.join(part2_alleles), 'part2': '/'.join(part1_alleles)}
 
             return part1_alleles, part2_alleles, locus, part1_set, part2_set, intersection, dict_make_result
 

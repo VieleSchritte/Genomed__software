@@ -9,7 +9,7 @@ class SiblingFormula(Formula):
         sibling_alleles, parent_alleles, child_alleles = alleles
         sibling_set, parent_set, child_set = sets
         cp_intersection, sc_intersection, sp_intersection = intersections
-        
+
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', **dict_make_result)
