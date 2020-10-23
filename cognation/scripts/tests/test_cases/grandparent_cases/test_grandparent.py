@@ -1,30 +1,28 @@
 # -*- coding: utf-8 -*-
 import unittest
 from django.test import TestCase
-from cognation.scripts.tests import GetData
+from cognation.scripts.tests import GetData, GRANDPARENT_TYPE
 
 # all possible test cases
-doc_refnames_list = ['grandparent1/reference_data_grandparent1.txt', 'grandparent2/reference_data_grandparent2.txt']
-doc_testnames_list = ['grandparent1/test_data_grandparent1.txt', 'grandparent2/test_data_grandparent2.txt']
+reference_paths_list = ['grandparent1/reference_data_grandparent1.txt', 'grandparent2/reference_data_grandparent2.txt']
+test_paths_list = ['grandparent1/test_data_grandparent1.txt', 'grandparent2/test_data_grandparent2.txt']
 short_path = 'cognation/scripts/tests/test_cases/grandparent_cases/'
 
 overall_ref_dict = {}
 overall_test_dict = {}
 
-GRANDPARENT_TYPE = 2
-part_number = 2
 
-
-class GetGrandParentsData():
+class GetGrandParentsData:
     #  preparing dictionaries for assertion
-    def prep(self):
+    @staticmethod
+    def prep():
         get_ref = GetData()
-        for i in range(len(doc_refnames_list)):
-            doc_ref_path = doc_refnames_list[i]
-            overall_ref_dict[doc_ref_path] = get_ref.get_reference_data(short_path, doc_ref_path, part_number)
+        for i in range(len(reference_paths_list)):
+            ref_path = reference_paths_list[i]
+            overall_ref_dict[ref_path] = get_ref.get_reference_data(short_path, ref_path, 2)
 
-            doc_test_path = doc_testnames_list[i]
-            overall_test_dict[doc_test_path] = get_ref.get_test_data(short_path, doc_test_path, GRANDPARENT_TYPE)
+            test_path = test_paths_list[i]
+            overall_test_dict[test_path] = get_ref.get_test_data(short_path, test_path, GRANDPARENT_TYPE)
 
 
 instance = GetGrandParentsData()
@@ -36,12 +34,12 @@ class TestGrandParentFormula(TestCase):
         pass
 
     def test_final_assertion(self):
-        for i in range(len(doc_refnames_list)):
-            doc_ref_path = doc_refnames_list[i]
-            doc_test_path = doc_testnames_list[i]
+        for i in range(len(reference_paths_list)):
+            ref_path = reference_paths_list[i]
+            test_path = test_paths_list[i]
 
-            grandparent_ref_tuple = overall_ref_dict[doc_ref_path]
-            grandparent_test_tuple = overall_test_dict[doc_test_path]
+            grandparent_ref_tuple = overall_ref_dict[ref_path]
+            grandparent_test_tuple = overall_test_dict[test_path]
 
             dict_loci_lrs_ref = grandparent_ref_tuple[0]
             dict_loci_lrs_test = grandparent_test_tuple[0]
