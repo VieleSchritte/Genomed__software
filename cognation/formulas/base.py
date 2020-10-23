@@ -4,7 +4,6 @@ import re
 from collections import OrderedDict
 
 
-# Exception - if something isn't right in data format
 class UnknownFormulaException(Exception):
     def __init__(self, formula_type):
         self.formula_type = formula_type
@@ -128,7 +127,6 @@ class Formula(abc.ABC):
     def split_sat(sat_string):
         return re.split(r'/', sat_string)
 
-    @staticmethod
     def make_result(locus, lr, **kwargs):
         if len(kwargs.keys()) == 2:
             return {

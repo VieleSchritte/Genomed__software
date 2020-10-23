@@ -14,36 +14,40 @@
         <div class="label-notion">
             <h1>Input order:</h1>
             <ol>
-              <li>Father / grandfather etc</li>
-              <li>Inspected person (child / grandchild etc)</li>
+                <li>Father / grandfather etc</li>
+                <li>Inspected person (child / grandchild etc)</li>
             </ol>
         </div>
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-          <label class="btn btn-secondary">
-            <input type="radio" name="type" id="typeParent" autocomplete="off" value="1" checked /> Parent
-          </label>
-          <label class="btn btn-secondary">
-            <input type="radio" name="type" id="typeGrandparent" autocomplete="off" value="2" /> Grandparent
-          </label>
-          <label class="btn btn-secondary">
-            <input type="radio" name="type" id="typeSibling" autocomplete="off" value="3" /> Sibling
-          </label>
-          <label class="btn btn-secondary">
-            <input type="radio" name="type" id="typeUncle" autocomplete="off" value="4" /> Uncle
-          </label>
-          <label class="btn btn-secondary">
-            <input type="radio" name="type" id="typeCousin" autocomplete="off" value="5" /> Cousin
-          </label>
-          <label class="btn btn-secondary">
-            <input type="radio" name="type" id="typeStep" autocomplete="off" value="6" /> Step-Brother
-          </label>
             <label class="btn btn-secondary">
-            <input type="radio" name="type" id="typeStep" autocomplete="off" value="7" /> Brother
-          </label>
+                <input type="radio" name="type" value="1"/> Parent
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="type" value="2"/> Grandparent
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="type" value="3"/> Uncle
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="type" value="4"/> Cousin
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="type" value="5"/> Step-Brother
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="type" value="6"/> Brother
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="type" value="7"/> Sibling
+            </label>
+            <label class="btn btn-secondary">
+                <input type="radio" name="type" value="8"/> 2 Parents
+            </label>
         </div>
         <div style="margin:10px 0;">
             <label for="dataId"></label>
-            <textarea style="background:gainsboro;" id="dataId" name="data" cols="120" rows="24" class="form-control"></textarea>
+            <textarea style="background:gainsboro;" id="dataId" name="data" cols="120" rows="24"
+                      class="form-control"></textarea>
         </div>
         {% csrf_token %}
         <input type="submit" class="btn btn-dark" title="Submit"/>
