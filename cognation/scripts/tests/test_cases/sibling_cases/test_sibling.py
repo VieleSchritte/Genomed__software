@@ -2,14 +2,17 @@
 import unittest
 from django.test import TestCase
 from cognation.scripts.tests import GetData, SIBLING_TYPE
+from django.core.management import call_command
 import logging
+
 logger = logging.getLogger('django.db.backends')
 logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.StreamHandler())
 
-
 class TestSiblingFormula(TestCase):
     def setUp(self):
+        call_command("loaddata", "converted.json", verbosity=0)
+
         self.reference_paths_list = ['sibling1/sibling1_ref.txt', 'sibling2/sibling2_ref.txt']
         self.test_paths_list = ['sibling1/sibling1_test.txt', 'sibling2/sibling2_test.txt']
         short_path = 'cognation/scripts/tests/test_cases/sibling_cases/'

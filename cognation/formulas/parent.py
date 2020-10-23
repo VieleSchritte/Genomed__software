@@ -9,7 +9,7 @@ class ParentFormula(Formula):
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
-            return self.make_result(locus, '-', **dict_make_result)
+            return self.make_result(locus, '-', dict_make_result)
 
         lr = 0
         freq_dict = self.get_frequencies(locus, intersection)
@@ -30,4 +30,4 @@ class ParentFormula(Formula):
             freq = list(freq_dict.values())[0]
             lr = 1 / (len(parent_set)*len(child_set) * freq)
 
-        return self.make_result(locus, lr, **dict_make_result)
+        return self.make_result(locus, lr, dict_make_result)

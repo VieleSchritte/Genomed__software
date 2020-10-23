@@ -127,20 +127,21 @@ class Formula(abc.ABC):
     def split_sat(sat_string):
         return re.split(r'/', sat_string)
 
-    def make_result(locus, lr, **kwargs):
-        if len(kwargs.keys()) == 2:
+    @staticmethod
+    def make_result(locus, lr, dict_alleles):
+        if len(dict_alleles.keys()) == 2:
             return {
                 "locus": locus,
-                "part1": kwargs['part1'],
-                "part2": kwargs['part2'],
+                "part1": dict_alleles['part1'],
+                "part2": dict_alleles['part2'],
                 "lr": lr
             }
         else:
             return {
                 "locus": locus,
-                "part1": kwargs['part1'],
-                "part2": kwargs['part2'],
-                "part3": kwargs['part3'],
+                "part1": dict_alleles['part1'],
+                "part2": dict_alleles['part2'],
+                "part3": dict_alleles['part3'],
                 "lr": lr
             }
 
