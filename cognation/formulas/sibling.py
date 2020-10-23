@@ -1,205 +1,119 @@
 from __future__ import unicode_literals
-from cognation.formulas.base import Formula, LineFormatException, AllelesException
+from cognation.formulas.base import Formula, Calculations
 
 
 class SiblingFormula(Formula):
     def calculate_relation(self, raw_values):
-        if len(raw_values) < 4:
-            raise LineFormatException()
+        locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 3)
 
-        raw_ef = raw_values.pop()
-        raw_cd = raw_values.pop()
-        raw_ab = raw_values.pop()
-        locus = ' '.join(raw_values)
+        sibling_alleles, parent_alleles, child_alleles = alleles
+        sibling_set, parent_set, child_set = sets
+        cp_intersection, sc_intersection, sp_intersection = intersections
 
-        split_ab = self.split_sat(raw_ab)
-        split_cd = self.split_sat(raw_cd)
-        split_ef = self.split_sat(raw_ef)
+        # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
+        if self.is_gender_specific(locus):
+            return self.make_result(locus, '-', **dict_make_result)
 
-        if len(split_ab) != 2 or len(split_cd) != 2 or len(split_ef) != 2:
-            raise AllelesException()
+        #  If there's no relation then return lr = 0 and start collecting mutations
+        if len(sp_intersection) == 0 or len(cp_intersection) == 0:
+            lr = 0
+            return self.make_result(locus, lr, **dict_make_result)
 
-        ab = set(split_ab)
-        cd = set(split_cd)
-        ef = set(split_ef)
+        c = Calculations()
+        freq_dict = self.get_frequencies(locus, child_alleles + parent_alleles + sibling_alleles)
+        unavailable_parent_alleles = [0, 0]
 
-        ab_cd = ab & cd
-        ab_ef = ab & ef
-        cd_ef = cd & ef
+        # Homozygous child
+        if len(child_set) == 1:
+            freq = freq_dict[child_alleles[0]]
+            refutation = c.homo_refutation(freq)
 
-        lr = 0
-        if len(ab) == 1:  # 1 - AA
-            if len(ab_cd) == 1:
-                if len(cd) == 1:  # 2 - AA
-                    if len(cd_ef) == 1:
-                        if len(ef) == 1:  # 3 - AA
-                            lr = self.gen_aa_aa_aa(locus, ab.copy().pop())
-                        else:  # 3 - AB
-                            lr = self.gen_aa_aa_ab(locus, ab.copy().pop(), (ab ^ ef).pop())
-                    else:  # 3 - BC or CC
-                        pass
-                elif len(cd) == 2:  # 2 - AB
-                    if len(ab_ef) == 1:
-                        if len(ef) == 1:  # 3 - AA
-                            lr = self.gen_aa_ab_aa(locus, ab.copy().pop())
-                        elif len(cd_ef) == 2:  # 3 - AB
-                            lr = self.gen_aa_ab_ab(locus, ab.copy().pop(), (ab ^ cd).pop())
-                        elif len(cd_ef) == 1:  # 3 - AC
-                            lr = self.gen_aa_ab_ac(locus, ab.copy().pop(), (ab ^ ef).pop())
-                    else:  # 3 - CC or CD
-                        pass
-            else:  # 2 - BC
-                pass
-        # 1 - AB
-        elif len(ab_cd) == 1:
-            if len(cd) == 1:  # 2 - AA
-                a = cd.copy().pop()
-                b = (cd ^ ab).pop()
-                if len(ef) == 1 and len(cd_ef) == 1:  # 3 - AA
-                    lr = self.gen_ab_aa_aa(locus, a, b)
-                elif len(ef) == 2:
-                    if len(ab_ef) == 2:  # 3 - AB
-                        lr = self.gen_ab_aa_ab(locus, a, b)
-                    elif len(ab_ef) == 1:  # 3 - AC
-                        lr = self.gen_ab_aa_ac(locus, a, b, (cd ^ ef).pop())
-                    else:  # 3 - BC
-                        pass
-                else:  # 3 - CC
-                    pass
-            else:  # 2 - AC
-                a = ab_cd.copy().pop()
-                b = (ab_cd ^ ab).pop()
-                c = (ab_cd ^ cd).pop()
-                if len(ef) == 1:
-                    if a in ef:  # 3 - AA
-                        lr = self.gen_ab_ac_aa(locus, a, b)
-                    elif c in ef:  # 3 - CC
-                        lr = self.gen_ab_ac_cc(locus, a, b, c)
+            #  A special case for confirmation = F(Pa) / (F(Pa) + F(Pb) - 2 * Pa * Pb) aa ab ab
+            if len(parent_set) == 2 and parent_set == sibling_set:
+                freq2 = freq_dict[self.get_unique_allele(parent_alleles, child_alleles)]
+                confirmation = c.F(freq) / (c.F(freq) + c.F(freq2) - 2 * freq * freq2)
+                lr = confirmation / refutation
+                return self.make_result(locus, lr, **dict_make_result)
+
+        # Heterozygous child
+        else:
+            freq1, freq2 = freq_dict[child_alleles[0]], freq_dict[child_alleles[1]]
+            refutation = c.hetero_refutation(freq1, freq2)
+
+            # A special case for confirmation = M(Pc, Pa) + M(Pc, Pb) ab ab ac
+            if parent_set == child_set and len(sibling_set) == 2 and sibling_set != parent_set:
+                freq1, freq2 = freq_dict[parent_alleles[0]], freq_dict[parent_alleles[1]]
+                freq3 = freq_dict[self.get_unique_allele(sibling_alleles, parent_alleles)]
+                confirmation = c.M(freq3, freq1) + c.M(freq3, freq2)
+                lr = confirmation / refutation
+                return self.make_result(locus, lr, **dict_make_result)
+
+            #  A special case for confirmation = 2 * Pb / (2 - Pa - Pc) ab ac ac
+            if parent_set == sibling_set and parent_set != child_set and len(parent_set) == len(sibling_set) == 2:
+                freq1, freq3 = freq_dict[parent_alleles[0]], freq_dict[parent_alleles[1]]
+                freq2 = freq_dict[self.get_unique_allele(child_alleles, parent_alleles)]
+                confirmation = 2 * freq2 / (2 - freq1 - freq3)
+                lr = confirmation / refutation
+                return self.make_result(locus, lr, **dict_make_result)
+
+            # ab aa ac case confirmation = M(Pc, Pa)
+            if len(child_set) == len(sibling_set) == 2 and child_set != sibling_set and len(parent_set) == 1:
+                unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, sibling_alleles, sp_intersection, 0)
+                unavailable_parent_alleles[1] = list(sp_intersection)[0]
+                lr = self.get_lr(freq_dict, unavailable_parent_alleles, refutation)
+                return self.make_result(locus, lr, **dict_make_result)
+
+            # ab ac aa case confirmation = M(Pa, Pc)
+            if len(child_set) == len(parent_set) == 2 and len(sibling_set) == len(sp_intersection) == len(cp_intersection) == len(sc_intersection) == 1 and child_set != parent_set:
+                unavailable_parent_alleles[1] = self.get_unique_allele(parent_alleles, child_alleles)
+                unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, sibling_alleles, sp_intersection, 0)
+                lr = self.get_lr(freq_dict, unavailable_parent_alleles, refutation)
+                return self.make_result(locus, lr, **dict_make_result)
+
+        # Default is confirmation = M(x,y); x, y = unavailable_parent_alleles[0], unavailable_parent_alleles[1]
+        unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, sibling_alleles, sp_intersection, 0)
+        unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, child_alleles, cp_intersection, 1)
+        set_unavailable = set(unavailable_parent_alleles)
+
+        # special case for confirmation = 1
+        if len(set_unavailable) == 1:
+            lr = 1 / refutation
+            return self.make_result(locus, lr, **dict_make_result)
+
+        lr = self.get_lr(freq_dict, unavailable_parent_alleles, refutation)
+        return self.make_result(locus, lr, **dict_make_result)
+
+    # A method to fill M(freq1, freq2) formula in base.Calculations. Returns list of alleles in required range
+    @staticmethod
+    def get_parent2_alleles(parent2_alleles, ch_sib_alleles, intersection, position):
+        counter = 0
+
+        for allele in ch_sib_alleles:
+            if allele == list(intersection)[0]:
+                counter += 1
+
+        if counter == 2:
+            parent2_alleles[position] = ch_sib_alleles[position]
+        else:
+            for allele in ch_sib_alleles:
+                if allele == list(intersection)[0]:
+                    continue
                 else:
-                    if len(ab_ef) == 2:  # 3 - AB
-                        lr = self.gen_ab_ac_ab(locus, a, b)
-                    elif len(cd_ef) == 2:  # 3 - AC
-                        lr = self.gen_ab_ac_ac(locus, a, b, c)
-                    elif len(ab_ef) == 1 and a in ef:
-                        lr = self.gen_ab_ac_ad(locus, a, b, (ab_ef ^ ef).pop())
-                    elif b in ef and c in ef:  # 3 - BC
-                        lr = self.gen_ab_ac_bc(locus, a, b)
-                    elif len(ab_ef) == 0 and len(cd_ef) == 1:
-                        lr = self.gen_ab_ac_cd(locus, a, b, (cd_ef ^ ef).pop())
-        elif len(ab_cd) == 2:  # 2 - AB
-            if len(ef) == 1 and len(ab_ef) == 1:  # 3 - AA
-                lr = self.gen_ab_ab_aa(locus, ab_ef.pop(), (ab ^ ef).pop())
-            elif len(ef) == 2 and len(ab_ef) == 2:  # 3 - AB
-                lr = self.gen_ab_ab_ab(locus, ab.pop(), ab.pop())
-            elif len(ef) == 2 and len(ab_ef) == 1:  # 3 - AC
-                lr = self.gen_ab_ab_ac(locus, ab_ef.copy().pop(), (ab_ef ^ cd).pop(), (ab_ef ^ ef).pop())
+                    parent2_alleles[position] = allele
 
-        result = self.make_result2(locus, raw_ab, raw_cd, lr)
-        result["ef"] = raw_ef
-        return result
+        return parent2_alleles
 
-    def gen_aa_aa_aa(self, locus, a):
-        p = self.get_frequencies(locus, {a: 0})
-        return 0 if p[a] == 0 else \
-            1 / self.prob_not_c_aa(p, a)
+    # A method to get unique allele from list1 (list2 doesn't include this allele)
+    @staticmethod
+    def get_unique_allele(list1, list2):
+        for allele in list1:
+            if allele not in list2:
+                return allele
 
-    def gen_aa_aa_ab(self, locus, a, b):
-        p = self.get_frequencies(locus, {a: 0, b: 0})
-        return 0 if p[a] == 0 else \
-            self._2_pa_pb(p, a, b) / self._2pa_sub_pa2(p, b) / self.prob_not_c_aa(p, a)
-
-    def gen_aa_ab_aa(self, locus, a):
-        p = self.get_frequencies(locus, {a: 0})
-        return 0 if p[a] == 0 else \
-            1 / self.prob_not_c_aa(p, a)
-
-    def gen_aa_ab_ab(self, locus, a, b):
-        p = self.get_frequencies(locus, {a: 0, b: 0})
-        return 0 if p[a] == 0 else \
-            (
-                self._2pa_sub_pa2(p, a)
-                / ((p[a] + p[b]) * (2 - (p[a] + p[b])))
-            ) / self.prob_not_c_aa(p, a)
-
-    def gen_aa_ab_ac(self, locus, a, c):
-        p = self.get_frequencies(locus, {a: 0, c: 0})
-        return 0 if p[a] == 0 else \
-            self._2_pa_pb(p, a, c) / self._2pa_sub_pa2(p, c) / self.prob_not_c_aa(p, a)
-
-    def gen_ab_aa_aa(self, locus, a, b):
-        p = self.get_frequencies(locus, {a: 0, b: 0})
-        divider = self.prob_not_c_ab(p, a, b)
-        return 0 if divider == 0 else \
-            self._2_pa_pb(p, a, b) / self._2pa_sub_pa2(p, a) / divider
-
-    def gen_ab_aa_ab(self, locus, a, b):
-        p = self.get_frequencies(locus, {a: 0, b: 0})
-        divider = self.prob_not_c_ab(p, a, b)
-        return 0 if divider == 0 else \
-            1 / divider
-
-    def gen_ab_aa_ac(self, locus, a, b, c):
-        p = self.get_frequencies(locus, {a: 0, b: 0, c: 0})
-        divider = self.prob_not_c_ab(p, a, b)
-        return 0 if divider == 0 else \
-            self._2_pa_pb(p, a, c) / self._2pa_sub_pa2(p, c) / divider
-
-    def gen_ab_ab_aa(self, locus, a, b):
-        p = self.get_frequencies(locus, {a: 0, b: 0})
-        divider = self.prob_not_c_ab(p, a, b)
-        return 0 if divider == 0 else \
-            1 / divider
-
-    def gen_ab_ab_ab(self, locus, a, b):
-        p = self.get_frequencies(locus, {a: 0, b: 0})
-        divider = self.prob_not_c_ab(p, a, b)
-        return 0 if divider == 0 else \
-            1 / divider
-
-    def gen_ab_ab_ac(self, locus, a, b, c):
-        p = self.get_frequencies(locus, {a: 0, b: 0, c: 0})
-        divider = self.prob_not_c_ab(p, a, b)
-        return 0 if divider == 0 else \
-            (self._2_pa_pb(p, a, c) + self._2_pa_pb(p, b, c)) / self._2pa_sub_pa2(p, c) / divider
-
-    def gen_ab_ac_aa(self, locus, a, b):
-        p = self.get_frequencies(locus, {a: 0, b: 0})
-        divider = self.prob_not_c_ab(p, a, b)
-        return 0 if divider == 0 else \
-            self._2_pa_pb(p, a, b) / self._2pa_sub_pa2(p, a) / divider
-
-    def gen_ab_ac_ab(self, locus, a, b):
-        p = self.get_frequencies(locus, {a: 0, b: 0})
-        divider = self.prob_not_c_ab(p, a, b)
-        return 0 if divider == 0 else \
-            1 / divider
-
-    def gen_ab_ac_ac(self, locus, a, b, c):
-        p = self.get_frequencies(locus, {a: 0, b: 0, c: 0})
-        divider = self.prob_not_c_ab(p, a, b)
-        return 0 if divider == 0 else \
-            (self._2_pa_pb(p, a, b) + self._2_pa_pb(p, b, c)) / ((p[a] + p[c]) * (2 - (p[a] + p[c]))) / divider
-
-    def gen_ab_ac_ad(self, locus, a, b, d):
-        p = self.get_frequencies(locus, {a: 0, b: 0, d: 0})
-        divider = self.prob_not_c_ab(p, a, b)
-        return 0 if divider == 0 else \
-            self._2_pa_pb(p, b, d) / self._2pa_sub_pa2(p, d) / divider
-
-    def gen_ab_ac_cc(self, locus, a, b, c):
-        p = self.get_frequencies(locus, {a: 0, b: 0, c: 0})
-        divider = self.prob_not_c_ab(p, a, b)
-        return 0 if divider == 0 else \
-            self._2_pa_pb(p, b, c) / self._2pa_sub_pa2(p, c) / divider
-
-    def gen_ab_ac_bc(self, locus, a, b):
-        p = self.get_frequencies(locus, {a: 0, b: 0})
-        divider = self.prob_not_c_ab(p, a, b)
-        return 0 if divider == 0 else \
-            1 / divider
-
-    def gen_ab_ac_cd(self, locus, a, b, d):
-        p = self.get_frequencies(locus, {a: 0, b: 0, d: 0})
-        divider = self.prob_not_c_ab(p, a, b)
-        return 0 if divider == 0 else \
-            self._2_pa_pb(p, b, d) / self._2pa_sub_pa2(p, d) / divider
+    @staticmethod
+    def get_lr(freq_dict, parent2_alleles, refutation):
+        c = Calculations()
+        freq1, freq2 = freq_dict[parent2_alleles[0]], freq_dict[parent2_alleles[1]]
+        confirmation = c.M(freq1, freq2)
+        lr = confirmation / refutation
+        return lr

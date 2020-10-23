@@ -1,7 +1,6 @@
 from cognation.models import Locus
 import abc
 import re
-from collections import Counter
 from collections import OrderedDict
 
 
@@ -17,7 +16,7 @@ class LineFormatException(Exception):
 
 class AllelesException(Exception):
     def __str__(self):
-        return "Alleles count doesn't look right"
+        return "Alleles count doesn't look right: "
 
 
 class UnknownAlleleException(Exception):
@@ -26,7 +25,7 @@ class UnknownAlleleException(Exception):
         self.sat = sat
 
     def __str__(self):
-        return "Unknown allele found: " + str(self.sat)
+        return "Unknown allele found: " + str(self.locus) + " " + str(self.sat)
 
 
 # Abstract parent class
@@ -60,19 +59,30 @@ class Formula(abc.ABC):
             part2_set = set(part2_alleles)
             intersection = part1_set & part2_set  # common unique alleles
 
-            return part1_alleles, part2_alleles, locus, part1_set, part2_set, intersection
+            if not self.is_gender_specific(locus):
+                if len(part1_alleles) != 2 or len(part2_alleles) != 2:
+                    raise AllelesException()
+
+            dict_make_result = {'part1': '/'.join(part2_alleles), 'part2': '/'.join(part1_alleles)}
+
+            return part1_alleles, part2_alleles, locus, part1_set, part2_set, intersection, dict_make_result
 
         #  case of 3 participants
         part3_alleles = self.split_sat(raw_values.pop())
         part2_alleles = self.split_sat(raw_values.pop())
         part1_alleles = self.split_sat(raw_values.pop())
-
         locus = ' '.join(raw_values)
+
+        if not self.is_gender_specific(locus):
+            if len(part1_alleles) != 2 or len(part2_alleles) != 2 or len(part3_alleles) != 2:
+                raise AllelesException()
+
         alleles = [part3_alleles, part2_alleles, part1_alleles]
         sets = [set(part3_alleles), set(part2_alleles), set(part1_alleles)]
         intersections = [sets[2] & sets[1], sets[2] & sets[0], sets[1] & sets[0]]
+        dict_make_result = {'part1': '/'.join(part1_alleles), 'part2': '/'.join(part2_alleles), 'part3': '/'.join(part3_alleles)}
 
-        return locus, alleles, sets, intersections
+        return locus, alleles, sets, intersections, dict_make_result
 
     def calculate(self):
         result = OrderedDict()
@@ -115,49 +125,24 @@ class Formula(abc.ABC):
 
     @staticmethod
     def split_sat(sat_string):
-        return re.split(r'\/', sat_string)
+        return re.split(r'/', sat_string)
 
-    @staticmethod
-    def make_result2(locus, part1, part2, lr):
-        return {
-            "locus": locus,
-            "part1": part1,
-            "part2": part2,
-            "lr": lr
-        }
-
-    @staticmethod
-    def make_result3(locus, part1, part2, part3, lr):
-        return {
-            "locus": locus,
-            "part1": part1,
-            "part2": part2,
-            "part3": part3,
-            "lr": lr
-        }
-
-    @staticmethod
-    def get_sat_counter(sat_string):
-        return Counter(Formula.split_sat(sat_string))
-
-    @staticmethod
-    def _2pa_sub_pa2(p, x):
-        return p[x] * (2 - p[x])
-
-    @staticmethod
-    def _05_add_05pa(p, x):
-        return .5 * (1 + p[x])
-
-    @staticmethod
-    def _2_pa_pb(p, a, b):
-        return 2 * p[a] * p[b]
-
-    def prob_not_c_aa(self, p, a):
-        return self._2pa_sub_pa2(p, a) ** 2
-
-    def prob_not_c_ab(self, p, a, b):
-        return 2 * self._2pa_sub_pa2(p, a) * self._2pa_sub_pa2(p, b) \
-               - self._2_pa_pb(p, a, b) * self._2_pa_pb(p, a, b)
+    def make_result(locus, lr, **kwargs):
+        if len(kwargs.keys()) == 2:
+            return {
+                "locus": locus,
+                "part1": kwargs['part1'],
+                "part2": kwargs['part2'],
+                "lr": lr
+            }
+        else:
+            return {
+                "locus": locus,
+                "part1": kwargs['part1'],
+                "part2": kwargs['part2'],
+                "part3": kwargs['part3'],
+                "lr": lr
+            }
 
     # Abstract methods
     @abc.abstractmethod

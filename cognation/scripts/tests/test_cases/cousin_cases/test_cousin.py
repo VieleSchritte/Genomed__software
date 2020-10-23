@@ -1,29 +1,28 @@
 # -*- coding: utf-8 -*-
 import unittest
 from django.test import TestCase
-from cognation.scripts.tests import GetData
+from cognation.scripts.tests import GetData, COUSIN_TYPE
 
 # all possible test cases
-doc_refnames_list = ['cousin1/cousin1_ref.txt']
-doc_testnames_list = ['cousin1/cousin1_test.txt']
+reference_paths_list = ['cousin1/cousin1_ref.txt']
+test_paths_list = ['cousin1/cousin1_test.txt']
 short_path = 'cognation/scripts/tests/test_cases/cousin_cases/'
 
 overall_ref_dict = {}
 overall_test_dict = {}
 
-COUSIN_TYPE = 4
 
 class GetCousinData:
     #  preparing dictionaries for assertion
-    def prep(self):
+    @staticmethod
+    def prep():
         get_ref = GetData()
-        part_number = 2
-        for i in range(len(doc_refnames_list)):
-            doc_ref_path = doc_refnames_list[i]
-            overall_ref_dict[doc_ref_path] = get_ref.get_reference_data(short_path, doc_ref_path, part_number)
+        for i in range(len(reference_paths_list)):
+            ref_path = reference_paths_list[i]
+            overall_ref_dict[ref_path] = get_ref.get_reference_data(short_path, ref_path, 2)
 
-            doc_test_path = doc_testnames_list[i]
-            overall_test_dict[doc_test_path] = get_ref.get_test_data(short_path, doc_test_path, COUSIN_TYPE)
+            test_path = test_paths_list[i]
+            overall_test_dict[test_path] = get_ref.get_test_data(short_path, test_path, COUSIN_TYPE)
 
 
 instance = GetCousinData()
@@ -35,27 +34,27 @@ class TestCousinFormula(TestCase):
         pass
 
     def test_final_assertion(self):
-        for i in range(len(doc_refnames_list)):
-            doc_ref_path = doc_refnames_list[i]
-            doc_test_path = doc_testnames_list[i]
+        for i in range(len(reference_paths_list)):
+            ref_path = reference_paths_list[i]
+            test_path = test_paths_list[i]
 
-            uncle_ref_tuple = overall_ref_dict[doc_ref_path]
-            uncle_test_tuple = overall_test_dict[doc_test_path]
+            cousin_ref_tuple = overall_ref_dict[ref_path]
+            cousin_test_tuple = overall_test_dict[test_path]
 
-            dict_loci_lrs_ref = uncle_ref_tuple[0]
-            dict_loci_lrs_test = uncle_test_tuple[0]
+            dict_loci_lrs_ref = cousin_ref_tuple[0]
+            dict_loci_lrs_test = cousin_test_tuple[0]
 
             for key in dict_loci_lrs_ref.keys():
                 lr_ref = dict_loci_lrs_ref[key]
                 lr_test = dict_loci_lrs_test[key]
                 self.assertEqual(lr_ref, lr_test)
 
-            cpi_ref = uncle_ref_tuple[1]
-            cpi_test = uncle_test_tuple[1]
+            cpi_ref = cousin_ref_tuple[1]
+            cpi_test = cousin_test_tuple[1]
             self.assertEqual(cpi_ref, cpi_test)
 
-            p_ref = int(uncle_ref_tuple[2] * 100) / 100
-            p_test = int(uncle_test_tuple[2] * 100) / 100
+            p_ref = int(cousin_ref_tuple[2] * 100) / 100
+            p_test = int(cousin_test_tuple[2] * 100) / 100
             self.assertEqual(p_ref, p_test)
 
     def tearDown(self):
