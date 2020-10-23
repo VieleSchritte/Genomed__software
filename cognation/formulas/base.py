@@ -5,7 +5,6 @@ from collections import Counter
 from collections import OrderedDict
 
 
-# Exception - if something isn't right in data format
 class UnknownFormulaException(Exception):
     def __init__(self, formula_type):
         self.formula_type = formula_type
@@ -140,25 +139,6 @@ class Formula(abc.ABC):
     @staticmethod
     def get_sat_counter(sat_string):
         return Counter(Formula.split_sat(sat_string))
-
-    @staticmethod
-    def make_result2(locus, part1, part2, lr):
-        return {
-            "locus": locus,
-            "part1": part1,
-            "part2": part2,
-            "lr": lr
-        }
-
-    @staticmethod
-    def make_result3(locus, part1, part2, part3, lr):
-        return {
-            "locus": locus,
-            "part1": part1,
-            "part2": part2,
-            "part3": part3,
-            "lr": lr
-        }
 
     @staticmethod
     def _2pa_sub_pa2(p, x):
