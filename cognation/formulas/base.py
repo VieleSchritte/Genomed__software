@@ -47,42 +47,31 @@ class Formula(abc.ABC):
             # Skip line with warning
             raise LineFormatException()
 
+        locus = raw_values[0]
+        if len(raw_values) > part_number + 2:
+            locus += ' ' + raw_values[1]
+
+        part_alleles = []
+        dict_make_result = {}
+        for i in range(1, part_number + 1):
+            part_alleles.append(self.split_sat(raw_values[-i]))
+            key = 'part' + str(i)
+            dict_make_result[key] = '/'.join(part_alleles[part_number - i])
+
+        part_sets = []
+        for part in part_alleles:
+            if not self.is_gender_specific(locus) and len(part) != 2:
+                raise AllelesException()
+            part_sets.append(set(part))
+
         #  case of 2 participants
         if part_number == 2:
-            # child/grandchild for example
-            part1_alleles = self.split_sat(raw_values.pop())
-            # parent/grandparent...
-            part2_alleles = self.split_sat(raw_values.pop())
-
-            locus = ' '.join(raw_values)  # for loci names contain space
-            part1_set = set(part1_alleles)  # unique alleles
-            part2_set = set(part2_alleles)
-            intersection = part1_set & part2_set  # common unique alleles
-
-            if not self.is_gender_specific(locus):
-                if len(part1_alleles) != 2 or len(part2_alleles) != 2:
-                    raise AllelesException()
-
-            dict_make_result = {'part1': '/'.join(part2_alleles), 'part2': '/'.join(part1_alleles)}
-
-            return part1_alleles, part2_alleles, locus, part1_set, part2_set, intersection, dict_make_result
+            intersection = part_sets[0] & part_sets[1]  # common unique alleles
+            return part_alleles[0], part_alleles[1], locus, part_sets[0], part_sets[1], intersection, dict_make_result
 
         #  case of 3 participants
-        part3_alleles = self.split_sat(raw_values.pop())
-        part2_alleles = self.split_sat(raw_values.pop())
-        part1_alleles = self.split_sat(raw_values.pop())
-        locus = ' '.join(raw_values)
-
-        if not self.is_gender_specific(locus):
-            if len(part1_alleles) != 2 or len(part2_alleles) != 2 or len(part3_alleles) != 2:
-                raise AllelesException()
-
-        alleles = [part3_alleles, part2_alleles, part1_alleles]
-        sets = [set(part3_alleles), set(part2_alleles), set(part1_alleles)]
-        intersections = [sets[2] & sets[1], sets[2] & sets[0], sets[1] & sets[0]]
-        dict_make_result = {'part1': '/'.join(part1_alleles), 'part2': '/'.join(part2_alleles), 'part3': '/'.join(part3_alleles)}
-
-        return locus, alleles, sets, intersections, dict_make_result
+        intersections = [part_sets[2] & part_sets[1], part_sets[2] & part_sets[0], part_sets[1] & part_sets[0]]
+        return locus, part_alleles, part_sets, intersections, dict_make_result
 
     def calculate(self):
         result = OrderedDict()

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 from django.test import TestCase
-from cognation.scripts.tests import GetData, GRANDPARENT_TYPE
+from cognation.scripts.tests import GetData
 
 # all possible test cases
 reference_paths_list = ['grandparent1/reference_data_grandparent1.txt', 'grandparent2/reference_data_grandparent2.txt']
@@ -22,7 +22,7 @@ class GetGrandParentsData:
             overall_ref_dict[ref_path] = get_ref.get_reference_data(short_path, ref_path, 2)
 
             test_path = test_paths_list[i]
-            overall_test_dict[test_path] = get_ref.get_test_data(short_path, test_path, GRANDPARENT_TYPE)
+            overall_test_dict[test_path] = get_ref.get_test_data(short_path, test_path, 2)
 
 
 instance = GetGrandParentsData()

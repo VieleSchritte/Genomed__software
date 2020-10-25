@@ -8,14 +8,6 @@ from cognation.formulas.brother import BrotherFormula
 from cognation.formulas.stepbrother import StepbrotherFormula
 import re
 
-PARENT_TYPE = 1
-GRANDPARENT_TYPE = 2
-UNCLE_TYPE = 3
-COUSIN_TYPE = 4
-SIBLING_TYPE = 5
-BROTHER_TYPE = 6
-STEPBROTHER_TYPE = 7
-
 
 class GetData:
     @staticmethod
@@ -30,9 +22,8 @@ class GetData:
                 # not gender specific loci - there is int meaning of lr
                 if len(line) != 1:
                     locus = line[0]
-                    if part_number == 2:
-                        lr = line[3]
-                    else:
+                    lr = line[3]
+                    if part_number == 3:
                         lr = line[4]
 
                     #  case of gender specific loci
@@ -56,20 +47,19 @@ class GetData:
 
     @staticmethod
     def formula_usage(number):
-        if number == PARENT_TYPE:
-            return ParentFormula(Formula)
-        if number == GRANDPARENT_TYPE:
-            return GrandParentFormula(Formula)
-        if number == UNCLE_TYPE:
-            return UncleFormula(Formula)
-        if number == COUSIN_TYPE:
-            return CousinFormula(Formula)
-        if number == SIBLING_TYPE:
-            return SiblingFormula(Formula)
-        if number == BROTHER_TYPE:
-            return BrotherFormula(Formula)
-        if number == STEPBROTHER_TYPE:
-            return StepbrotherFormula(Formula)
+        num_to_formula = {
+            1: ParentFormula,
+            2: GrandParentFormula,
+            3: UncleFormula,
+            4: CousinFormula,
+            5: BrotherFormula,
+            6: StepbrotherFormula,
+            7: SiblingFormula,
+        }
+
+        for key in num_to_formula.keys():
+            if number == key:
+                return num_to_formula[key](Formula)
 
     def get_test_data(self, short_path, doc_name, number):
         test_cpi = 1
@@ -98,3 +88,17 @@ class GetData:
             test_cpi = round(test_cpi)
 
             return test_dict, test_cpi, test_p
+
+    def get_tuples(self, raw_values, reference_paths, test_paths, short_path, number):
+        overall_ref_dict = {}
+        overall_test_dict = {}
+
+        for i in range(len(reference_paths)):
+            ref_path = reference_paths[i]
+            overall_ref_dict[ref_path] = self.get_reference_data(short_path, ref_path, number)
+
+            test_path = test_paths[i]
+            overall_test_dict[test_path] = self.get_test_data(short_path, test_path, number)
+
+
+
