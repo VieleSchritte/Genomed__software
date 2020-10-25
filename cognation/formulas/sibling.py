@@ -5,7 +5,6 @@ from cognation.formulas.base import Formula, Calculations
 class SiblingFormula(Formula):
     def calculate_relation(self, raw_values):
         locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 3)
-
         sibling_alleles, parent_alleles, child_alleles = alleles
         sibling_set, parent_set, child_set = sets
         cp_intersection, sc_intersection, sp_intersection = intersections

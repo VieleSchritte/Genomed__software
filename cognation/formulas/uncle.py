@@ -4,7 +4,9 @@ from .base import Formula
 
 class UncleFormula(Formula):
     def calculate_relation(self, raw_values):
-        (nephew_alleles, uncle_alleles, locus, nephew_set, uncle_set, intersection, dict_make_result) = self.getting_alleles_locus(raw_values, 2)
+        locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 2)
+        nephew_set, uncle_set = sets
+        intersection = intersections[0]
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):

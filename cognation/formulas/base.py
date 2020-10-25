@@ -48,7 +48,7 @@ class Formula(abc.ABC):
             raise LineFormatException()
 
         locus = raw_values[0]
-        if len(raw_values) > part_number + 2:
+        if len(raw_values) == part_number + 2:
             locus += ' ' + raw_values[1]
 
         part_alleles = []
@@ -56,7 +56,7 @@ class Formula(abc.ABC):
         for i in range(1, part_number + 1):
             part_alleles.append(self.split_sat(raw_values[-i]))
             key = 'part' + str(i)
-            dict_make_result[key] = '/'.join(part_alleles[part_number - i])
+            dict_make_result[key] = '/'.join(part_alleles[i - 1])
 
         part_sets = []
         for part in part_alleles:
@@ -64,13 +64,11 @@ class Formula(abc.ABC):
                 raise AllelesException()
             part_sets.append(set(part))
 
-        #  case of 2 participants
-        if part_number == 2:
-            intersection = part_sets[0] & part_sets[1]  # common unique alleles
-            return part_alleles[0], part_alleles[1], locus, part_sets[0], part_sets[1], intersection, dict_make_result
-
-        #  case of 3 participants
-        intersections = [part_sets[2] & part_sets[1], part_sets[2] & part_sets[0], part_sets[1] & part_sets[0]]
+        intersections = []
+        for i in range(len(part_alleles)):
+            for j in range(len(part_alleles)):
+                if j > i:
+                    intersections.append(part_sets[i] & part_sets[j])
         return locus, part_alleles, part_sets, intersections, dict_make_result
 
     def calculate(self):

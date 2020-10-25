@@ -4,7 +4,10 @@ from .base import Formula, Calculations
 
 class BrotherFormula(Formula):
     def calculate_relation(self, raw_values):
-        (brother_alleles, insp_alleles, locus, brother_set, insp_set, intersection, dict_make_result) = self.getting_alleles_locus(raw_values, 2)
+        locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 2)
+        brother_alleles, insp_alleles = alleles
+        brother_set, insp_set = sets
+        intersection = intersections[0]
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):

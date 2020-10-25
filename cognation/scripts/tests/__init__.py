@@ -88,17 +88,3 @@ class GetData:
             test_cpi = round(test_cpi)
 
             return test_dict, test_cpi, test_p
-
-    def get_tuples(self, raw_values, reference_paths, test_paths, short_path, number):
-        overall_ref_dict = {}
-        overall_test_dict = {}
-
-        for i in range(len(reference_paths)):
-            ref_path = reference_paths[i]
-            overall_ref_dict[ref_path] = self.get_reference_data(short_path, ref_path, number)
-
-            test_path = test_paths[i]
-            overall_test_dict[test_path] = self.get_test_data(short_path, test_path, number)
-
-
-

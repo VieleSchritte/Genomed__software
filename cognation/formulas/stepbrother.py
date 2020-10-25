@@ -4,7 +4,9 @@ from .base import Formula
 
 class StepbrotherFormula(Formula):
     def calculate_relation(self, raw_values):
-        (stb1_alleles, stb2_alleles, locus, stb1_set, stb2_set, intersection, dict_make_result) = self.getting_alleles_locus(raw_values, 2)
+        locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 2)
+        stb1_set, stb2_set = sets
+        intersection = intersections[0]
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
