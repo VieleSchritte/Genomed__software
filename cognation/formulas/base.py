@@ -49,7 +49,7 @@ class Formula(abc.ABC):
 
         locus = raw_values[0]
         if len(raw_values) == part_number + 2:
-            locus += ' ' + raw_values[1]
+            locus = raw_values[0] + ' ' + raw_values[1]
 
         part_alleles = []
         dict_make_result = {}
@@ -69,6 +69,7 @@ class Formula(abc.ABC):
             for j in range(len(part_alleles)):
                 if j > i:
                     intersections.append(part_sets[i] & part_sets[j])
+
         return locus, part_alleles, part_sets, intersections, dict_make_result
 
     def calculate(self):

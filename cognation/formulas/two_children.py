@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
-from .base import Formula
-from .base import Calculations
+from .base import Formula, Calculations
 from .parent import ParentFormula
 
 
@@ -15,7 +14,10 @@ class TwoChildrenFormula(Formula):
             return self.make_result(locus, '-', dict_make_result)
 
         if child1_set == child2_set:
-            return ParentFormula(Formula).calculate_relation(raw_values)
+            raw_values = [locus, '/'.join(parent_alleles), '/'.join(child2_alleles)]
+            result = ParentFormula(Formula).calculate_relation(raw_values)
+            result['part3'] = '/'.join(child1_alleles)
+            return result
 
         c = Calculations()
         freq_dict = self.get_frequencies(locus, child1_alleles + child2_alleles + parent_alleles)
@@ -24,22 +26,21 @@ class TwoChildrenFormula(Formula):
         if len(ch1p_intersection) >= 1 and len(ch2p_intersection) >= 1:
             # Homozygous 1st child
             if len(child1_set) == 1:
+                freq1, freq2, freq3 = freq_dict[child1_alleles[0]], freq_dict[child2_alleles[0]], freq_dict[child2_alleles[1]]
 
                 # case aa an an
                 if len(ch1ch2_intersection) != 0:
-                    lr = c.F(freq_dict[child1_alleles[0]])
+                    lr = c.F(freq1)
                     return self.make_result(locus, lr, dict_make_result)
 
                 else:
                     # case aa bb ab
                     if len(child2_set) == 1:
-                        freq1, freq2 = freq_dict[child1_alleles[0]], freq_dict[child2_alleles[0]]
                         lr = 2 * freq1 * freq2
                         return self.make_result(locus, lr, dict_make_result)
 
                     # case aa bc ab/ac
                     else:
-                        freq1, freq2, freq3 = freq_dict[child1_alleles[0]], freq_dict[child2_alleles[0]], freq_dict[child2_alleles[1]]
                         lr = 2 * freq1 * (freq2 + freq3)
                         return self.make_result(locus, lr, dict_make_result)
 
