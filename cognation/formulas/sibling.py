@@ -7,7 +7,7 @@ class SiblingFormula(Formula):
         locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 3)
         sibling_alleles, parent_alleles, child_alleles = alleles
         sibling_set, parent_set, child_set = sets
-        cp_intersection, sc_intersection, sp_intersection = intersections
+        sp_intersection, sc_intersection, cp_intersection = intersections
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
@@ -75,7 +75,7 @@ class SiblingFormula(Formula):
         set_unavailable = set(unavailable_parent_alleles)
 
         # special case for confirmation = 1
-        if len(set_unavailable) == 1:
+        if len(set_unavailable) == 1 or parent_set == child_set and len(parent_set) == len(child_set) == 2 and len(sibling_set) == 1:
             lr = 1 / refutation
             return self.make_result(locus, lr, dict_make_result)
 
@@ -90,7 +90,6 @@ class SiblingFormula(Formula):
         for allele in ch_sib_alleles:
             if allele == list(intersection)[0]:
                 counter += 1
-
         if counter == 2:
             parent2_alleles[position] = ch_sib_alleles[position]
         else:
