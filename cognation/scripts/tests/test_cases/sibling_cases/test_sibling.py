@@ -5,9 +5,9 @@ from cognation.scripts.tests import GetData
 from django.core.management import call_command
 import logging
 
-# logger = logging.getLogger('django.db.backends')
-# logger.setLevel(logging.DEBUG)
-# logger.addHandler(logging.StreamHandler())
+logger = logging.getLogger('django.db.backends')
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging.StreamHandler())
 
 
 class TestSiblingFormula(TestCase):
