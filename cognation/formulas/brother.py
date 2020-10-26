@@ -4,11 +4,14 @@ from .base import Formula, Calculations
 
 class BrotherFormula(Formula):
     def calculate_relation(self, raw_values):
-        (brother_alleles, insp_alleles, locus, brother_set, insp_set, intersection, dict_make_result) = self.getting_alleles_locus(raw_values, 2)
+        locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 2)
+        brother_alleles, insp_alleles = alleles
+        brother_set, insp_set = sets
+        intersection = intersections[0]
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
-            return self.make_result(locus, '-', **dict_make_result)
+            return self.make_result(locus, '-', dict_make_result)
 
         c = Calculations()
         # In cases aa aa or ab ab lr = 1
@@ -28,7 +31,7 @@ class BrotherFormula(Formula):
 
             lr = confirmation / refutation
 
-            return self.make_result(locus, lr, **dict_make_result)
+            return self.make_result(locus, lr, dict_make_result)
 
         freq_dict = self.get_frequencies(locus, insp_alleles + brother_alleles)
         conf = Confirmations()
@@ -47,7 +50,7 @@ class BrotherFormula(Formula):
             confirmation = conf.hetero_insp_conf(freq_dict, intersection, brother_set, brother_alleles, insp_alleles)
 
         lr = confirmation / refutation
-        return self.make_result(locus, lr, **dict_make_result)
+        return self.make_result(locus, lr, dict_make_result)
 
 
 class Confirmations:

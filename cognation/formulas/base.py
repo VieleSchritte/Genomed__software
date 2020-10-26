@@ -47,42 +47,29 @@ class Formula(abc.ABC):
             # Skip line with warning
             raise LineFormatException()
 
-        #  case of 2 participants
-        if part_number == 2:
-            # child/grandchild for example
-            part1_alleles = self.split_sat(raw_values.pop())
-            # parent/grandparent...
-            part2_alleles = self.split_sat(raw_values.pop())
+        locus = raw_values[0]
+        if len(raw_values) == part_number + 2:
+            locus += ' ' + raw_values[1]
 
-            locus = ' '.join(raw_values)  # for loci names contain space
-            part1_set = set(part1_alleles)  # unique alleles
-            part2_set = set(part2_alleles)
-            intersection = part1_set & part2_set  # common unique alleles
+        part_alleles = []
+        dict_make_result = {}
+        for i in range(1, part_number + 1):
+            part_alleles.append(self.split_sat(raw_values[-i]))
+            key = 'part' + str(i)
+            dict_make_result[key] = '/'.join(part_alleles[i - 1])
 
-            if not self.is_gender_specific(locus):
-                if len(part1_alleles) != 2 or len(part2_alleles) != 2:
-                    raise AllelesException()
-
-            dict_make_result = {'part1': '/'.join(part2_alleles), 'part2': '/'.join(part1_alleles)}
-
-            return part1_alleles, part2_alleles, locus, part1_set, part2_set, intersection, dict_make_result
-
-        #  case of 3 participants
-        part3_alleles = self.split_sat(raw_values.pop())
-        part2_alleles = self.split_sat(raw_values.pop())
-        part1_alleles = self.split_sat(raw_values.pop())
-        locus = ' '.join(raw_values)
-
-        if not self.is_gender_specific(locus):
-            if len(part1_alleles) != 2 or len(part2_alleles) != 2 or len(part3_alleles) != 2:
+        part_sets = []
+        for part in part_alleles:
+            if not self.is_gender_specific(locus) and len(part) != 2:
                 raise AllelesException()
+            part_sets.append(set(part))
 
-        alleles = [part3_alleles, part2_alleles, part1_alleles]
-        sets = [set(part3_alleles), set(part2_alleles), set(part1_alleles)]
-        intersections = [sets[2] & sets[1], sets[2] & sets[0], sets[1] & sets[0]]
-        dict_make_result = {'part1': '/'.join(part1_alleles), 'part2': '/'.join(part2_alleles), 'part3': '/'.join(part3_alleles)}
-
-        return locus, alleles, sets, intersections, dict_make_result
+        intersections = []
+        for i in range(len(part_alleles)):
+            for j in range(len(part_alleles)):
+                if j > i:
+                    intersections.append(part_sets[i] & part_sets[j])
+        return locus, part_alleles, part_sets, intersections, dict_make_result
 
     def calculate(self):
         result = OrderedDict()
@@ -127,20 +114,21 @@ class Formula(abc.ABC):
     def split_sat(sat_string):
         return re.split(r'/', sat_string)
 
-    def make_result(locus, lr, **kwargs):
-        if len(kwargs.keys()) == 2:
+    @staticmethod
+    def make_result(locus, lr, dict_alleles):
+        if len(dict_alleles.keys()) == 2:
             return {
                 "locus": locus,
-                "part1": kwargs['part1'],
-                "part2": kwargs['part2'],
+                "part1": dict_alleles['part1'],
+                "part2": dict_alleles['part2'],
                 "lr": lr
             }
         else:
             return {
                 "locus": locus,
-                "part1": kwargs['part1'],
-                "part2": kwargs['part2'],
-                "part3": kwargs['part3'],
+                "part1": dict_alleles['part1'],
+                "part2": dict_alleles['part2'],
+                "part3": dict_alleles['part3'],
                 "lr": lr
             }
 
