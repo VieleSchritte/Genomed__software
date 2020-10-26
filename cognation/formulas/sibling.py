@@ -29,7 +29,7 @@ class SiblingFormula(Formula):
 
             #  A special case for confirmation = F(Pa) / (F(Pa) + F(Pb) - 2 * Pa * Pb) aa ab ab
             if len(parent_set) == 2 and parent_set == sibling_set:
-                freq2 = freq_dict[self.get_unique_allele(parent_alleles, child_alleles)]
+                freq2 = freq_dict[c.get_unique_allele(parent_alleles, child_alleles)]
                 confirmation = c.F(freq) / (c.F(freq) + c.F(freq2) - 2 * freq * freq2)
                 lr = confirmation / refutation
                 return self.make_result(locus, lr, dict_make_result)
@@ -42,7 +42,7 @@ class SiblingFormula(Formula):
             # A special case for confirmation = M(Pc, Pa) + M(Pc, Pb) ab ab ac
             if parent_set == child_set and len(sibling_set) == 2 and sibling_set != parent_set:
                 freq1, freq2 = freq_dict[parent_alleles[0]], freq_dict[parent_alleles[1]]
-                freq3 = freq_dict[self.get_unique_allele(sibling_alleles, parent_alleles)]
+                freq3 = freq_dict[c.get_unique_allele(sibling_alleles, parent_alleles)]
                 confirmation = c.M(freq3, freq1) + c.M(freq3, freq2)
                 lr = confirmation / refutation
                 return self.make_result(locus, lr, dict_make_result)
@@ -50,7 +50,7 @@ class SiblingFormula(Formula):
             #  A special case for confirmation = 2 * Pb / (2 - Pa - Pc) ab ac ac
             if parent_set == sibling_set and parent_set != child_set and len(parent_set) == len(sibling_set) == 2:
                 freq1, freq3 = freq_dict[parent_alleles[0]], freq_dict[parent_alleles[1]]
-                freq2 = freq_dict[self.get_unique_allele(child_alleles, parent_alleles)]
+                freq2 = freq_dict[c.get_unique_allele(child_alleles, parent_alleles)]
                 confirmation = 2 * freq2 / (2 - freq1 - freq3)
                 lr = confirmation / refutation
                 return self.make_result(locus, lr, dict_make_result)
@@ -64,7 +64,7 @@ class SiblingFormula(Formula):
 
             # ab ac aa case confirmation = M(Pa, Pc)
             if len(child_set) == len(parent_set) == 2 and len(sibling_set) == len(sp_intersection) == len(cp_intersection) == len(sc_intersection) == 1 and child_set != parent_set:
-                unavailable_parent_alleles[1] = self.get_unique_allele(parent_alleles, child_alleles)
+                unavailable_parent_alleles[1] = c.get_unique_allele(parent_alleles, child_alleles)
                 unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, sibling_alleles, sp_intersection, 0)
                 lr = self.get_lr(freq_dict, unavailable_parent_alleles, refutation)
                 return self.make_result(locus, lr, dict_make_result)
@@ -100,13 +100,6 @@ class SiblingFormula(Formula):
                     parent2_alleles[position] = allele
 
         return parent2_alleles
-
-    # A method to get unique allele from list1 (list2 doesn't include this allele)
-    @staticmethod
-    def get_unique_allele(list1, list2):
-        for allele in list1:
-            if allele not in list2:
-                return allele
 
     @staticmethod
     def get_lr(freq_dict, parent2_alleles, refutation):

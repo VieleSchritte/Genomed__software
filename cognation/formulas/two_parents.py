@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 from .base import Formula
-from .base import AllelesException, Calculations
+from .base import Calculations
 
 
 class TwoParentsFormula(Formula):
@@ -12,8 +12,6 @@ class TwoParentsFormula(Formula):
 
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
-        if len(child_alleles) != 2 or len(parent1_alleles) != 2 or len(parent2_alleles) != 2:
-            raise AllelesException()
 
         freq_dict = self.get_frequencies(locus, child_alleles + parent1_alleles + parent2_alleles)
         c = Calculations()
