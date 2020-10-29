@@ -6,6 +6,7 @@ from cognation.formulas.sibling import SiblingFormula
 from cognation.formulas.base import Formula
 from cognation.formulas.brother import BrotherFormula
 from cognation.formulas.stepbrother import StepbrotherFormula
+from cognation.formulas.two_children import TwoChildrenFormula
 import re
 
 
@@ -55,6 +56,7 @@ class GetData:
             5: BrotherFormula,
             6: StepbrotherFormula,
             7: SiblingFormula,
+            8: TwoChildrenFormula
         }
 
         for key in num_to_formula.keys():
@@ -69,9 +71,9 @@ class GetData:
             for line in test_data:
                 line = line.strip()
                 case_formula = self.formula_usage(number)
-                parent_formula_dict = case_formula.calculate_relation(re.split(r'[\s\t]+', line))
-                locus = parent_formula_dict['locus']
-                lr = parent_formula_dict['lr']
+                formula_dict = case_formula.calculate_relation(re.split(r'[\s\t]+', line))
+                locus = formula_dict['locus']
+                lr = formula_dict['lr']
 
                 if lr != '-':
                     test_cpi *= lr

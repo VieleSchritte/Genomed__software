@@ -7,6 +7,7 @@ from cognation.formulas.brother import BrotherFormula
 from cognation.formulas.sibling import SiblingFormula
 from cognation.formulas.two_parents import TwoParentsFormula
 from cognation.formulas.base import UnknownFormulaException
+from cognation.formulas.two_children import TwoChildrenFormula
 from cognation.formulas.three_children import ThreeChildrenFormula
 
 
@@ -19,6 +20,7 @@ numToFormula = {
     6: BrotherFormula,
     7: SiblingFormula,
     8: TwoParentsFormula,
+    9: TwoChildrenFormula,
     10: ThreeChildrenFormula
 }
 
