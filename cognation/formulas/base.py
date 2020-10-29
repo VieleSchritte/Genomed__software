@@ -81,7 +81,6 @@ class Formula(abc.ABC):
 
             try:
                 relation = self.calculate_relation(re.split(r'[\s\t]+', line))
-                print('==============', relation)
                 result[relation['locus']] = relation
             except (LineFormatException, AllelesException, UnknownAlleleException) as exception:
                 result[hash(line)] = {'exception': exception, 'line': line}
