@@ -56,8 +56,7 @@ class TwoChildrenFormula(Formula):
                 # case ab ac an/bc
                 if len(child2_set) == 2 and len(ch1ch2_intersection) == 1:
                     freq1 = freq_dict[list(ch1ch2_intersection)[0]]
-                    freq2 = freq_dict[c.get_unique_allele(child1_alleles, list(ch1ch2_intersection))]
-                    freq3 = freq_dict[c.get_unique_allele(child2_alleles, list(ch1ch2_intersection))]
+                    freq2, freq3 = freq_dict[list(child1_set - child2_set)[0]], freq_dict[list(child2_set - child1_set)[0]]
                     lr = freq1 * (2 - freq1) + 2 * freq2 * freq3
                     return self.make_result(locus, lr, dict_make_result)
 

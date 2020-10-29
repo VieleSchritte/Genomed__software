@@ -77,7 +77,6 @@ class GetData:
 
                 if lr != '-':
                     test_cpi *= lr
-                    print('============', lr)
                     lr = float("{0:.2f}".format(lr))
                     test_dict[locus] = lr
 

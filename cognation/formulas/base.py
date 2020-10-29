@@ -166,10 +166,3 @@ class Calculations:
     #  Probability of relation theory refutation in case of inspected person's heterozygosity
     def hetero_refutation(self, freq1, freq2):
         return 2 * self.F(freq1) * self.F(freq2) - (2 * freq1 * freq2) ** 2
-
-    # A method to get unique allele from list1 (list2 doesn't include this allele)
-    @staticmethod
-    def get_unique_allele(list1, list2):
-        for allele in list1:
-            if allele not in list2:
-                return allele
