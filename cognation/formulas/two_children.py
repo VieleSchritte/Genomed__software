@@ -10,9 +10,6 @@ class TwoChildrenFormula(Formula):
         parent_set, child2_set, child1_set = part_sets
         ch2p_intersection, ch1p_intersection, ch1ch2_intersection = intersections
 
-        print(locus)
-        print('parent: ', parent_alleles, ', child1: ', child1_alleles, ' , child2: ', child2_alleles)
-
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 
@@ -30,7 +27,6 @@ class TwoChildrenFormula(Formula):
         if len(ch1p_intersection) >= 1 and len(ch2p_intersection) >= 1:
             # Homozygous 1st child
             if len(child1_set) == 1:
-                print('HOMO')
                 freq1, freq2, freq3 = freq_dict[child1_alleles[0]], freq_dict[child2_alleles[0]], freq_dict[child2_alleles[1]]
 
                 # case aa an an
@@ -51,7 +47,6 @@ class TwoChildrenFormula(Formula):
 
             # Heterozygous 1st child
             else:
-                print('heterozygous child')
                 # case ab cc ac/bc
                 if len(child2_set) == 1:
                     freq3, freq2, freq1 = freq_dict[child2_alleles[0]], freq_dict[child1_alleles[0]], freq_dict[child1_alleles[1]]
@@ -68,12 +63,9 @@ class TwoChildrenFormula(Formula):
 
                 # case ab cd ac/ad/bc/bd
                 if len(child2_set) == 2 and len(ch1ch2_intersection) == 0:
-                    print('ab cd ac/ad/bc/bd')
-                    print()
                     freq1, freq2 = freq_dict[child1_alleles[0]], freq_dict[child1_alleles[1]]
                     freq3, freq4 = freq_dict[child2_alleles[0]], freq_dict[child2_alleles[1]]
                     lr = 2 * (freq1 + freq2) * (freq3 + freq4)
                     return self.make_result(locus, lr, dict_make_result)
-        print('no intersections, return lr = 0')
-        print()
+
         return self.make_result(locus, lr, dict_make_result)
