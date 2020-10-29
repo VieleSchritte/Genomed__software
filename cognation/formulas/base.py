@@ -81,6 +81,7 @@ class Formula(abc.ABC):
 
             try:
                 relation = self.calculate_relation(re.split(r'[\s\t]+', line))
+                print('==============', relation)
                 result[relation['locus']] = relation
             except (LineFormatException, AllelesException, UnknownAlleleException) as exception:
                 result[hash(line)] = {'exception': exception, 'line': line}
@@ -123,12 +124,21 @@ class Formula(abc.ABC):
                 "part2": dict_alleles['part2'],
                 "lr": lr
             }
-        else:
+        elif len(dict_alleles.keys()) == 3:
             return {
                 "locus": locus,
                 "part1": dict_alleles['part1'],
                 "part2": dict_alleles['part2'],
                 "part3": dict_alleles['part3'],
+                "lr": lr
+            }
+        elif len(dict_alleles.keys()) == 4:
+            return {
+                "locus": locus,
+                "part1": dict_alleles['part1'],
+                "part2": dict_alleles['part2'],
+                "part3": dict_alleles['part3'],
+                "part4": dict_alleles['part4'],
                 "lr": lr
             }
 
