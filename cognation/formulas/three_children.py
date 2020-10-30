@@ -40,9 +40,6 @@ class ThreeChildrenFormula(Formula):
                 # aa ab bb ab
                 if child2_set == parent_set and len(child3_set) == 1 and len(ch1ch3_inter) == 0:
                     freq1, freq2 = freq_dict[list(common_set)[0]], freq_dict[list(common_set)[1]]
-                    print('aa ab bb ab')
-                    print('freq1, freq2: ', freq1, freq2)
-                    print()
                     lr = 2 * freq1 * freq2
                     return self.make_result(locus, lr, dict_make_result)
 
@@ -50,18 +47,12 @@ class ThreeChildrenFormula(Formula):
                 if len(child3_set) == 2 and len(common_set) == 3:
                     freq1 = freq_dict[list(ch1ch2_inter)[0]]
                     freq2, freq3 = freq_dict[child3_alleles[0]], freq_dict[child3_alleles[1]]
-                    print('aa ab bc ab/ac')
-                    print('freq1, freq2, freq3: ', freq1, freq2, freq3)
-                    print()
                     lr = 2 * freq1 * (freq2 + freq3)
                     return self.make_result(locus, lr, dict_make_result)
 
                 # aa ab cc ac
                 if len(child3_set) == 1 and len(common_set) == 3:
                     freq1, freq2 = freq_dict[child1_alleles[0]], freq_dict[child3_alleles[0]]
-                    print('aa ab cc ac')
-                    print('freq1, freq2: ', freq1, freq2)
-                    print()
                     lr = 2 * freq1 * freq2
                     return self.make_result(locus, lr, dict_make_result)
 

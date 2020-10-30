@@ -2,7 +2,6 @@
 import unittest
 from django.test import TestCase
 from cognation.scripts.tests import GetData
-from django.core.management import call_command
 import logging
 
 logger = logging.getLogger('django.db.backends')
@@ -12,7 +11,6 @@ logger.addHandler(logging.StreamHandler())
 
 class TestCousinFormula(TestCase):
     def setUp(self):
-        call_command("loaddata", "converted.json", verbosity=0)
 
         self.reference_paths = ['cousin1/cousin1_ref.txt']
         self.test_paths = ['cousin1/cousin1_test.txt']

@@ -2,7 +2,6 @@
 import unittest
 from django.test import TestCase
 from cognation.scripts.tests import GetData
-from django.core.management import call_command
 # import logging
 
 # logger = logging.getLogger('django.db.backends')
@@ -12,9 +11,10 @@ from django.core.management import call_command
 
 class TestSiblingFormula(TestCase):
     def setUp(self):
-        call_command("loaddata", "converted.json", verbosity=0)
-        self.reference_paths = ['aa_ab_ac_an/aa_ab_ac_an_ref', 'aa_ab_bb_ab/aa_ab_bb_ab_ref']
-        self.test_paths = ['aa_ab_ac_an/aa_ab_ac_an_test', 'aa_ab_bb_ab/aa_ab_bb_ab_test']
+        self.reference_paths = ['aa_ab_ac_an/aa_ab_ac_an_ref', 'aa_ab_bb_ab/aa_ab_bb_ab_ref', 'aa_ab_bc_abac/aa_ab_bc_abac_ref',
+                                'aa_ab_cc_ac/aa_ab_cc_ac_ref', 'aa_bc_bn_ab/aa_bc_bn_ab_ref']
+        self.test_paths = ['aa_ab_ac_an/aa_ab_ac_an_test', 'aa_ab_bb_ab/aa_ab_bb_ab_test', 'aa_ab_bc_abac/aa_ab_bc_abac_test',
+                           'aa_ab_cc_ac/aa_ab_cc_ac_test', 'aa_bc_bn_ab/aa_bc_bn_ab_test']
         short_path = 'cognation/scripts/tests/test_cases/threechildren_cases/'
 
         get_ref = GetData()

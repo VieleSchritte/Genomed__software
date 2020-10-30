@@ -2,7 +2,6 @@
 import unittest
 from django.test import TestCase
 from cognation.scripts.tests import GetData
-from django.core.management import call_command
 import logging
 
 logger = logging.getLogger('django.db.backends')
@@ -12,7 +11,6 @@ logger.addHandler(logging.StreamHandler())
 
 class TestGrandParentFormula(TestCase):
     def setUp(self):
-        call_command("loaddata", "converted.json", verbosity=0)
 
         self.reference_paths = ['grandparent1/reference_data_grandparent1.txt', 'grandparent2/reference_data_grandparent2.txt']
         self.test_paths = ['grandparent1/test_data_grandparent1.txt', 'grandparent2/test_data_grandparent2.txt']

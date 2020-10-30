@@ -9,6 +9,7 @@ from cognation.formulas.stepbrother import StepbrotherFormula
 from cognation.formulas.two_children import TwoChildrenFormula
 from cognation.formulas.three_children import ThreeChildrenFormula
 import re
+from django.core.management import call_command
 
 
 class GetData:
@@ -68,6 +69,7 @@ class GetData:
     def get_test_data(self, short_path, doc_name, number):
         test_cpi = 1
         test_dict = {}
+        call_command("loaddata", "converted.json", verbosity=0)
 
         with open(short_path + doc_name, 'r') as test_data:
             for line in test_data:
