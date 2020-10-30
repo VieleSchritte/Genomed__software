@@ -7,6 +7,7 @@ from cognation.formulas.base import Formula
 from cognation.formulas.brother import BrotherFormula
 from cognation.formulas.stepbrother import StepbrotherFormula
 from cognation.formulas.two_children import TwoChildrenFormula
+from cognation.formulas.three_children import ThreeChildrenFormula
 import re
 
 
@@ -23,7 +24,7 @@ class GetData:
                 # not gender specific loci - there is int meaning of lr
                 if len(line) != 1:
                     locus = line[0]
-                    lr = line[3]
+                    lr = line[-1]
                     if part_number == 3:
                         lr = line[4]
 
@@ -56,7 +57,8 @@ class GetData:
             5: BrotherFormula,
             6: StepbrotherFormula,
             7: SiblingFormula,
-            8: TwoChildrenFormula
+            8: TwoChildrenFormula,
+            9: ThreeChildrenFormula
         }
 
         for key in num_to_formula.keys():

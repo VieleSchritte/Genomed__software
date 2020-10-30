@@ -29,7 +29,7 @@ class UnknownAlleleException(Exception):
         self.sat = sat
 
     def __str__(self):
-        return "Unknown allele found: " + str(self.locus) + " " + str(self.sat)
+        return "Unknown allele found in locus " + str(self.locus) + ": " + str(self.sat)
 
 
 # Abstract parent class
