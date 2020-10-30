@@ -10,7 +10,6 @@ class ThreeChildrenFormula(Formula):
         ch3p_inter, ch2p_inter, ch1p_inter, ch2ch3_inter, ch1ch3_inter, ch1ch2_inter = intersections
 
         c = Calculations()
-        help_get = CalculateHelp()
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
@@ -21,20 +20,14 @@ class ThreeChildrenFormula(Formula):
         common_set = set(child1_alleles + child2_alleles + child3_alleles + parent_alleles)
         freq_dict = self.get_frequencies(locus, list(common_set))
 
-        print(locus)
-        print('child1, child2, child3, parent: ', child1_alleles, child2_alleles, child3_alleles, parent_alleles)
-        print(freq_dict)
-
         # special cases (aa ab ac an) and (ab ac ad an)
         if ch1ch2_inter == ch2ch3_inter == ch3p_inter:
             freq = freq_dict[list(ch1ch2_inter)[0]]
             lr = c.F(freq)
             return self.make_result(locus, lr, dict_make_result)
 
-        print(len(child1_set) == 1)
         #  Homozygous 1st child
         if len(child1_set) == 1:
-            print('HOMO')
             # Heterozygous 2nd child with intersection with the 1st child
             if len(child2_set) == 2 and len(ch1ch2_inter) != 0:
                 # aa ab bb ab
@@ -59,22 +52,15 @@ class ThreeChildrenFormula(Formula):
             # Heterozygous 2nd child with no intersection with the 1st chile aa bc bn (n != a, c) ab
             if len(child2_set) == 2 and len(ch1ch2_inter) == 0:
                 freq1, freq2 = freq_dict[parent_alleles[0]], freq_dict[parent_alleles[1]]
-                print('aa bc bn (n != a, c) ab')
-                print('freq1, freq2: ', freq1, freq2)
-                print()
                 lr = 2 * freq1 * freq2
                 return self.make_result(locus, lr, dict_make_result)
 
         # Heterozygous 1st child
         if len(child1_set) == 2:
-            print('HETERO')
             # ab ac bc ab/ac/bc
             if len(common_set) == 3:
                 freq1, freq2 = freq_dict[child1_alleles[0]], freq_dict[child1_alleles[1]]
                 freq3 = freq_dict[list(child2_set - child1_set)[0]]
-                print('ab ac bc ab/ac/bc')
-                print('freq1, freq2, freq3: ', freq1, freq2, freq3)
-                print()
                 lr = 2 * (freq1 * freq2 + freq1 * freq3 + freq2 * freq3)
                 return self.make_result(locus, lr, dict_make_result)
 
@@ -83,9 +69,6 @@ class ThreeChildrenFormula(Formula):
                 if len(common_set) == 4 and len(ch2ch3_inter) == 0:
                     freq1, freq2 = freq_dict[list(ch1ch2_inter)[0]], freq_dict[list(ch1ch3_inter)[0]]
                     freq3, freq4 = freq_dict[list(child2_set - child1_set)[0]], freq_dict[list(child3_set - child1_set)[0]]
-                    print('ab ac bd ad/bc')
-                    print('freq1, freq2, freq3, freq4: ', freq1, freq2, freq3, freq4)
-                    print()
                     lr = 2 * (freq1 * freq4 + freq2 * freq3)
                     return self.make_result(locus, lr, dict_make_result)
 
@@ -93,9 +76,6 @@ class ThreeChildrenFormula(Formula):
                 if len(common_set) == 4 and len(ch1ch2_inter) == len(ch2ch3_inter) == 1:
                     freq1, freq2 = freq_dict[list(ch1ch2_inter)[0]], freq_dict[list(child1_set - child2_set)[0]]
                     freq3, freq4 = freq_dict[list(ch2ch3_inter)[0]], freq_dict[list(child3_set - child2_set)[0]]
-                    print('ab ac cd ac/ad/bc')
-                    print('freq1, freq2, freq3, freq4: ', freq1, freq2, freq3, freq4)
-                    print()
                     lr = 2 * (freq1 * freq3 + freq1 * freq4 + freq2 * freq3)
                     return self.make_result(locus, lr, dict_make_result)
 
@@ -103,9 +83,6 @@ class ThreeChildrenFormula(Formula):
                 if len(common_set) == 5 and len(ch2ch3_inter) == 0:
                     freq1 = freq_dict[list(ch1ch2_inter)[0]]
                     freq2, freq3 = freq_dict[child3_alleles[0]], freq_dict[child3_alleles[1]]
-                    print('ab ac de ad/ae')
-                    print('freq1, freq2, freq3: ', freq1, freq2, freq3)
-                    print()
                     lr = 2 * freq1 * (freq2 + freq3)
                     return self.make_result(locus, lr, dict_make_result)
 
@@ -113,22 +90,7 @@ class ThreeChildrenFormula(Formula):
             if len(ch1ch2_inter) == 0:
                 freq1, freq2 = freq_dict[child1_alleles[0]], freq_dict[child1_alleles[1]]
                 freq3 = freq_dict[list(ch2ch3_inter)[0]]
-                print('ab cd cn (n != a, b, d) ac/bc')
-                print('freq1, freq2, freq3: ', freq1, freq2, freq3)
-                print()
                 lr = 2 * freq3 * (freq1 + freq2)
                 return self.make_result(locus, lr, dict_make_result)
 
-        print('default')
-        print()
         return self.make_result(locus, lr, dict_make_result)
-
-
-# should be method "get unique allele" from TwoChildrenFormula instead of this class
-class CalculateHelp:
-    # get unique allele from list1 in comparison with list2
-    @staticmethod
-    def get_unique_allele(list1, list2):
-        for allele in list1:
-            if allele not in list2:
-                return allele

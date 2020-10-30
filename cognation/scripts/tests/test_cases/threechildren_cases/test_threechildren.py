@@ -12,9 +12,16 @@ from cognation.scripts.tests import GetData
 class TestSiblingFormula(TestCase):
     def setUp(self):
         self.reference_paths = ['aa_ab_ac_an/aa_ab_ac_an_ref', 'aa_ab_bb_ab/aa_ab_bb_ab_ref', 'aa_ab_bc_abac/aa_ab_bc_abac_ref',
-                                'aa_ab_cc_ac/aa_ab_cc_ac_ref', 'aa_bc_bn_ab/aa_bc_bn_ab_ref']
+                                'aa_ab_cc_ac/aa_ab_cc_ac_ref', 'aa_bc_bn_ab/aa_bc_bn_ab_ref', 'ab_ac_ad_an/ab_ac_ad_an_ref',
+                                'ab_ac_bc_abacbc/ab_ac_bc_abacbc_ref', 'ab_ac_bd_adbc/ab_ac_bd_adbc_ref',
+                                'ab_ac_сd_acadbc/ab_ac_сd_acadbc_ref', 'ab_ac_de_adae/ab_ac_de_adae_ref',
+                                'ab_cd_cn_acbc/ab_cd_cn_acbc_ref']
         self.test_paths = ['aa_ab_ac_an/aa_ab_ac_an_test', 'aa_ab_bb_ab/aa_ab_bb_ab_test', 'aa_ab_bc_abac/aa_ab_bc_abac_test',
-                           'aa_ab_cc_ac/aa_ab_cc_ac_test', 'aa_bc_bn_ab/aa_bc_bn_ab_test']
+                           'aa_ab_cc_ac/aa_ab_cc_ac_test', 'aa_bc_bn_ab/aa_bc_bn_ab_test', 'ab_ac_ad_an/ab_ac_ad_an_test',
+                           'ab_ac_bc_abacbc/ab_ac_bc_abacbc_test', 'ab_ac_bd_adbc/ab_ac_bd_adbc_test',
+                           'ab_ac_сd_acadbc/ab_ac_сd_acadbc_test', 'ab_ac_de_adae/ab_ac_de_adae_test',
+                           'ab_cd_cn_acbc/ab_cd_cn_acbc_test']
+
         short_path = 'cognation/scripts/tests/test_cases/threechildren_cases/'
 
         get_ref = GetData()
