@@ -29,7 +29,7 @@ class UnknownAlleleException(Exception):
         self.sat = sat
 
     def __str__(self):
-        return "Unknown allele found: " + str(self.locus) + " " + str(self.sat)
+        return "Unknown allele found in locus " + str(self.locus) + ": " + str(self.sat)
 
 
 # Abstract parent class
@@ -128,12 +128,21 @@ class Formula(abc.ABC):
                 "part2": dict_alleles['part2'],
                 "lr": lr
             }
-        else:
+        elif len(dict_alleles.keys()) == 3:
             return {
                 "locus": locus,
                 "part1": dict_alleles['part1'],
                 "part2": dict_alleles['part2'],
                 "part3": dict_alleles['part3'],
+                "lr": lr
+            }
+        elif len(dict_alleles.keys()) == 4:
+            return {
+                "locus": locus,
+                "part1": dict_alleles['part1'],
+                "part2": dict_alleles['part2'],
+                "part3": dict_alleles['part3'],
+                "part4": dict_alleles['part4'],
                 "lr": lr
             }
 

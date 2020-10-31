@@ -7,7 +7,9 @@ from cognation.formulas.base import Formula
 from cognation.formulas.brother import BrotherFormula
 from cognation.formulas.stepbrother import StepbrotherFormula
 from cognation.formulas.two_children import TwoChildrenFormula
+from cognation.formulas.three_children import ThreeChildrenFormula
 import re
+from django.core.management import call_command
 
 
 class GetData:
@@ -23,7 +25,7 @@ class GetData:
                 # not gender specific loci - there is int meaning of lr
                 if len(line) != 1:
                     locus = line[0]
-                    lr = line[3]
+                    lr = line[-1]
                     if part_number == 3:
                         lr = line[4]
 
@@ -56,7 +58,8 @@ class GetData:
             5: BrotherFormula,
             6: StepbrotherFormula,
             7: SiblingFormula,
-            8: TwoChildrenFormula
+            8: TwoChildrenFormula,
+            9: ThreeChildrenFormula
         }
 
         for key in num_to_formula.keys():
@@ -66,6 +69,7 @@ class GetData:
     def get_test_data(self, short_path, doc_name, number):
         test_cpi = 1
         test_dict = {}
+        call_command("loaddata", "converted.json", verbosity=0)
 
         with open(short_path + doc_name, 'r') as test_data:
             for line in test_data:

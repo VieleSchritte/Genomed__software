@@ -2,7 +2,6 @@
 import unittest
 from django.test import TestCase
 from cognation.scripts.tests import GetData
-from django.core.management import call_command
 # import logging
 """
 logger = logging.getLogger('django.db.backends')
@@ -12,7 +11,6 @@ logger.addHandler(logging.StreamHandler())
 
 class TestTwoChildrenFormula(TestCase):
     def setUp(self):
-        call_command("loaddata", "converted.json", verbosity=0)
 
         self.reference_paths = ['1_calls_ParentFormula/1_calls_ParentFormula_ref', '2_aa_an_an/2_aa_an_an_ref',
                                 '3_aa_bb_ab/3_aa_bb_ab_ref', '4_aa_bc_abac/4_aa_bc_abac_ref', '5_ab_ac_anbc/5_ab_ac_anbc_ref',
