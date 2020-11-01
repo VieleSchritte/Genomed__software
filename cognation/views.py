@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.template.defaultfilters import register
 
@@ -10,7 +10,11 @@ from .models import Locus
 
 
 def index(request):
-    return render(request, 'cognation/index.html')
+    return redirect('input_data')
+
+
+def input_data(request):
+    return render(request, 'cognation/input_data.html')
 
 
 def calculate(request):

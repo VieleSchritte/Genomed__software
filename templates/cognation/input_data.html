@@ -1,0 +1,29 @@
+{% extends "../base.html" %}
+
+{% block html_title %}
+    {{ block.super }} — Cognation
+{% endblock %}
+
+{% block title %}
+    Cognation
+{% endblock title %}
+
+{% block content %}
+    {{ block.super }}
+    <form action="{% url 'cognation:calculate' %}" method="post" id="cognationForm">
+        <div class="label-notion">
+            <h1>Input order:</h1>
+            <ol>
+                <li>Father / grandfather etc</li>
+                <li>Inspected person (child / grandchild etc)</li>
+            </ol>
+        </div>
+        <div style="margin:10px 0;">
+            <label for="dataId"></label>
+            <textarea style="background:gainsboro;" id="dataId" name="data" cols="120" rows="24"
+                      class="form-control"></textarea>
+        </div>
+        {% csrf_token %}
+        <input type="submit" class="btn btn-dark" title="Submit"/>
+    </form>
+{% endblock content %}
