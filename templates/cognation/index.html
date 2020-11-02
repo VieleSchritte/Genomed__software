@@ -1,4 +1,4 @@
-{% extends "../base.html" %}
+{% extends "./base.html" %}
 
 {% block html_title %}
     {{ block.super }} — Cognation
@@ -11,6 +11,10 @@
 {% block content %}
     {{ block.super }}
     <form action="{% url 'cognation:input' %}" method="post" id="cognationForm">
+        <div>
+            <button>Caucasoid race</button>
+            <button>Mongoloid race</button>
+        </div>
         <div class="label-notion">
             <h1>Choose relationship type:</h1>
         </div>
