@@ -40,10 +40,10 @@ def calculate(request):
                 mutations = mutations + 1
 
     if way_to_calc == 0:
-        cpi = 1 / prob
+        cpi = 1. / prob
         prob *= 100
     else:
-        prob = 1 / (1 + 1 / cpi) * 100
+        prob = cpi / (1. + cpi) * 100.
 
     if mutations > 2:
         cpi = 0
