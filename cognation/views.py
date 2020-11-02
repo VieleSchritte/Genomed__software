@@ -33,10 +33,8 @@ def calculate(request):
                 continue
             elif result[key]["lr"] > 0:
                 if way_to_calc == 0:
-                    print('===========Hardy')
                     prob *= result[key]["lr"]
                 else:
-                    print('=========IBDs')
                     cpi *= result[key]["lr"]
             else:
                 mutations = mutations + 1
@@ -100,12 +98,6 @@ def make_order_verifiler():
     return ['AMEL', 'Yindel', 'DYS391', 'SRY', 'D3S1358', 'vWA', 'D16S539', 'CSF1PO', 'TPOX', 'D8S1179', 'D21S11', 'D18S51', 'Penta E', 'D2S441',
             'D19S433', 'TH01', 'FGA', 'D22S1045', 'D5S818', 'D13S317', 'D7S820', 'D6S1043', 'D10S1248', 'D1S1656',
             'D12S391', 'D2S1338', 'Penta D']
-
-
-def make_order_yfiler():
-    return ['DYS576', 'DYS389I', 'DYS635', 'DYS389II', 'DYS627', 'DYS460', 'DYS458', 'DYS19', 'YGATAH4',
-            'DYS448', 'DYS391', 'DYS456', 'DYS390', 'DYS438', 'DYS392', 'DYS518', 'DYS570', 'DYS437',
-            'DYS385', 'DYS449', 'DYS533', 'DYS393', 'DYS439', 'DYS481', 'DYF387S1']
 
 
 def make_order_cordis_exp():

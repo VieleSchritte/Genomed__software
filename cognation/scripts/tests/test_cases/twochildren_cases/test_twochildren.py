@@ -45,17 +45,16 @@ class TestTwoChildrenFormula(TestCase):
             for key in dict_loci_lrs_ref.keys():
                 lr_ref = dict_loci_lrs_ref[key]
                 lr_test = dict_loci_lrs_test[key]
-                print(key, lr_ref, lr_test)
                 self.assertEqual(lr_ref, lr_test, key)
 
             cpi_ref = sibling_ref_tuple[1]
             cpi_test = sibling_test_tuple[1]
-            print(cpi_ref, cpi_test)
             self.assertEqual(cpi_ref, cpi_test)
 
+            p_ref = sibling_ref_tuple[2]
+            p_test = sibling_test_tuple[2]
             p_ref = int(sibling_ref_tuple[2] * 100) / 100
             p_test = int(sibling_test_tuple[2] * 100) / 100
-            print(p_ref, p_test)
             self.assertEqual(p_ref, p_test)
 
     def tearDown(self):

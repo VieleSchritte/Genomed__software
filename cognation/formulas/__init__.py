@@ -13,15 +13,15 @@ from cognation.formulas.three_children import ThreeChildrenFormula
 # If in calculation used Hardy-Weinberg law, return 0; else (if used IBD indices) return 1
 numToFormula = {
     1: [ParentFormula, 1],
-    2: [GrandParentFormula, 1],
-    3: [UncleFormula, 1],
-    4: [CousinFormula, 1],
-    5: [StepbrotherFormula, 1],
-    6: [BrotherFormula, 1],
-    7: [SiblingFormula, 1],
-    8: [TwoParentsFormula, 0],
-    9: [TwoChildrenFormula, 0],
-    10: [ThreeChildrenFormula, 0]
+    2: [TwoChildrenFormula, 0],
+    3: [SiblingFormula, 1],
+    4: [ThreeChildrenFormula, 0],
+    7: [TwoParentsFormula, 0],
+    11: [StepbrotherFormula, 1],
+    12: [BrotherFormula, 1],
+    14: [CousinFormula, 1],
+    15: [UncleFormula, 1],
+    17: [GrandParentFormula, 1],
 }
 
 
