@@ -10,7 +10,7 @@ from .models import Locus
 
 
 def index(request):
-    return redirect('input_data')
+    return redirect('cognation:input_data')
 
 
 def input_data(request):
