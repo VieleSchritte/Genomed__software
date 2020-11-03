@@ -6,14 +6,14 @@ from .base import Calculations
 class TwoParentsFormula(Formula):
     def calculate_relation(self, raw_values):
         (locus, alleles, sets, intersections, dict_make_result) = self.getting_alleles_locus(raw_values, 3)
-        child_alleles, parent1_alleles, parent2_alleles = alleles
+        child_alleles, mother_alleles, father_alleles = alleles
         child_set, parent1_set, parent2_set = sets
         intersection1, intersection2 = intersections[0], intersections[1]
 
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 
-        freq_dict = self.get_frequencies(locus, child_alleles + parent1_alleles + parent2_alleles)
+        freq_dict = self.get_frequencies(locus, child_alleles + mother_alleles + father_alleles)
         c = Calculations()
         lr = 0
 
