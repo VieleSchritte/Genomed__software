@@ -10,18 +10,18 @@ from cognation.formulas.base import UnknownFormulaException
 from cognation.formulas.two_children import TwoChildrenFormula
 from cognation.formulas.three_children import ThreeChildrenFormula
 
-
+# If in calculation used Hardy-Weinberg law, return 0; else (if used IBD indices) return 1
 numToFormula = {
-    1: ParentFormula,
-    2: GrandParentFormula,
-    3: UncleFormula,
-    4: CousinFormula,
-    5: StepbrotherFormula,
-    6: BrotherFormula,
-    7: SiblingFormula,
-    8: TwoParentsFormula,
-    9: TwoChildrenFormula,
-    10: ThreeChildrenFormula
+    1: [ParentFormula, 1],
+    2: [TwoChildrenFormula, 0],
+    3: [SiblingFormula, 1],
+    4: [ThreeChildrenFormula, 0],
+    7: [TwoParentsFormula, 0],
+    11: [StepbrotherFormula, 1],
+    12: [BrotherFormula, 1],
+    14: [CousinFormula, 1],
+    15: [UncleFormula, 1],
+    17: [GrandParentFormula, 1],
 }
 
 
@@ -29,6 +29,7 @@ def formula_builder(data_type, data):
     normalized_type = int(data_type)
 
     if normalized_type in numToFormula.keys():
-        return numToFormula[normalized_type](data)
+        target_list = numToFormula[normalized_type]
+        return target_list[0](data), target_list[1]
     else:
         raise UnknownFormulaException(data_type)

@@ -51,6 +51,8 @@ class TestTwoChildrenFormula(TestCase):
             cpi_test = sibling_test_tuple[1]
             self.assertEqual(cpi_ref, cpi_test)
 
+            p_ref = sibling_ref_tuple[2]
+            p_test = sibling_test_tuple[2]
             p_ref = int(sibling_ref_tuple[2] * 100) / 100
             p_test = int(sibling_test_tuple[2] * 100) / 100
             self.assertEqual(p_ref, p_test)

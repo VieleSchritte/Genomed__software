@@ -17,33 +17,43 @@ def calculate(request):
     data_type = request.POST.get('type', 0)
     data = request.POST.get('data', '')
 
-    formula = formula_builder(data_type, data)
+    # way_to_calc = 0 => Hardy-Weinberg law; way_to_calc = 1 => IBD indices
+    (formula, way_to_calc) = formula_builder(data_type, data)
     result = formula.calculate()
 
     cpi = 1
-    participants = 2
     mutations = 0
+    participants = 0
+    prob = 1
 
     for key in result:
-        if len(result[key].keys()) == 5:
-            participants = 3
-
+        participants = len(result[key].keys()) - 2
         if "lr" in result[key]:
             if result[key]["lr"] == '-':
                 continue
             elif result[key]["lr"] > 0:
-                cpi = cpi * result[key]["lr"]
+                if way_to_calc == 0:
+                    prob *= result[key]["lr"]
+                else:
+                    cpi *= result[key]["lr"]
             else:
                 mutations = mutations + 1
 
+    if way_to_calc == 0:
+        cpi = 1. / prob
+        prob *= 100
+    else:
+        prob = cpi / (1. + cpi) * 100.
+
     if mutations > 2:
         cpi = 0
+        prob = 0
         mutations = 0
 
     ctx = {
         'result': result,
         'cpi': cpi,
-        'prob': ((cpi / (1. + cpi)) * 100.),
+        'prob': prob,
         'participants': participants,
         'mutations': mutations,
         'order': make_order(result),
@@ -88,12 +98,6 @@ def make_order_verifiler():
     return ['AMEL', 'Yindel', 'DYS391', 'SRY', 'D3S1358', 'vWA', 'D16S539', 'CSF1PO', 'TPOX', 'D8S1179', 'D21S11', 'D18S51', 'Penta E', 'D2S441',
             'D19S433', 'TH01', 'FGA', 'D22S1045', 'D5S818', 'D13S317', 'D7S820', 'D6S1043', 'D10S1248', 'D1S1656',
             'D12S391', 'D2S1338', 'Penta D']
-
-
-def make_order_yfiler():
-    return ['DYS576', 'DYS389I', 'DYS635', 'DYS389II', 'DYS627', 'DYS460', 'DYS458', 'DYS19', 'YGATAH4',
-            'DYS448', 'DYS391', 'DYS456', 'DYS390', 'DYS438', 'DYS392', 'DYS518', 'DYS570', 'DYS437',
-            'DYS385', 'DYS449', 'DYS533', 'DYS393', 'DYS439', 'DYS481', 'DYF387S1']
 
 
 def make_order_cordis_exp():
