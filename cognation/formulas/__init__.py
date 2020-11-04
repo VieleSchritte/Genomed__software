@@ -10,6 +10,7 @@ from cognation.formulas.base import UnknownFormulaException
 from cognation.formulas.two_children import TwoChildrenFormula
 from cognation.formulas.three_children import ThreeChildrenFormula
 
+
 # If in calculation used Hardy-Weinberg law, return 0; else (if used IBD indices) return 1
 numToFormula = {
     1: [ParentFormula, 1],
