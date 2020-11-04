@@ -5,11 +5,14 @@ from cognation.formulas.cousin import CousinFormula
 from cognation.formulas.stepbrother import StepbrotherFormula
 from cognation.formulas.brother import BrotherFormula
 from cognation.formulas.sibling import SiblingFormula
-from cognation.formulas.two_parents import TwoParentsFormula
+from cognation.formulas.child_couple import CoupleFormula
 from cognation.formulas.base import UnknownFormulaException
 from cognation.formulas.two_children import TwoChildrenFormula
 from cognation.formulas.three_children import ThreeChildrenFormula
 from cognation.formulas.grand_parent_child_yes import ParentGrandChildYes
+from cognation.formulas.one_known_supposed import OneKnownSupposedFormula
+from cognation.formulas.two_known_supposed import TwoKnownSupposedFormula
+
 
 # If in calculation used Hardy-Weinberg law, return 0; else (if used IBD indices) return 1
 numToFormula = {
@@ -17,7 +20,9 @@ numToFormula = {
     2: [TwoChildrenFormula, 0],
     3: [SiblingFormula, 1],
     4: [ThreeChildrenFormula, 0],
-    7: [TwoParentsFormula, 0],
+    5: [TwoKnownSupposedFormula, 0],
+    7: [CoupleFormula, 0],
+    8: [OneKnownSupposedFormula, 0],
     11: [StepbrotherFormula, 1],
     12: [BrotherFormula, 1],
     14: [CousinFormula, 1],

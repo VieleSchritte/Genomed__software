@@ -3,7 +3,7 @@ from .base import Formula
 from .base import Calculations
 
 
-class TwoParentsFormula(Formula):
+class CoupleFormula(Formula):
     def calculate_relation(self, raw_values):
         (locus, alleles, sets, intersections, dict_make_result) = self.getting_alleles_locus(raw_values, 3)
         child_alleles, mother_alleles, father_alleles = alleles
