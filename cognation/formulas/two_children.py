@@ -5,9 +5,10 @@ from .base import Formula, Calculations
 class TwoChildrenFormula(Formula):
     def calculate_relation(self, raw_values):
         (locus, part_alleles, part_sets, intersections, dict_make_result) = self.getting_alleles_locus(raw_values, 3)
-        parent_alleles, child2_alleles, child1_alleles = part_alleles
-        parent_set, child2_set, child1_set = part_sets
-        ch2p_inter, ch1p_inter, ch1ch2_inter = intersections
+        # input order: parent, child1, child2
+        child2_alleles, child1_alleles, parent_alleles = part_alleles
+        child2_set, child1_set, parent_set = part_sets
+        ch1ch2_inter, ch2p_inter, ch1p_inter = intersections
 
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
