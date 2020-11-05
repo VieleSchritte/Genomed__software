@@ -19,6 +19,7 @@ class TwoKnownSupposedFormula(Formula):
         freq_dict = self.get_frequencies(locus, child1_alleles + child2_alleles + known_alleles + supposed_alleles)
         c = Calculations()
 
+        # If children's genotypes are same, use OneKnownSupposedFormula
         if child1_set == child2_set:
             raw_values = [locus, '/'.join(child1_alleles), '/'.join(known_alleles), '/'.join(supposed_alleles)]
             result = OneKnownSupposedFormula(Formula).calculate_relation(raw_values)

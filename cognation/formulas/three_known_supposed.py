@@ -1,46 +1,63 @@
 from __future__ import unicode_literals
-from .base import Formula
+from .base import Formula, Calculations
 from .one_known_supposed import OneKnownSupposedFormula
 from .two_known_supposed import TwoKnownSupposedFormula
 
 
 class ThreeKnownSupposed(Formula):
     def calculate_relation(self, raw_values):
-        locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 3)
+        locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 5)
         supposed_alleles, known_alleles, child3_alleles, child2_alleles, child1_alleles = alleles
         supposed_set, known_set, child3_set, child2_set, child1_set = sets
-        sk_inter, sch3_inter, sch2_inter, sch1_inter, kch3_inter, kch2_inter, kch1_inter, ch3ch2_inter, ch3ch1_inter, ch2ch1_inter = intersections
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 
-        children_alleles = [child1_alleles, child2_alleles, child3_alleles]
+        # If there are no intersections, return lr = 0 and start counting mutations
+        for i in range(1, 7):
+            if len(intersections[i]) == 0:
+                return self.make_result(locus, 0, dict_make_result)
 
-        # If child alleles are the same, use OneKnownSupposed
-        if child1_set == child2_set == child3_set:
+        c = Calculations()
+        unique_genotype, repeat_genotype_raw, repeat_genotype_join = c.get_child13_genotypes(child1_alleles, child2_alleles, child3_alleles)
+
+        # all children genotypes are same, use OneKnownSupposed
+        if len(unique_genotype) == 0 and len(repeat_genotype_join) != 0:
             raw_values = [locus, '/'.join(child1_alleles), '/'.join(known_alleles), '/'.join(supposed_alleles)]
             result = OneKnownSupposedFormula(Formula).calculate_relation(raw_values)
             result['part4'] = '/'.join(child2_alleles)
             result['part5'] = '/'.join(child3_alleles)
             return result
 
-        unique_genotype = []
-        repeat_genotype = []
-
-        for i in range(len(children_alleles)):
-            for j in range(len(children_alleles)):
-                for k in range(len(children_alleles)):
-
-                    if j > i and children_alleles[i] == children_alleles[j]:
-                        if child_alleles[k] != children_alleles[i]:
-                            unique_genotype = children_alleles[k]
-                            repeat_genotype = children_alleles[i]
-
         # If there are two same child alleles, use TwoKnownSupposed
-
-        if len(unique_genotype) != 0 and len(repeat_genotype) != 0:
-            raw_values = [locus, '/'.join(supposed_alleles), '/'.join(known_alleles), '/'.join(unique_genotype), '/'.join(repeat_genotype)]
+        if len(unique_genotype) != 0 and len(repeat_genotype_raw) != 0:
+            raw_values = [locus, '/'.join(supposed_alleles), '/'.join(known_alleles), '/'.join(unique_genotype), '/'.join(repeat_genotype_raw)]
             result = TwoKnownSupposedFormula(Formula).calculate_relation(raw_values)
-            result['part5'] = '/'.join(child3_alleles)
+            result['part5'] = '/'.join(repeat_genotype_join)
             return result
+
+        common_set = set(child1_alleles + child2_alleles + child3_alleles + supposed_alleles + known_alleles)
+        freq_dict = self.get_frequencies(locus, list(common_set))
+
+        # special case aa ab bb ab ab
+        if len(common_set) == 2:
+            freq1, freq2 = freq_dict[list(common_set)[0]], freq_dict[list(common_set)[1]]
+            lr = 2 * freq1 * freq2
+            return self.make_result(locus, lr, dict_make_result)
+
+        # special case ab ac bd ac bc
+        if len(common_set) == 4:
+            freq1, freq2 = freq_dict[child3_alleles[0]], freq_dict[child3_alleles[1]]
+            lr = 2 * freq1 * freq2
+            return self.make_result(locus, lr, dict_make_result)
+
+        # Homozygous first child
+        if len(child1_set) == 1:
+            freq1, freq2 = freq_dict[supposed_alleles[0]], freq_dict[supposed_alleles[1]]
+            lr = 2 * freq1 * freq2
+            return self.make_result(locus, lr, dict_make_result)
+
+        freq1, freq2, freq3 = freq_dict[child1_alleles[0]], freq_dict[child1_alleles[1]], freq_dict[list(common_set - child1_set)[0]]
+        lr = 2 * freq3 * (freq1 + freq2)
+        return self.make_result(locus, lr, dict_make_result)

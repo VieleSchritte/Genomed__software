@@ -175,3 +175,20 @@ class Calculations:
     #  Probability of relation theory refutation in case of inspected person's heterozygosity
     def hetero_refutation(self, freq1, freq2):
         return 2 * self.F(freq1) * self.F(freq2) - (2 * freq1 * freq2) ** 2
+
+    # Returns unique and repeatable children's genotypes in case of two and three children
+    @staticmethod
+    def get_child13_genotypes(child1_alleles, child2_alleles, child3_alleles):
+        children_genotypes = [child1_alleles, child2_alleles, child3_alleles]
+        unique_genotype, repeat_genotype_raw, repeat_genotype_join = [], [], []
+
+        for i in range(len(children_genotypes)):
+            for j in range(len(children_genotypes)):
+                for k in range(len(children_genotypes)):
+
+                    if j > i and children_genotypes[i] == children_genotypes[j]:
+                        if children_genotypes[k] != children_genotypes[i]:
+                            unique_genotype = children_genotypes[k]
+                            repeat_genotype_raw, repeat_genotype_join = children_genotypes[i], children_genotypes[j]
+
+        return unique_genotype, repeat_genotype_raw, repeat_genotype_join

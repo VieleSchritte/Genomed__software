@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from .base import Formula, Calculations
+from .two_children import TwoChildrenFormula
 
 
 class ThreeChildrenFormula(Formula):
@@ -9,16 +10,27 @@ class ThreeChildrenFormula(Formula):
         parent_set, child3_set, child2_set, child1_set = sets
         ch3p_inter, ch2p_inter, ch1p_inter, ch2ch3_inter, ch1ch3_inter, ch1ch2_inter = intersections
 
-        c = Calculations()
-
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 
         lr = 0
-
         common_set = set(child1_alleles + child2_alleles + child3_alleles + parent_alleles)
         freq_dict = self.get_frequencies(locus, list(common_set))
+
+        c = Calculations()
+        unique_genotype, repeat_genotype_raw, repeat_genotype_join = c.get_child13_genotypes(child1_alleles, child2_alleles, child3_alleles)
+
+        # all children genotypes are same, use Hardy-Weinberg formula for one parent and one child
+        if len(unique_genotype) == 0 and len(repeat_genotype_join) != 0:
+            lr = TwoChildrenFormula.ParentHardy(child1_set, ch1p_inter, freq_dict)
+            return self.make_result(locus, lr, dict_make_result)
+
+        # If there are two same child alleles, use TwoChildrenFormula
+        if len(unique_genotype) != 0 and len(repeat_genotype_raw) != 0:
+            raw_values = [locus, '/'.join(repeat_genotype_raw), '/'.join(unique_genotype), '/'.join(parent_alleles)]
+            result = TwoChildrenFormula(Formula).calculate_relation(raw_values)
+            result['part4'] = '/'.join(repeat_genotype_join)
 
         # special cases (aa ab ac an) and (ab ac ad an)
         if ch1ch2_inter == ch2ch3_inter == ch3p_inter:
