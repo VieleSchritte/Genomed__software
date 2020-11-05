@@ -13,8 +13,10 @@ class TwoKnownSupposedFormula(Formula):
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 
-        if len(kch1_inter) == 0 or len(sch1_inter) == 0 or len(kch2_inter) == 0 or len(sch2_inter) == 0:
-            return self.make_result(locus, 0, dict_make_result)
+        # If there are no intersections between children and parents, return lr = 0 and start counting mutations
+        for i in range(1, 5):
+            if len(intersections[i]) == 0:
+                return self.make_result(locus, 0, dict_make_result)
 
         freq_dict = self.get_frequencies(locus, child1_alleles + child2_alleles + known_alleles + supposed_alleles)
         c = Calculations()

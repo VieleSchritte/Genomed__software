@@ -29,21 +29,27 @@ def calculate(request):
     for key in result:
         participants = len(result[key].keys()) - 2
         if "lr" in result[key]:
+            # Gender-specific locus
             if result[key]["lr"] == '-':
                 continue
+
             elif result[key]["lr"] > 0:
+
+                # Hardy-Weinberg law
                 if way_to_calc == 0:
                     prob *= result[key]["lr"]
+
+                # IBD indices
                 else:
                     cpi *= result[key]["lr"]
             else:
                 mutations = mutations + 1
 
     if way_to_calc == 0:
-        cpi = 1. / prob
+        cpi = 1 / prob
         prob *= 100
     else:
-        prob = cpi / (1. + cpi) * 100.
+        prob = cpi / (1 + cpi) * 100
 
     if mutations > 2:
         cpi = 0

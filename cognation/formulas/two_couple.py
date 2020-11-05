@@ -17,6 +17,7 @@ class TwoCoupleFormula(Formula):
         freq_dict = self.get_frequencies(locus, list(common_set))
         lr = 0
 
+        # If there are no intersections between children and couple, return lr = 0 and start counting mutations
         for i in range(1, 5):
             if intersections[i] == 0:
                 return self.make_result(locus, lr, dict_make_result)

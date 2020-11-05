@@ -23,6 +23,11 @@ class TwoChildrenFormula(Formula):
         freq_dict = self.get_frequencies(locus, list(common_set))
         lr = 0
 
+        # If there are no intersections, return lr = 0 and start counting mutations
+        for i in range(1, 2):
+            if len(intersections[i]) == 0:
+                return self.make_result(locus, lr, dict_make_result)
+
         if len(ch1p_inter) >= 1 and len(ch2p_inter) >= 1:
             # Homozygous 1st child
             if len(child1_set) == 1:

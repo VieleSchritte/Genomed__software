@@ -9,10 +9,6 @@ class OneKnownSupposedFormula(Formula):
         sup_set, known_set, child_set = sets
         sk_inter, sch_inter, kch_inter = intersections
 
-        print(locus)
-        print('supposed, known, child: ', sup_alleles, known_alleles, child_alleles)
-        print('sch_inter: ', sch_inter)
-
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 

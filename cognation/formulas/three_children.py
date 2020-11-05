@@ -14,11 +14,16 @@ class ThreeChildrenFormula(Formula):
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 
-        lr = 0
         common_set = set(child1_alleles + child2_alleles + child3_alleles + parent_alleles)
         freq_dict = self.get_frequencies(locus, list(common_set))
-
         c = Calculations()
+        lr = 0
+
+        # If there are no intersections between children and parent, return lr = 0
+        for i in range(0, 3):
+            if len(intersections[i]) == 0:
+                return self.make_result(locus, lr, dict_make_result)
+
         unique_genotype, repeat_genotype_raw, repeat_genotype_join = c.get_child13_genotypes(child1_alleles, child2_alleles, child3_alleles)
 
         # all children genotypes are same, use Hardy-Weinberg formula for one parent and one child
@@ -104,5 +109,3 @@ class ThreeChildrenFormula(Formula):
                 freq3 = freq_dict[list(ch2ch3_inter)[0]]
                 lr = 2 * freq3 * (freq1 + freq2)
                 return self.make_result(locus, lr, dict_make_result)
-
-        return self.make_result(locus, lr, dict_make_result)

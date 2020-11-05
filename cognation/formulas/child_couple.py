@@ -16,6 +16,11 @@ class CoupleFormula(Formula):
         c = Calculations()
         lr = 0
 
+        # If there are no intersections between child and couple, return lr = 0 and start counting mutations
+        for i in range(0, 2):
+            if len(intersections[i]) == 0:
+                return self.make_result(locus, lr, dict_make_result)
+
         if len(cm_inter) != 0 and len(cf_inter) != 0:
             if len(child_set) == 1:
                 freq = freq_dict[child_alleles[0]]
