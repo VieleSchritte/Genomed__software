@@ -17,27 +17,26 @@ from cognation.formulas.three_known_supposed import ThreeKnownSupposed
 from cognation.formulas.two_couple import TwoCoupleFormula
 
 
-# If in calculation used Hardy-Weinberg law, return 0; else (if used IBD indices) return 1
 numToFormula = {
-    1: [ParentFormula, 1],
-    2: [TwoChildrenFormula, 0],
-    3: [SiblingFormula, 1],
-    4: [ThreeChildrenFormula, 0],
-    5: [TwoKnownSupposedFormula, 0],
-    6: [ThreeKnownSupposed, 0],
-    7: [CoupleFormula, 0],
-    8: [OneKnownSupposedFormula, 0],
-    9: [TwoCoupleFormula, 0],
+    1: ParentFormula,
+    2: TwoChildrenFormula,
+    3: SiblingFormula,
+    4: ThreeChildrenFormula,
+    5: TwoKnownSupposedFormula,
+    6: ThreeKnownSupposed,
+    7: CoupleFormula,
+    8: OneKnownSupposedFormula,
+    9: TwoCoupleFormula,
     10: [],
-    11: [StepbrotherFormula, 1],
-    12: [BrotherFormula, 1],
-    13: [TwoBrothersFormula, 1],
-    14: [CousinFormula, 1],
-    15: [UncleFormula, 1],
+    11: StepbrotherFormula,
+    12: BrotherFormula,
+    13: TwoBrothersFormula,
+    14: CousinFormula,
+    15: UncleFormula,
     16: [],
-    17: [GrandParentFormula, 1],
+    17: GrandParentFormula,
     18: [],
-    19: [ParentGrandChildYes, 0],
+    19: ParentGrandChildYes,
     20: [],
     21: []
 }
@@ -45,9 +44,7 @@ numToFormula = {
 
 def formula_builder(data_type, data):
     normalized_type = int(data_type)
-
     if normalized_type in numToFormula.keys():
-        target_list = numToFormula[normalized_type]
-        return target_list[0](data), target_list[1]
+        return numToFormula[normalized_type](data)
     else:
         raise UnknownFormulaException(data_type)

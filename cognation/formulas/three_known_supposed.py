@@ -20,9 +20,18 @@ class ThreeKnownSupposed(Formula):
                 return self.make_result(locus, 0, dict_make_result)
 
         c = Calculations()
-        unique_genotype, repeat_genotype_raw, repeat_genotype_join = c.get_child13_genotypes(child1_alleles, child2_alleles, child3_alleles)
+        unique_genotype, repeat_genotype = c.get_child13_genotypes(child1_alleles, child2_alleles, child3_alleles)
+        if len(repeat_genotype) != 0:
+            raw_values = [locus, '/'.join(repeat_genotype), '/'.join(known_alleles), '/'.join(supposed_alleles)]
 
-        # all children genotypes are same, use OneKnownSupposed
+            # all children genotypes are same, use OneKnownSupposed
+            if len(unique_genotype) == 0:
+                result = OneKnownSupposedFormula(Formula).calculate_relation(raw_values)
+                lr = result['lr']
+                return self.make_result(locus, lr, dict_make_result)
+
+
+
         if len(unique_genotype) == 0 and len(repeat_genotype_join) != 0:
             raw_values = [locus, '/'.join(child1_alleles), '/'.join(known_alleles), '/'.join(supposed_alleles)]
             result = OneKnownSupposedFormula(Formula).calculate_relation(raw_values)

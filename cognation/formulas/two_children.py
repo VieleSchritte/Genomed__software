@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from .base import Formula, Calculations
+from .parent import ParentFormula
 
 
 class TwoChildrenFormula(Formula):
@@ -13,10 +14,11 @@ class TwoChildrenFormula(Formula):
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 
-        # If children's genotypes are same, use Hardy-Weinberg formula for one child
+        # If children's genotypes are same, use ParentFormula
         if child1_set == child2_set:
-            freq_dict = self.get_frequencies(locus, child1_alleles + parent_alleles)
-            lr = self.ParentHardy(child1_set, ch1p_inter, freq_dict)
+            raw_values = [locus, '/'.join(parent_alleles), '/'.join(child1_alleles)]
+            result = ParentFormula(Formula).calculate_relation(raw_values)
+            lr = result['lr']
             return self.make_result(locus, lr, dict_make_result)
 
         c = Calculations()
@@ -73,23 +75,3 @@ class TwoChildrenFormula(Formula):
                     return self.make_result(locus, lr, dict_make_result)
 
         return self.make_result(locus, lr, dict_make_result)
-
-    @staticmethod
-    def ParentHardy(child1_set, ch1p_inter, freq_dict):
-        lr = 0
-        c = Calculations()
-
-        if len(ch1p_inter) == 0:
-            return lr
-        else:
-            # Homozygous child
-            if len(child1_set) == 1:
-                freq = freq_dict[list(child1_set)[0]]
-                lr = c.F(freq)
-                return lr
-
-            # Heterozygous child
-            else:
-                freq1, freq2 = freq_dict[list(child1_set)[0]], freq_dict[list(child1_set)[1]]
-                lr = (freq1 + freq2) * (2 - (freq1 + freq2))
-                return lr

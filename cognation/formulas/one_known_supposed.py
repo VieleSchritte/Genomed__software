@@ -5,9 +5,9 @@ from .base import Formula, Calculations
 class OneKnownSupposedFormula(Formula):
     def calculate_relation(self, raw_values):
         (locus, alleles, sets, intersections, dict_make_result) = self.getting_alleles_locus(raw_values, 3)
-        sup_alleles, known_alleles, child_alleles = alleles
-        sup_set, known_set, child_set = sets
-        sk_inter, sch_inter, kch_inter = intersections
+        child_alleles, known_alleles, sup_alleles = alleles
+        child_set, known_set, sup_set = sets
+        kch_inter, sch_inter, sk_inter = intersections
 
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)

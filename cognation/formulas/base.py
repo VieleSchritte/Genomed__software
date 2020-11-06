@@ -180,7 +180,7 @@ class Calculations:
     @staticmethod
     def get_child13_genotypes(child1_alleles, child2_alleles, child3_alleles):
         children_genotypes = [child1_alleles, child2_alleles, child3_alleles]
-        unique_genotype, repeat_genotype_raw, repeat_genotype_join = [], [], []
+        unique_genotype, repeat_genotype = [], []
 
         for i in range(len(children_genotypes)):
             for j in range(len(children_genotypes)):
@@ -189,6 +189,6 @@ class Calculations:
                     if j > i and children_genotypes[i] == children_genotypes[j]:
                         if children_genotypes[k] != children_genotypes[i]:
                             unique_genotype = children_genotypes[k]
-                            repeat_genotype_raw, repeat_genotype_join = children_genotypes[i], children_genotypes[j]
+                            repeat_genotype = children_genotypes[i]
 
-        return unique_genotype, repeat_genotype_raw, repeat_genotype_join
+        return unique_genotype, repeat_genotype
