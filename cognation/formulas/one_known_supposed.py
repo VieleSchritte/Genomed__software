@@ -18,13 +18,12 @@ class OneKnownSupposedFormula(Formula):
 
         freq_dict = self.get_frequencies(locus, child_alleles + known_alleles + sup_alleles)
         freq1, freq2 = freq_dict[child_alleles[0]], freq_dict[child_alleles[1]]
+
         # cases ab ab an/bn
         if child_set == known_set:
-            print('ordinary ab ab an/bn')
             lr = (freq1 + freq2) * (2 - (freq1 + freq2))
             return self.make_result(locus, lr, dict_make_result)
 
-        print('default')
         freq = freq_dict[list(sch_inter)[0]]
         c = Calculations()
         lr = c.F(freq)
