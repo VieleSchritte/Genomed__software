@@ -43,7 +43,6 @@ class TestFormula(TestCase):
             for key in dict_loci_lrs_ref.keys():
                 lr_ref = dict_loci_lrs_ref[key]
                 lr_test = dict_loci_lrs_test[key]
-                print('test, ref: ', lr_test, lr_ref)
                 self.assertEqual(lr_ref, lr_test, key)
 
             cpi_ref = ref_tuple[1]
