@@ -13,10 +13,10 @@ logger.addHandler(logging.StreamHandler())
 class TestTwoChildrenFormula(TestCase):
     def setUp(self):
 
-        self.reference_paths = ['1_calls_ParentHardy/1_calls_ParentHardy_ref', '2_aa_an_an/2_aa_an_an_ref',
+        self.reference_paths = ['no_intersections/no_intersections_ref', '2_aa_an_an/2_aa_an_an_ref',
                                 '3_aa_bb_ab/3_aa_bb_ab_ref', '4_aa_bc_abac/4_aa_bc_abac_ref', '5_ab_ac_anbc/5_ab_ac_anbc_ref',
                                 '6_ab_cc_acbc/6_ab_cc_acbc_ref', '7_ab_cd_acadbcbd/7_ab_cd_acadbcbd_ref']
-        self.test_paths = ['1_calls_ParentHardy/1_calls_ParentHardy_test', '2_aa_an_an/2_aa_an_an_test',
+        self.test_paths = ['no_intersections/no_intersections_test', '2_aa_an_an/2_aa_an_an_test',
                            '3_aa_bb_ab/3_aa_bb_ab_test', '4_aa_bc_abac/4_aa_bc_abac_test', '5_ab_ac_anbc/5_ab_ac_anbc_test',
                            '6_ab_cc_acbc/6_ab_cc_acbc_test', '7_ab_cd_acadbcbd/7_ab_cd_acadbcbd_test']
         short_path = 'cognation/scripts/tests/test_cases/twochildren_cases/'
