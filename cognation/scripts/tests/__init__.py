@@ -8,6 +8,7 @@ from cognation.formulas.brother import BrotherFormula
 from cognation.formulas.stepbrother import StepbrotherFormula
 from cognation.formulas.two_children import TwoChildrenFormula
 from cognation.formulas.three_children import ThreeChildrenFormula
+from cognation.formulas.one_known_supposed import OneKnownSupposedFormula
 import re
 from django.core.management import call_command
 
@@ -52,14 +53,26 @@ class GetData:
     def formula_usage(number):
         num_to_formula = {
             1: ParentFormula,
-            2: GrandParentFormula,
-            3: UncleFormula,
-            4: CousinFormula,
-            5: BrotherFormula,
-            6: StepbrotherFormula,
-            7: SiblingFormula,
-            8: TwoChildrenFormula,
-            9: ThreeChildrenFormula
+            2: TwoChildrenFormula,
+            3: SiblingFormula,
+            4: ThreeChildrenFormula,
+            5: [],
+            6: [],
+            7: [],
+            8: OneKnownSupposedFormula,
+            9: [],
+            10: [],
+            11: StepbrotherFormula,
+            12: BrotherFormula,
+            13: [],
+            14: CousinFormula,
+            15: UncleFormula,
+            16: [],
+            17: GrandParentFormula,
+            18: [],
+            19: [],
+            20: [],
+            21: []
         }
 
         for key in num_to_formula.keys():

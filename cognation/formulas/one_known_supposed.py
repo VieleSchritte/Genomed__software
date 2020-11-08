@@ -5,9 +5,9 @@ from .base import Formula, Calculations
 class OneKnownSupposedFormula(Formula):
     def calculate_relation(self, raw_values):
         (locus, alleles, sets, intersections, dict_make_result) = self.getting_alleles_locus(raw_values, 3)
-        child_alleles, known_alleles, sup_alleles = alleles
-        child_set, known_set, sup_set = sets
-        kch_inter, sch_inter, sk_inter = intersections
+        sup_alleles, child_alleles, known_alleles = alleles
+        sup_set, child_set, known_set = sets
+        sch_inter, sk_inter, kch_inter = intersections
 
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
@@ -17,12 +17,14 @@ class OneKnownSupposedFormula(Formula):
             return self.make_result(locus, lr, dict_make_result)
 
         freq_dict = self.get_frequencies(locus, child_alleles + known_alleles + sup_alleles)
+        freq1, freq2 = freq_dict[child_alleles[0]], freq_dict[child_alleles[1]]
         # cases ab ab an/bn
-        if len(child_set) == len(known_set) == 2 and len(sch_inter) == 1:
-            freq1, freq2 = freq_dict[child_alleles[0]], freq_dict[child_alleles[1]]
+        if child_set == known_set:
+            print('ordinary ab ab an/bn')
             lr = (freq1 + freq2) * (2 - (freq1 + freq2))
             return self.make_result(locus, lr, dict_make_result)
 
+        print('default')
         freq = freq_dict[list(sch_inter)[0]]
         c = Calculations()
         lr = c.F(freq)

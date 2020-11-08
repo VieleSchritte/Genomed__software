@@ -20,7 +20,7 @@ class ThreeKnownSupposed(Formula):
                 return self.make_result(locus, 0, dict_make_result)
 
         c = Calculations()
-        unique_genotype, repeat_genotype = c.get_child13_genotypes(child1_alleles, child2_alleles, child3_alleles)
+        unique_genotype, repeat_genotype = c.get_repeat_unique(child1_alleles, child2_alleles, child3_alleles)
         if len(repeat_genotype) != 0:
             raw_values = [locus, '/'.join(repeat_genotype), '/'.join(known_alleles), '/'.join(supposed_alleles)]
 

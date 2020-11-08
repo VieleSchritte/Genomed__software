@@ -21,11 +21,12 @@ class ThreeChildrenFormula(Formula):
         lr = 0
 
         # If there are no intersections between children and parent, return lr = 0
-        for i in range(4, 6):
-            if len(intersections[i]) == 0 and len(intersections[2]) == 0:
-                return self.make_result(locus, lr, dict_make_result)
+        if len(intersections[2]) == 0:
+            for i in range(4, 6):
+                if len(intersections[i]) == 0:
+                    return self.make_result(locus, lr, dict_make_result)
 
-        unique_genotype, repeat_genotype = c.get_child13_genotypes(child1_alleles, child2_alleles, child3_alleles)
+        unique_genotype, repeat_genotype = c.get_repeat_unique(child1_alleles, child2_alleles, child3_alleles)
         # There are repeatable children genotypes
         if len(repeat_genotype) != 0:
             raw_values = [locus, '/'.join(parent_alleles), '/'.join(repeat_genotype)]
@@ -49,17 +50,19 @@ class ThreeChildrenFormula(Formula):
             lr = c.F(freq)
             return self.make_result(locus, lr, dict_make_result)
 
-        # special case aa ab bb ab
-        if len(common_set) == 2:
-            freq1, freq2 = freq_dict[list(common_set)[0]], freq_dict[list(common_set)[1]]
-            lr = 2 * freq1 * freq2
-            return self.make_result(locus, lr, dict_make_result)
-
         #  Homozygous 1st child
         if len(child1_set) == 1:
             # aa ab bc ab/ac
-            # aa ab cc ac
-            # aa bc bn (n != a, c) ab
+            if len(ch1ch2_inter) != 0 and len(child2_set) == len(child3_set) == len(parent_set) == 2:
+                freq1 = freq_dict[child1_alleles[0]]
+                freq2, freq3 = freq_dict[child3_alleles[0]], freq_dict[child3_alleles[1]]
+                lr = 2 * freq1 * (freq2 + freq3)
+                return self.make_result(locus, lr, dict_make_result)
+
+            # default is lr = 2 * P(parent_alleles[0]) * P(parent_alleles[1])
+            freq1, freq2 = freq_dict[parent_alleles[0]], freq_dict[parent_alleles[1]]
+            lr = 2 * freq1 * freq2
+            return self.make_result(locus, lr, dict_make_result)
 
         # Heterozygous 1st child
         if len(child1_set) == 2:

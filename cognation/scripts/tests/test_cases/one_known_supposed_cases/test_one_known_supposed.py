@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import unittest
 from django.test import TestCase
 from cognation.scripts.tests import GetData
@@ -11,20 +10,12 @@ from cognation.scripts.tests import GetData
 
 class TestFormula(TestCase):
     def setUp(self):
-        self.reference_paths = ['aa_ab_ac_an/aa_ab_ac_an_ref', 'aa_ab_bb_ab/aa_ab_bb_ab_ref', 'aa_ab_bc_abac/aa_ab_bc_abac_ref',
-                                'aa_ab_cc_ac/aa_ab_cc_ac_ref', 'aa_bc_bn_ab/aa_bc_bn_ab_ref', 'ab_ac_ad_an/ab_ac_ad_an_ref',
-                                'ab_ac_bc_abacbc/ab_ac_bc_abacbc_ref', 'ab_ac_bd_adbc/ab_ac_bd_adbc_ref',
-                                'ab_ac_сd_acadbc/ab_ac_сd_acadbc_ref', 'ab_ac_de_adae/ab_ac_de_adae_ref',
-                                'ab_cd_cn_acbc/ab_cd_cn_acbc_ref', 'no_intersections/no_intersections_ref',
-                                'three_same/three_same_ref', 'two_same_one_unique/two_same_one_unique_ref']
-        self.test_paths = ['aa_ab_ac_an/aa_ab_ac_an_test', 'aa_ab_bb_ab/aa_ab_bb_ab_test', 'aa_ab_bc_abac/aa_ab_bc_abac_test',
-                           'aa_ab_cc_ac/aa_ab_cc_ac_test', 'aa_bc_bn_ab/aa_bc_bn_ab_test', 'ab_ac_ad_an/ab_ac_ad_an_test',
-                           'ab_ac_bc_abacbc/ab_ac_bc_abacbc_test', 'ab_ac_bd_adbc/ab_ac_bd_adbc_test',
-                           'ab_ac_сd_acadbc/ab_ac_сd_acadbc_test', 'ab_ac_de_adae/ab_ac_de_adae_test',
-                           'ab_cd_cn_acbc/ab_cd_cn_acbc_test', 'no_intersections/no_intersections_test',
-                           'three_same/three_same_test', 'two_same_one_unique/two_same_one_unique_test']
+        self.reference_paths = ['no_intersections/no_intersections_ref', 'aa_an_an/aa_an_an_ref', 'ab_an_bn/ab_an_bn_ref',
+                                'ab_ab_an/ab_ab_an_ref', 'ab_ab_bn/ab_ab_bn_ref']
+        self.test_paths = ['no_intersections/no_intersections_test', 'aa_an_an/aa_an_an_test', 'ab_an_bn/ab_an_bn_test',
+                           'ab_ab_an/ab_ab_an_test', 'ab_ab_bn/ab_ab_bn_test']
 
-        short_path = 'cognation/scripts/tests/test_cases/threechildren_cases/'
+        short_path = 'cognation/scripts/tests/test_cases/one_known_supposed_cases/'
 
         get_ref = GetData()
         self.overall_ref_dict = {}
@@ -35,7 +26,7 @@ class TestFormula(TestCase):
             self.overall_ref_dict[ref_path] = get_ref.get_reference_data(short_path, ref_path, 4)
 
             test_path = self.test_paths[i]
-            self.overall_test_dict[test_path] = get_ref.get_test_data(short_path, test_path, 4)
+            self.overall_test_dict[test_path] = get_ref.get_test_data(short_path, test_path, 8)
 
     def test_formula(self):
         for i in range(len(self.reference_paths)):

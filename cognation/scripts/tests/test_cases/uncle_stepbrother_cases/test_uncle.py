@@ -25,7 +25,7 @@ class TestUncleFormula(TestCase):
             self.overall_ref_dict[ref_path] = get_ref.get_reference_data(short_path, ref_path, 2)
 
             test_path = self.test_paths[i]
-            self.overall_test_dict[test_path] = get_ref.get_test_data(short_path, test_path, 3)
+            self.overall_test_dict[test_path] = get_ref.get_test_data(short_path, test_path, 15)
         pass
 
     def test_formula(self):
