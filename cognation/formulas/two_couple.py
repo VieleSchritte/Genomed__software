@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 from .base import Formula
-from .child_couple import CoupleFormula
+from .couple import CoupleFormula
 
 
 class TwoCoupleFormula(Formula):

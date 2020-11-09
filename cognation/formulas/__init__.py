@@ -5,7 +5,7 @@ from cognation.formulas.cousin import CousinFormula
 from cognation.formulas.stepbrother import StepbrotherFormula
 from cognation.formulas.brother import BrotherFormula
 from cognation.formulas.sibling import SiblingFormula
-from cognation.formulas.child_couple import CoupleFormula
+from cognation.formulas.couple import CoupleFormula
 from cognation.formulas.base import UnknownFormulaException
 from cognation.formulas.two_children import TwoChildrenFormula
 from cognation.formulas.three_children import ThreeChildrenFormula
