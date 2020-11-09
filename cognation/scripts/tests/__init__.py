@@ -13,6 +13,7 @@ from cognation.formulas.two_known_supposed import TwoKnownSupposedFormula
 from cognation.formulas.three_known_supposed import ThreeKnownSupposed
 from cognation.formulas.couple import CoupleFormula
 from cognation.formulas.two_couple import TwoCoupleFormula
+from cognation.formulas.two_brothers import TwoBrothersFormula
 import re
 from django.core.management import call_command
 
@@ -33,7 +34,7 @@ class GetData:
             10: [],
             11: StepbrotherFormula,
             12: BrotherFormula,
-            13: [],
+            13: TwoBrothersFormula,
             14: CousinFormula,
             15: UncleFormula,
             16: [],
