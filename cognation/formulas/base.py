@@ -145,6 +145,16 @@ class Formula(abc.ABC):
                 "part4": dict_alleles['part4'],
                 "lr": lr
             }
+        elif len(dict_alleles.keys()) == 5:
+            return {
+                "locus": locus,
+                "part1": dict_alleles['part1'],
+                "part2": dict_alleles['part2'],
+                "part3": dict_alleles['part3'],
+                "part4": dict_alleles['part4'],
+                "part5": dict_alleles['part5'],
+                "lr": lr
+            }
 
     # Abstract methods
     @abc.abstractmethod

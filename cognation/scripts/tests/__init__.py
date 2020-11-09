@@ -10,6 +10,7 @@ from cognation.formulas.two_children import TwoChildrenFormula
 from cognation.formulas.three_children import ThreeChildrenFormula
 from cognation.formulas.one_known_supposed import OneKnownSupposedFormula
 from cognation.formulas.two_known_supposed import TwoKnownSupposedFormula
+from cognation.formulas.three_known_supposed import ThreeKnownSupposed
 import re
 from django.core.management import call_command
 
@@ -23,7 +24,7 @@ class GetData:
             3: SiblingFormula,
             4: ThreeChildrenFormula,
             5: TwoKnownSupposedFormula,
-            6: [],
+            6: ThreeKnownSupposed,
             7: [],
             8: OneKnownSupposedFormula,
             9: [],
