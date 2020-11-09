@@ -6,9 +6,9 @@ from .couple import CoupleFormula
 class TwoCoupleFormula(Formula):
     def calculate_relation(self, raw_values):
         (locus, alleles, sets, intersections, dict_make_result) = self.getting_alleles_locus(raw_values, 4)
-        child1_alleles, child2_alleles, mother_alleles, father_alleles = alleles
-        child1_set, child2_set, mother_set, father_set = sets
-        ch1ch2_inter, ch1m_inter, ch1f_inter, ch2m_inter, ch2f_inter = intersections[0:5]
+        child2_alleles, child1_alleles, mother_alleles, father_alleles = alleles
+        child2_set, child1_set, mother_set, father_set = sets
+        ch1ch2_inter, ch2m_inter, ch2f_inter, ch1m_inter, ch1f_inter = intersections[0:5]
 
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
@@ -26,8 +26,8 @@ class TwoCoupleFormula(Formula):
         if child1_set == child2_set:
             raw_values = [locus, '/'.join(father_alleles), '/'.join(mother_alleles), '/'.join(child1_alleles)]
             result = CoupleFormula(Formula).calculate_relation(raw_values)
-            result['part4'] = '/'.join(child2_alleles)
-            return result
+            lr = result['lr']
+            return self.make_result(locus, lr, dict_make_result)
 
         # special case aa bb ab ab
         if len(common_set) == 2:
@@ -38,7 +38,7 @@ class TwoCoupleFormula(Formula):
         # Homozygous child1
         if len(child1_set) == 1:
             # aa ab an ab
-            if child2_set == father_set and len(child2_set) == 2:
+            if len(ch1ch2_inter) != 0:
                 freq1, freq2 = freq_dict[list(ch1m_inter)[0]], freq_dict[list(child2_set - child1_set)[0]]
                 lr = 4 * (freq1 ** 2) * freq2 * (2 - freq1 - freq2)
                 return self.make_result(locus, lr, dict_make_result)
@@ -60,5 +60,6 @@ class TwoCoupleFormula(Formula):
             # case ab cd ad/ac bc/bd
             lr = 16
             for i in range(len(list(common_set))):
-                lr *= list(common_set)[i]
+                freq = freq_dict[list(common_set)[i]]
+                lr *= freq
             return self.make_result(locus, lr, dict_make_result)
