@@ -6,9 +6,10 @@ from .one_known_supposed import OneKnownSupposedFormula
 class TwoKnownSupposedFormula(Formula):
     def calculate_relation(self, raw_values):
         (locus, alleles, sets, intersections, dict_make_result) = self.getting_alleles_locus(raw_values, 4)
-        child1_alleles, child2_alleles, known_alleles, supposed_alleles = alleles
-        child1_set, child2_set, known_set, supposed_set = sets
-        ch1ch2_inter, kch1_inter, sch1_inter, kch2_inter, sch2_inter, sk_inter = intersections
+        # known child1 child2 supposed => supposed child2 child1 known
+        supposed_alleles, child2_alleles, child1_alleles, known_alleles = alleles
+        supposed_set, child2_set, child1_set, known_set = sets
+        sch2_inter, sch1_inter, sk_inter, ch1ch2_inter, kch2_inter = intersections[0, 5]
 
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
@@ -23,10 +24,10 @@ class TwoKnownSupposedFormula(Formula):
 
         # If children's genotypes are same, use OneKnownSupposedFormula
         if child1_set == child2_set:
-            raw_values = [locus, '/'.join(child1_alleles), '/'.join(known_alleles), '/'.join(supposed_alleles)]
+            raw_values = [locus, '/'.join(known_alleles), '/'.join(child1_alleles), '/'.join(supposed_alleles)]
             result = OneKnownSupposedFormula(Formula).calculate_relation(raw_values)
-            result['part4'] = '/'.join(child2_alleles)
-            return result
+            lr = result['lr']
+            return self.make_result(locus, lr, dict_make_result)
 
         # homozygous first child
         if len(child1_set) == 1:
