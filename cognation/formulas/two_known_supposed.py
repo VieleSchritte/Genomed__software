@@ -11,8 +11,6 @@ class TwoKnownSupposedFormula(Formula):
         supposed_set, child2_set, child1_set, known_set = sets
         sch2_inter, sch1_inter, sk_inter, ch1ch2_inter, kch2_inter, kch1_inter = intersections
 
-        print(locus)
-
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 
@@ -48,27 +46,20 @@ class TwoKnownSupposedFormula(Formula):
 
         # Heterozygous first child
         else:
+            # ab cd bd ac, ab ac an (n != b) bc
+            if len(ch1ch2_inter) == 0 or list(child1_set - child2_set)[0] not in known_alleles:
+                freq1, freq2 = freq_dict[supposed_alleles[0]], freq_dict[supposed_alleles[1]]
+                lr = 2 * freq1 * freq2
+                return self.make_result(locus, lr, dict_make_result)
+
             # ab ac ab ac/bc
-            unique_ch2_allele = list(child2_set - child1_set)[0]
-            unique_ch1_allele = list(child1_set - child2_set)[0]
-            if child1_set == known_set and unique_ch2_allele in supposed_alleles and unique_ch2_allele not in child1_set:
-                freq1, freq2, freq3 = freq_dict[child1_alleles[0]], freq_dict[child1_alleles[1]], freq_dict[list(child2_set - child1_set)[0]]
+            if list(ch1ch2_inter)[0] in known_alleles and child1_set == known_set:
+                freq1, freq2 = freq_dict[known_alleles[0]], freq_dict[known_alleles[1]]
+                freq3 = freq_dict[list(child2_set - child1_set)[0]]
                 lr = 2 * freq3 * (freq1 + freq2)
                 return self.make_result(locus, lr, dict_make_result)
 
-            # ab ac an (n != b) bc
-            if ch1ch2_inter == kch2_inter and unique_ch1_allele not in known_alleles:
-                freq1, freq2 = freq_dict[supposed_alleles[0]], freq_dict[supposed_alleles[1]]
-                lr = 2 * freq1 * freq2
-                return self.make_result(locus, lr, dict_make_result)
-
             # ab ac bc an
-            if list(ch1ch2_inter)[0] in supposed_alleles and list(ch1ch2_inter)[0] not in known_alleles:
-                lr = c.F(list(ch1ch2_inter)[0])
-                return self.make_result(locus, lr, dict_make_result)
-
-            # ab cd bd ac
-            if len(ch1ch2_inter) == 0 and len(sk_inter) == 0:
-                freq1, freq2 = freq_dict[supposed_alleles[0]], freq_dict[supposed_alleles[1]]
-                lr = 2 * freq1 * freq2
-                return self.make_result(locus, lr, dict_make_result)
+            freq = freq_dict[list(ch1ch2_inter)[0]]
+            lr = c.F(freq)
+            return self.make_result(locus, lr, dict_make_result)
