@@ -156,9 +156,8 @@ class Formula(abc.ABC):
                 "lr": lr
             }
 
-    def get_division_lr(self, locus, key_set, confirmation):
+    def get_division_lr(self, locus, key_set, alleles_list, confirmation):
         c = Calculations()
-        alleles_list = list(key_set)
         freq_dict = self.get_frequencies(locus, alleles_list)
         freq1, freq2 = freq_dict[alleles_list[0]], freq_dict[alleles_list[1]]
         if len(key_set) == 1:
