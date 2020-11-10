@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
-from .base import Formula
-from .base import Calculations
+from .base import Formula, Calculations
 
 
 # FORMULA_TYPE_GRANDPARENT
