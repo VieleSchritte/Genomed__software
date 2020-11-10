@@ -24,12 +24,17 @@ class TwoBrothersFormula(Formula):
             lr = self.get_division_lr(locus, inspected_set, inspected_alleles, confirmation)
             return self.make_result(locus, lr, dict_make_result)
 
-        if len(br2br1_inter) == 0 and len(br2insp_inter) == 0:
+        # aa ab cc/cd cases => lr = 0
+        zero_case1 = len(br2br1_inter) == len(br2insp_inter) == 0
+        # ab not an/bn not an/bn => lr = 0
+        zero_case2 = len(br1insp_inter) == len(br2insp_inter) == 0
+        # ab ac ad => lr = 0
+        zero_case3 = len(common_set) == 4 and br1insp_inter == br2br1_inter == br2insp_inter
+        if zero_case1 or zero_case2 or zero_case3:
             return self.make_result(locus, 0, dict_make_result)
 
         # brother1_set = brother2_set => call BrotherFormula
         if brother1_set == brother2_set:
-            print(locus, 'caa BrotherFormula')
             raw_values = [locus, '/'.join(inspected_alleles), '/'.join(brother1_alleles)]
             result = BrotherFormula(Formula).calculate_relation(raw_values)
             lr = result['lr']
