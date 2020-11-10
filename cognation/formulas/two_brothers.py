@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from .base import Formula, Calculations
+from .brother import BrotherFormula
 
 
 class TwoBrothersFormula(Formula):
@@ -25,6 +26,14 @@ class TwoBrothersFormula(Formula):
 
         if len(br2br1_inter) == 0 and len(br2insp_inter) == 0:
             return self.make_result(locus, 0, dict_make_result)
+
+        # brother1_set = brother2_set => call BrotherFormula
+        if brother1_set == brother2_set:
+            print(locus, 'caa BrotherFormula')
+            raw_values = [locus, '/'.join(inspected_alleles), '/'.join(brother1_alleles)]
+            result = BrotherFormula(Formula).calculate_relation(raw_values)
+            lr = result['lr']
+            return self.make_result(locus, lr, dict_make_result)
 
         # Homozygous inspected person
         if len(inspected_set) == 1:
@@ -54,10 +63,6 @@ class TwoBrothersFormula(Formula):
                 freq1, freq2 = freq_dict[brother1_alleles[0]], freq_dict[list(inspected_set - brother1_set)[0]]
                 confirmation = freq2 / (2 - freq1)
                 return self.make_result(locus, confirmation / refutation, dict_make_result)
-
-            # ab any != an/bn any != an/bn, ab ac ad
-            if len(br1insp_inter) == 0 or br1insp_inter == br2br1_inter:
-                return self.make_result(locus, 0, dict_make_result)
 
             # ab ac bd
             if len(br2br1_inter) == 0 and len(br1insp_inter) != 0:
