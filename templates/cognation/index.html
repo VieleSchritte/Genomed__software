@@ -11,17 +11,17 @@
 {% block content %}
     {{ block.super }}
     <form action="{% url 'cognation:calculate' %}" method="post" id="cognationForm">
-        <div class="label-notion">
+        <div class="content label-notion">
             <h1>Input order:</h1>
             <ol>
                 <li>Father / grandfather etc</li>
                 <li>Inspected person (child / grandchild etc)</li>
             </ol>
         </div>
-        <div hidden class="label-notion">
+        <div hidden class="content label-notion">
             <h1>Choose cognation type:</h1>
         </div>
-        <div hidden class="btn-group btn-group-toggle flex-wrap" data-toggle="buttons">
+        <div hidden class="content btn-group btn-group-toggle flex-wrap" data-toggle="buttons">
             <label class="btn btn-secondary">
                 <input type="radio" name="type" value="1"/> Parent
             </label>
@@ -77,8 +77,9 @@
                       class="form-control"></textarea>
         </div>
         {% csrf_token %}
-        <input hidden type="submit" class="btn btn-dark" title="Submit" value="Submit"/>
-        <input hidden type="button" class="btn btn-dark" title="Next" value="Back"/>
-        <input type="button" class="btn btn-dark" title="Next" value="Next"/>
+        <input hidden type="submit" class="content btn btn-dark" title="Submit" value="Submit"/>
+        <input hidden type="button" class="content btn btn-dark" title="Next" value="Back"/>
+        <script src="HideIndexElements.js"></script>
+        <input type="button" class="content btn btn-dark" title="Next" value="Next" onclick="show()"/>
     </form>
 {% endblock content %}
