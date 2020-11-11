@@ -5,16 +5,16 @@ from cognation.formulas.base import Formula, Calculations
 class SiblingFormula(Formula):
     def calculate_relation(self, raw_values):
         locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 3)
-        sibling_alleles, parent_alleles, child_alleles = alleles
-        sibling_set, parent_set, child_set = sets
-        sp_intersection, sc_intersection, cp_intersection = intersections
+        child_alleles, sibling_alleles, parent_alleles = alleles
+        child_set, sibling_set, parent_set = sets
+        sc_inter, cp_inter, sp_inter = intersections
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 
         #  If there's no relation then return lr = 0 and start collecting mutations
-        if len(sp_intersection) == 0 or len(cp_intersection) == 0:
+        if len(sp_inter) == 0 or len(cp_inter) == 0:
             lr = 0
             return self.make_result(locus, lr, dict_make_result)
 
@@ -57,21 +57,21 @@ class SiblingFormula(Formula):
 
             # ab aa ac case confirmation = M(Pc, Pa)
             if len(child_set) == len(sibling_set) == 2 and child_set != sibling_set and len(parent_set) == 1:
-                unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, sibling_alleles, sp_intersection, 0)
-                unavailable_parent_alleles[1] = list(sp_intersection)[0]
+                unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, sibling_alleles, sp_inter, 0)
+                unavailable_parent_alleles[1] = list(sp_inter)[0]
                 lr = self.get_lr(freq_dict, unavailable_parent_alleles, refutation)
                 return self.make_result(locus, lr, dict_make_result)
 
             # ab ac aa case confirmation = M(Pa, Pc)
-            if len(child_set) == len(parent_set) == 2 and len(sibling_set) == len(sp_intersection) == len(cp_intersection) == len(sc_intersection) == 1 and child_set != parent_set:
+            if len(child_set) == len(parent_set) == 2 and len(sibling_set) == len(sp_inter) == len(cp_inter) == len(sc_inter) == 1 and child_set != parent_set:
                 unavailable_parent_alleles[1] = list(parent_set - child_set)
-                unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, sibling_alleles, sp_intersection, 0)
+                unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, sibling_alleles, sp_inter, 0)
                 lr = self.get_lr(freq_dict, unavailable_parent_alleles, refutation)
                 return self.make_result(locus, lr, dict_make_result)
 
         # Default is confirmation = M(x,y); x, y = unavailable_parent_alleles[0], unavailable_parent_alleles[1]
-        unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, sibling_alleles, sp_intersection, 0)
-        unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, child_alleles, cp_intersection, 1)
+        unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, sibling_alleles, sp_inter, 0)
+        unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, child_alleles, cp_inter, 1)
         set_unavailable = set(unavailable_parent_alleles)
 
         # special case for confirmation = 1

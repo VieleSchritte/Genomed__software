@@ -17,14 +17,12 @@ def calculate(request):
     data_type = request.POST.get('type', 0)
     data = request.POST.get('data', '')
 
-    # way_to_calc = 0 => Hardy-Weinberg law; way_to_calc = 1 => IBD indices
-    (formula, way_to_calc) = formula_builder(data_type, data)
+    formula = formula_builder(data_type, data)
     result = formula.calculate()
 
     cpi = 1
     mutations = 0
     participants = 0
-    prob = 1
 
     for key in result:
         participants = len(result[key].keys()) - 2
@@ -32,18 +30,11 @@ def calculate(request):
             if result[key]["lr"] == '-':
                 continue
             elif result[key]["lr"] > 0:
-                if way_to_calc == 0:
-                    prob *= result[key]["lr"]
-                else:
-                    cpi *= result[key]["lr"]
+                cpi *= result[key]["lr"]
             else:
-                mutations = mutations + 1
+                mutations += 1
 
-    if way_to_calc == 0:
-        cpi = 1. / prob
-        prob *= 100
-    else:
-        prob = cpi / (1. + cpi) * 100.
+    prob = cpi / (1 + cpi) * 100
 
     if mutations > 2:
         cpi = 0

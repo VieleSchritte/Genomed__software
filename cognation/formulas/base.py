@@ -145,6 +145,26 @@ class Formula(abc.ABC):
                 "part4": dict_alleles['part4'],
                 "lr": lr
             }
+        elif len(dict_alleles.keys()) == 5:
+            return {
+                "locus": locus,
+                "part1": dict_alleles['part1'],
+                "part2": dict_alleles['part2'],
+                "part3": dict_alleles['part3'],
+                "part4": dict_alleles['part4'],
+                "part5": dict_alleles['part5'],
+                "lr": lr
+            }
+
+    def get_division_lr(self, locus, key_set, alleles_list, confirmation):
+        c = Calculations()
+        freq_dict = self.get_frequencies(locus, alleles_list)
+        freq1, freq2 = freq_dict[alleles_list[0]], freq_dict[alleles_list[1]]
+        if len(key_set) == 1:
+            refutation = c.homo_refutation(freq1)
+        else:
+            refutation = c.hetero_refutation(freq1, freq2)
+        return confirmation / refutation
 
     # Abstract methods
     @abc.abstractmethod
@@ -175,3 +195,23 @@ class Calculations:
     #  Probability of relation theory refutation in case of inspected person's heterozygosity
     def hetero_refutation(self, freq1, freq2):
         return 2 * self.F(freq1) * self.F(freq2) - (2 * freq1 * freq2) ** 2
+
+    # Returns unique and repeatable children's genotypes in case of two and three children
+    @staticmethod
+    def get_repeat_unique(child1_alleles, child2_alleles, child3_alleles):
+        children_genotypes = [child1_alleles, child2_alleles, child3_alleles]
+        unique_genotype, repeatable_genotype = [], []
+
+        for i in range(len(children_genotypes)):
+            for j in range(len(children_genotypes)):
+                for k in range(len(children_genotypes)):
+
+                    if j > i and children_genotypes[i] == children_genotypes[j]:
+                        if children_genotypes[k] != children_genotypes[i]:
+                            unique_genotype = children_genotypes[k]
+                            repeatable_genotype = children_genotypes[i]
+
+        if children_genotypes[0] == children_genotypes[1] == children_genotypes[2]:
+            repeatable_genotype = children_genotypes[0]
+
+        return unique_genotype, repeatable_genotype

@@ -1,0 +1,17 @@
+{% extends '../calculate.html' %}
+
+{% block results_header %}
+    <th>Установленный генотип<br/>предполагаемого родителя</th>
+    <th>Установленный генотип<br/>второго проверяемого лица (ребенка 3)</th>
+    <th>Установленный генотип<br/>второго проверяемого лица (ребенка 2)</th>
+    <th>Установленный генотип<br/>первого проверяемого лица (ребенка 1)</th>
+    <th>Установленный генотип<br/>известного родителя</th>
+
+{% endblock results_header %}
+
+{% block results_row %}
+    {{ block.super }}
+    <td>{{ value.part3 }}</td>
+    <td>{{ value.part4 }}</td>
+    <td>{{ value.part5 }}</td>
+{% endblock results_row %}
