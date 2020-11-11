@@ -11,17 +11,27 @@
 {% block content %}
     {{ block.super }}
     <form action="{% url 'cognation:calculate' %}" method="post" id="cognationForm">
-        <div class="content label-notion">
-            <h1>Input order:</h1>
-            <ol>
-                <li>Father / grandfather etc</li>
-                <li>Inspected person (child / grandchild etc)</li>
-            </ol>
+        <div id="hide">
+            <div>
+                <h1>Input order:</h1>
+                <ol>
+                    <li>Father / grandfather etc</li>
+                    <li>Inspected person (child / grandchild etc)</li>
+                </ol>
+            </div>
+            <div style="margin:10px 0;">
+            <label for="dataId"></label>
+            <textarea style="background:gainsboro;" id="dataId" name="data" cols="120" rows="24"
+                      class="form-control"></textarea>
         </div>
-        <div hidden class="content label-notion">
-            <h1>Choose cognation type:</h1>
+            <input type="button" id="next" class="btn btn-dark" title="Next" value="Next"/>
         </div>
-        <div hidden class="content btn-group btn-group-toggle flex-wrap" data-toggle="buttons">
+
+        <div hidden id="show">
+            <div>
+                <h1>Choose cognation type:</h1>
+            </div>
+            <div class="btn-group btn-group-toggle flex-wrap" data-toggle="buttons">
             <label class="btn btn-secondary">
                 <input type="radio" name="type" value="1"/> Parent
             </label>
@@ -71,15 +81,19 @@
                 <input type="radio" name="type" value="19"/> GranParentChild
             </label>
         </div>
-        <div style="margin:10px 0;">
-            <label for="dataId"></label>
-            <textarea style="background:gainsboro;" id="dataId" name="data" cols="120" rows="24"
-                      class="form-control"></textarea>
+            {% csrf_token %}
+            <input type="button" id="back" class="btn btn-dark" title="Next" value="Back"/>
+            <input type="submit" class="btn btn-dark" title="Submit" value="Submit"/>
         </div>
-        {% csrf_token %}
-        <input hidden type="submit" class="content btn btn-dark" title="Submit" value="Submit"/>
-        <input hidden type="button" class="content btn btn-dark" title="Next" value="Back"/>
-        <script src="HideIndexElements.js"></script>
-        <input type="button" class="content btn btn-dark" title="Next" value="Next" onclick="show()"/>
+        <script>
+            document.getElementById('next').onclick = function() {
+                document.getElementById('hide').hidden = true;
+                document.getElementById('show').hidden = false;
+            }
+            document.getElementById('back').onclick = function() {
+                document.getElementById('hide').hidden = false;
+                document.getElementById('show').hidden = true;
+            }
+        </script>
     </form>
 {% endblock content %}
