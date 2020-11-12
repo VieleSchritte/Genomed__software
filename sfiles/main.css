@@ -1,3 +1,21 @@
-[hidden] {
-    display: none;
+.final-group {
+    margin-top: 1%;
 }
+
+.btn {
+    width: 20%;
+    white-space: normal;
+}
+
+table {
+    text-align: center;
+}
+
+.descr {
+    text-align: left;
+}
+
+.meaning {
+    text-align: right;
+}
+

@@ -78,12 +78,15 @@
                 <input type="radio" name="type" value="17"/> Grandparent
             </label>
             <label class="btn btn-secondary">
-                <input type="radio" name="type" value="19"/> GranParentChild
+                <input type="radio" name="type" value="19"/> GranParent Child
             </label>
         </div>
             {% csrf_token %}
-            <input type="button" id="back" class="btn btn-dark" title="Next" value="Back"/>
-            <input type="submit" class="btn btn-dark" title="Submit" value="Submit"/>
+            <div class="final-group">
+                <input type="button" id="back" class="btn btn-dark" title="Next" value="Back"/>
+                <input type="submit" class="btn btn-dark" title="Submit" value="Submit"/>
+            </div>
+
         </div>
         <script>
             document.getElementById('next').onclick = function() {

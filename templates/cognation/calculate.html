@@ -70,14 +70,14 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="{{ participants|add:1 }}">Индекс отцовства (Combined Paternity Index)</td>
-                <td>
+                <td class="descr" colspan="{{ participants|add:1 }}">Индекс отцовства (Combined Paternity Index)</td>
+                <td class="meaning">
                     CPI=<span class="fair-result" data-result="{{ cpi|floatformat:0 }}">{% if mutations %}0{% else %}{{ cpi|floatformat:0 }}{% endif %}</span>
                 </td>
             </tr>
             <tr>
-                <td colspan="{{ participants|add:1 }}">Вероятность отцовства</td>
-                <td>P=<span class="fair-result" data-result="{{ prob }}">{% if mutations %}0{% else %}{{ prob }}{% endif %}</span></td>
+                <td class="descr" colspan="{{ participants|add:1 }}">Вероятность отцовства</td>
+                <td class="meaning">P=<span class="fair-result" data-result="{{ prob }}">{% if mutations %}0{% else %}{{ prob }}{% endif %}</span></td>
             </tr>
             <tr>
                 <td colspan="{{ participants|add:2 }}">Использовались референсные частоты аллелей для русских</td>
