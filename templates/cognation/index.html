@@ -10,7 +10,7 @@
 
 {% block content %}
     {{ block.super }}
-    <form action="{% url 'cognation:calculate' %}" method="post" id="cognationForm">
+    <form action="{% url 'cognation:calculate' %}" method="post" id="cognationForm" class="text-dark">
         <div id="hide">
             <div>
                 <h1>Input order:</h1>
@@ -20,10 +20,10 @@
                 </ol>
             </div>
             <div style="margin:10px 0;">
-            <label for="dataId"></label>
-            <textarea style="background:gainsboro;" id="dataId" name="data" cols="120" rows="24"
-                      class="form-control"></textarea>
-        </div>
+                <label for="dataId"></label>
+                <textarea style="background:gainsboro;" id="dataId" name="data" cols="120" rows="24"
+                          class="form-control"></textarea>
+            </div>
             <input type="button" id="next" class="btn btn-dark" title="Next" value="Next"/>
         </div>
 
@@ -31,72 +31,185 @@
             <div>
                 <h1>Choose cognation type:</h1>
             </div>
-            <div class="btn-group btn-group-toggle flex-wrap" data-toggle="buttons">
-            <label class="btn btn-secondary">
-                <input type="radio" name="type" value="1"/> Parent
-            </label>
-            <label class="btn btn-secondary">
-                <input type="radio" name="type" value="2"/> 2 Children
-            </label>
-            <label class="btn btn-secondary">
-                <input type="radio" name="type" value="3"/> Sibling
-            </label>
-            <label class="btn btn-secondary">
-                <input type="radio" name="type" value="4"/> 3 Children
-            </label>
-            <label class="btn btn-secondary">
-                <input type="radio" name="type" value="5"/> 2 Children 2 Parents
-            </label>
-            <label class="btn btn-secondary">
-                <input type="radio" name="type" value="6"/> 3 Children 2 Parents
-            </label>
-            <label class="btn btn-secondary">
-                <input type="radio" name="type" value="7"/> Couple
-            </label>
-            <label class="btn btn-secondary">
-                <input type="radio" name="type" value="8"/> 2 Parents
-            </label>
-            <label class="btn btn-secondary">
-                <input type="radio" name="type" value="9"/> 2 Children Couple
-            </label>
-            <label class="btn btn-secondary">
-                <input type="radio" name="type" value="11"/> Step-Brother
-            </label>
-            <label class="btn btn-secondary">
-                <input type="radio" name="type" value="12"/> Brother
-            </label>
-            <label class="btn btn-secondary">
-                <input type="radio" name="type" value="13"/> Two Brothers
-            </label>
-            <label class="btn btn-secondary">
-                <input type="radio" name="type" value="14"/> Cousin
-            </label>
-            <label class="btn btn-secondary">
-                <input type="radio" name="type" value="15"/> Uncle
-            </label>
-            <label class="btn btn-secondary">
-                <input type="radio" name="type" value="17"/> Grandparent
-            </label>
-            <label class="btn btn-secondary">
-                <input type="radio" name="type" value="19"/> GranParent Child
-            </label>
-        </div>
+
+            <div class="btn-group btn-group-toggle flex-wrap text-center square-radio square-radio--clicked" data-toggle="buttons">
+
+                <div class="btn btn-secondary">
+                    <label>
+                        <input type="radio" class="h5" name="type" value="1"/> Parent
+                    </label>
+                    <p class="h6">Исследованию подвергаются биологические образцы
+                        проверяемого ребенка и одного предполагаемого родителя. Биологический образец второго
+                        родителя для исследования недоступен</p>
+                </div>
+
+                <div class="btn btn-secondary">
+                    <label>
+                        <input type="radio" class="h5" name="type" value="2"/> 2 Children
+                    </label>
+                    <p class="h6">Исследованию подвергают биологически образцы проверяемых детей и одного предполагаемого
+                        родителя. Биологическое родство между проверяемыми детьми достоверно известно. Биологический
+                        образец второго родителя для исследования недоступен</p>
+                </div>
+
+                <div class="btn btn-secondary">
+                    <label>
+                        <input type="radio" class="h5" name="type" value="3"/> Sibling
+                    </label>
+                    <p class="h6">Исследованию подвергаются биологические образцы проверяемого лица, одного предполагаемого
+                        родителя и одного предполагаемого брата или сестры. Предполагается, что проверяемое лицо и
+                        предполагаемый брат (сестра) имеют общих родителей, биологический образец одного из которых
+                        для исследования недоступен.</p>
+                </div>
+
+                <div class="btn btn-secondary">
+                    <label>
+                        <input type="radio" class="h5" name="type" value="4"/> 3 Children
+                    </label>
+                    <p class="h6">Исследованию подвергают биологические образцы проверяемых детей и одного предполагаемого
+                        родителя. Биологическое родство между проверяемыми детьми достоверно известно. Биологический
+                        образец второго родителя для исследования недоступен</p>
+                </div>
+
+                <div class="btn btn-secondary">
+                    <label>
+                        <input type="radio" class="h5" name="type" value="5"/> 2 Children 2 Parents
+                    </label>
+                    <p class="h6">Исследованию подвергают биологические образцы проверяемых детей, одного известного и одного
+                        предполагаемого родителя. Биологическое родство между проверяемыми детьми и известным
+                        родителем достоверно известно</p>
+                </div>
+
+                <div class="btn btn-secondary">
+                    <label>
+                        <input type="radio" class="h5" name="type" value="6"/> 3 Children 2 Parents
+                    </label>
+                    <p class="h6">Исследованию подвергают биологические образцы проверяемых детей, одного известного и одного
+                        предполагаемого родителя. Биологическое родство между проверяемыми детьми и известным
+                        родителем достоверно известно.</p>
+                </div>
+
+                <div class="btn btn-secondary">
+                    <label>
+                        <input type="radio" class="h5" name="type" value="7"/> Couple
+                    </label>
+                    <p class="h6">Исследованию подвергают биологические образцы проверяемого ребенка и двух предполагаемых
+                        родителей. Достоверно известно, что предполагаемые родители являются родительской парой,
+                        а не отдельными лицами, с которыми проверяется родство</p>
+                </div>
+
+                <div class="btn btn-secondary">
+                    <label>
+                        <input type="radio" class="h5" name="type" value="8"/> 2 Parents
+                    </label>
+                    <div class="description">
+                        <p class="h6">Исследованию подвергают биологические образцы проверяемого ребенка, одного известного
+                            родителя и одного предполагаемого родителя. Биологическое родство между проверяемым ребенком
+                            и известным родителем достоверно известно.</p>
+                    </div>
+                </div>
+
+                <div class="btn btn-secondary">
+                    <label>
+                        <input type="radio" class="h5" name="type" value="9"/> 2 Children Couple
+                    </label>
+                    <p class="h6">Исследованию повергают биологические образцы проверяемых детей и двух предполагаемых
+                        родителей. Достоверно известно, что предполагаемые родители являются родительской парой, а
+                        не отдельными лицами, с которыми проверяется родство. Также достоверно известно биологическое
+                        родство между проверяемыми детьми.</p>
+                </div>
+
+                <div class="btn btn-secondary">
+                    <label >
+                        <input type="radio" class="h5" name="type" value="11"/> Step-Brother
+                    </label>
+                    <p class="h6">Исследованию подвергают биологические образцы лиц, имеющих одного общего родителя. Это могут
+                        быть единокровные брат/сестра, при условии, что у них общий отец или единоутробные - если у
+                        них общая мать.</p>
+                </div>
+
+                <div class="btn btn-secondary">
+                    <label>
+                        <input type="radio" class="h5" name="type" value="12"/> Brother
+                    </label>
+                    <p class="h6">Исследованию подвергают биологические образцы проверяемого лица и одного предполагаемого
+                        брата или сестры. Предполагается, что исследуемые лица имеют общих
+                        родителей, биологические образцы которых для исследования недоступны</p>
+                </div>
+
+                <div class="btn btn-secondary">
+                    <label>
+                        <input type="radio" class="h5" name="type" value="13"/> Two Brothers
+                    </label>
+                    <p class="h6">Исследованию подвергаются биологические образцы проверяемого лица
+                        и двух предполагаемых братьев или сестер. Предполагается, что исследуемые лица имеют общих
+                        родителей, биологические образцы которых для исследования недоступны. Экспертная оценка
+                        более достоверна, чем при сравнении гаплотипов исследуемого лица и одного брата или сестры.</p>
+                </div>
+
+                <div class="btn btn-secondary">
+                    <label>
+                        <input type="radio" class="h5" name="type" value="14"/> Cousin
+                    </label>
+                    <p class="h6">Исследованию подвергаются биологические образцы проверяемого лица и
+                        одного предполагаемого двоюродного брата или сестры. Предполагается, что исследуемые лица
+                        имеют общих бабушку и дедушку, а один из родителей проверяемого лица является родным братом
+                        или сестрой одного из родителей предполагаемого двоюродного брата или сестры. Биологические
+                        образцы бабушки и дедушки, а также родителей участников недоступны.</p>
+                </div>
+
+                <div class="btn btn-secondary">
+                    <label>
+                        <input type="radio" class="h5" name="type" value="15"/> Uncle
+                    </label>
+                    <p class="h6">Исследованию подвергают биологические образцы проверяемого лица и
+                        предполагаемого дяди или тети. Предполагается, что один из родителей проверяемого лица
+                        является родным братом или сестрой предполагаемого дяди или тети. Биологические образцы
+                        родителей проверяемого лица для исследования недоступны.</p>
+                </div>
+
+                <div class="btn btn-secondary">
+                    <label>
+                        <input type="radio" class="h5" name="type" value="17"/> Grandparent
+                    </label>
+                    <p class="h6">Исследованию подвергают биологические образцы проверяемого лица и
+                        предполагаемой бабушки(дедушки). Предполагается, что один из родителей проверяемого лица
+                        является дочерью или сыном предполагаемой бабушки (дедушки). Биологические образцы
+                        предполагаемых родителей проверяемого лица для исследования недоступны</p>
+                </div>
+
+                <div class="btn btn-secondary">
+                    <label>
+                        <input type="radio" class="h5" name="type" value="19"/> GranParent Child
+                    </label>
+                    <p class="h6">Исследованию подвергают биологические образцы проверяемого лица,
+                        известного родителя, предполагаемой бабушки и предполагаемого дедушки. Предполагается, что
+                        одним из родителей проверяемого лица является известный родитель, а другим - дочь или сын
+                        предполагаемой бабушки и дедушки. Биологический образец этого второго родителя для исследования
+                        недоступен.</p>
+                </div>
+
+            </div>
+
             {% csrf_token %}
             <div class="final-group">
                 <input type="button" id="back" class="btn btn-dark" title="Next" value="Back"/>
                 <input type="submit" class="btn btn-dark" title="Submit" value="Submit"/>
             </div>
-
         </div>
+
         <script>
+            table = {"bla": 2}
             document.getElementById('next').onclick = function() {
                 document.getElementById('hide').hidden = true;
                 document.getElementById('show').hidden = false;
             }
+
             document.getElementById('back').onclick = function() {
                 document.getElementById('hide').hidden = false;
                 document.getElementById('show').hidden = true;
             }
+
         </script>
     </form>
 {% endblock content %}

@@ -8,12 +8,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <style type="text/css">
         {% load static %}
-        body{background: url('{% static 'genomed.png' %}');}
-        .container-content{background: lightgray;opacity:0.9;margin-top:300px;padding:40px;border-radius:40px;}
+        .container-content{background: lightgray;opacity:0.9;margin-top:150px;padding:40px;border-radius:40px;}
     </style>
     <link rel="stylesheet" href="{% static "main.css" %}">
 </head>
-<body>
+<body class="p-3 mb-2 bg-dark text-white">
     <div class="container container-content">
         <section class="content">
             {% block content %}{% endblock content %}
@@ -30,6 +29,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <!-- END Bootstrap JS -->
-    {% block scripts %}{% endblock scripts %}
+    {% block scripts %}
+
+    {% endblock scripts %}
 </body>
 </html>
