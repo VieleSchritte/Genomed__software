@@ -10,7 +10,7 @@
 
 {% block content %}
     {{ block.super }}
-    <table class="table" id="resultTable">
+    <table class="table text-dark" id="resultTable">
         <thead>
             <tr>
                 <th>Локус</th>
@@ -55,7 +55,7 @@
                     <td>
                         {{ value.exception }}<br />
                         {% if value.exception.locus %}
-                            <button class="btn btn-light btn-add-allele"
+                            <button class="button-collection btn-light btn-add-allele"
                                     data-locus="{{ value.exception.locus }}"
                                     data-sat="{{ value.exception.sat }}"
                                     data-toggle="modal"
@@ -70,22 +70,22 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="{{ participants|add:1 }}">Индекс отцовства (Combined Paternity Index)</td>
-                <td>
+                <td class="descr" colspan="{{ participants|add:1 }}">Индекс отцовства (Combined Paternity Index)</td>
+                <td class="meaning">
                     CPI=<span class="fair-result" data-result="{{ cpi|floatformat:0 }}">{% if mutations %}0{% else %}{{ cpi|floatformat:0 }}{% endif %}</span>
                 </td>
             </tr>
             <tr>
-                <td colspan="{{ participants|add:1 }}">Вероятность отцовства</td>
-                <td>P=<span class="fair-result" data-result="{{ prob }}">{% if mutations %}0{% else %}{{ prob }}{% endif %}</span></td>
+                <td class="descr" colspan="{{ participants|add:1 }}">Вероятность отцовства</td>
+                <td class="meaning">P=<span class="fair-result" data-result="{{ prob }}">{% if mutations %}0{% else %}{{ prob }}{% endif %}</span></td>
             </tr>
             <tr>
-                <td colspan="{{ participants|add:2 }}">Использовались референсные частоты аллелей для русских</td>
+                <td class="freqused" colspan="{{ participants|add:2 }}">Использовались референсные частоты аллелей для русских</td>
             </tr>
             {% if mutations %}
             <tr>
                 <td colspan="{{ participants|add:2 }}">
-                    <button class="btn btn-primary btn-mutations">Рассчитать CPI без учета локусов в которых обнаружены мутации</button>
+                    <button class="button-collection btn-primary btn-mutations">Рассчитать CPI без учета локусов в которых обнаружены мутации</button>
                 </td>
             </tr>
             {% endif %}
@@ -133,8 +133,8 @@
                 </div>
                 <div class="modal-footer">
                     <div class="text-danger invisible" id="addAlleleError">Save error <span class="error-text"></span></div>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save</button>
+                    <button type="button" class="button-collection btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="button-collection btn-primary">Save</button>
                 </div>
             </div>
         </div>

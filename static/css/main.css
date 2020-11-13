@@ -1,0 +1,32 @@
+.cogn-button {
+    margin: 1%;
+    width: 32%;
+    white-space: normal;
+}
+
+.final-group {
+    margin-top: 2%;
+}
+
+/* Final table in calculate.html */
+
+table {
+    text-align: center;
+}
+
+.descr, .freqused {
+    text-align: left;
+}
+
+.meaning {
+    text-align: right;
+}
+
+.container-content {
+    background: lightgray;
+    opacity: 0.9;
+    margin-top: 100px;
+    padding: 40px;
+    border-radius: 40px;
+}
+
