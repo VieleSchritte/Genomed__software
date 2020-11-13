@@ -1,29 +1,15 @@
-.final-group {
-    margin-top: 2%;
-}
-
-.btn {
+.but-bunch {
     white-space: normal;
 }
 
-.btn-secondary {
+.cogn-button {
     margin: 1%;
     width: 32%;
 }
 
-.btn-secondary p {
-    display: none;
+.final-group {
+    margin-top: 2%;
 }
-
-.btn-secondary:hover p {
-    display: block;
-}
-
-.btn-secondary:active p {
-    display: block;
-}
-
-
 
 /* Final table in calculate.html */
 
@@ -38,3 +24,12 @@ table {
 .meaning {
     text-align: right;
 }
+
+.container-content {
+    background: lightgray;
+    opacity: 0.9;
+    margin-top: 100px;
+    padding: 40px;
+    border-radius: 40px;
+}
+
