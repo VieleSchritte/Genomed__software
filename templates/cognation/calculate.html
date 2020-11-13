@@ -10,7 +10,7 @@
 
 {% block content %}
     {{ block.super }}
-    <table class="table" id="resultTable">
+    <table class="table text-dark" id="resultTable">
         <thead>
             <tr>
                 <th>Локус</th>
@@ -80,7 +80,7 @@
                 <td class="meaning">P=<span class="fair-result" data-result="{{ prob }}">{% if mutations %}0{% else %}{{ prob }}{% endif %}</span></td>
             </tr>
             <tr>
-                <td colspan="{{ participants|add:2 }}">Использовались референсные частоты аллелей для русских</td>
+                <td class="freqused" colspan="{{ participants|add:2 }}">Использовались референсные частоты аллелей для русских</td>
             </tr>
             {% if mutations %}
             <tr>
@@ -92,8 +92,8 @@
 
         </tfoot>
     </table>
-    <a href="{% url 'cognation:index' %}" class="button-collection btn-dark">Start Over</a>
-    <a href="#" class="button-collection btn-dark" id="saveResults">Save results</a>
+    <a href="{% url 'cognation:index' %}" class="btn btn-dark">Start Over</a>
+    <a href="#" class="btn btn-dark" id="saveResults">Save results</a>
 {% endblock content %}
 
 {% block footer %}

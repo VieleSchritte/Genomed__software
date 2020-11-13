@@ -31,7 +31,7 @@ table {
     text-align: center;
 }
 
-.descr {
+.descr, .freqused {
     text-align: left;
 }
 
