@@ -35,17 +35,14 @@ def calculate(request):
             else:
                 mutations += 1
 
-    prob = cpi / (1 + cpi) * 100
-
     if mutations > 2:
         cpi = 0
-        prob = 0
         mutations = 0
 
     ctx = {
         'result': result,
         'cpi': cpi,
-        'prob': prob,
+        'prob': ((cpi / (1. + cpi)) * 100.),
         'participants': participants,
         'mutations': mutations,
         'order': make_order(result),
