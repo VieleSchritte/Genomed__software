@@ -96,7 +96,7 @@
                 </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Родство между детьми достоверно известно. Родство между детьми и известным родителем - тоже">
-                    <input type="radio" name="type" value="5"onclick="showHide('twoknownsup-descr')"/> Двое детей, известный и предполагаемый родители
+                    <input type="radio" name="type" value="5" onclick="showHide('twoknownsup-descr')"/> Двое детей, известный и предполагаемый родители
                 </label>
                 <div class="cogn-descr" id="twoknownsup-descr">
                     <img src="" class="descr-image" alt="Трое детей, известный и предполагаемый родители">
@@ -309,8 +309,8 @@
 
             function showHide(element_id) {
                 if (document.getElementById(element_id)) {
-                    var obj = document.getElementById(element_id);
-                    if (obj.style.display != "block") {
+                    let obj = document.getElementById(element_id);
+                    if (obj.style.display === "none") {
                         obj.style.display = "block";
                     }
                     else obj.style.display = "none";
