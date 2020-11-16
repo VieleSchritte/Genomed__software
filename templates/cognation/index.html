@@ -34,9 +34,21 @@
 
             <div class="btn-group btn-group-toggle flex-wrap but-bunch" data-toggle="buttons">
 
-                <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Ребенок и предполагаемый родитель">
-                    <input type="radio" name="type" value="1"/> Отцовство/материнство для двух участников
+                <label class="btn btn-secondary cogn-button" id="parent-button" data-toggle="tooltip" data-placement="top" title="Ребенок и предполагаемый родитель">
+                    <input type="radio" name="type" value="1" onclick="showHide('cogn-descr')"/> Отцовство/материнство для двух участников
                 </label>
+                <div hidden class="cogn-descr" id="parent-descr">
+                    <img src="/static/button_images/ParentFormula.png" class="descr-image" alt="Схема родства для двух участников">
+                    <p class="descr">
+                        Исследованию подвергаются биологические образцы проверяемого ребенка и одного
+                        предполагаемого родителя. Биологический образец второго родителя для исследования
+                        недоступен
+                    </p>
+                    <button class="btn btn-secondary descr-ok">
+                        OK
+                    </button>
+
+                </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Родство между детьми достоверно известно">
                     <input type="radio" name="type" value="2"/> Двое детей, предполагаемый родитель
@@ -122,6 +134,16 @@
             document.getElementById('back').onclick = function() {
                 document.getElementById('hide').hidden = false;
                 document.getElementById('show').hidden = true;
+            }
+
+            function showHide(element_id) {
+                console.log('called ok')
+                if (document.getElementById(element_id)) {
+                    let obj = document.getElementById(element_id);
+                    if (obj.hidden == true) {
+                        obj.hidden = false;
+                    } else obj.hidden = true;
+                }
             }
 
         </script>

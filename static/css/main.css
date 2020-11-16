@@ -8,6 +8,30 @@
     margin-top: 2%;
 }
 
+.cogn-descr {
+    display: block;
+    border: #333333;
+}
+
+.descr-image {
+    display: inline-block;
+    width: 30%;
+    margin-left: 5%;
+}
+
+.descr {
+    display: inline-block;
+    width: 60%;
+    margin-top: 2%;
+    margin-right: 4%;
+    text-align: center;
+}
+
+.descr-ok {
+    display: block;
+    margin: auto
+}
+
 /* Final table in calculate.html */
 
 table {
