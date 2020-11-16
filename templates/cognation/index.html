@@ -35,10 +35,10 @@
             <div class="btn-group btn-group-toggle flex-wrap but-bunch" data-toggle="buttons">
 
                 <label class="btn btn-secondary cogn-button" id="parent-button" data-toggle="tooltip" data-placement="top" title="Ребенок и предполагаемый родитель">
-                    <input type="radio" name="type" value="1" onclick="showHide('cogn-descr')"/> Отцовство/материнство для двух участников
+                    <input type="radio" name="type" value="1" onclick="showHide('parent-descr')"/> Отцовство/материнство для двух участников
                 </label>
                 <div hidden class="cogn-descr" id="parent-descr">
-                    <img src="/static/button_images/ParentFormula.png" class="descr-image" alt="Схема родства для двух участников">
+                    <img src="/static/button_images/ParentFormula.png" class="descr-image" alt="Отцовство/материнство для двух участников">
                     <p class="descr">
                         Исследованию подвергаются биологические образцы проверяемого ребенка и одного
                         предполагаемого родителя. Биологический образец второго родителя для исследования
@@ -47,68 +47,239 @@
                     <button class="btn btn-secondary descr-ok">
                         OK
                     </button>
-
                 </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Родство между детьми достоверно известно">
-                    <input type="radio" name="type" value="2"/> Двое детей, предполагаемый родитель
+                    <input type="radio" name="type" value="2" onclick="showHide('twochildren-descr')"/> Двое детей, предполагаемый родитель
                 </label>
+                <div hidden class="cogn-descr" id="twochildren-descr">
+                    <img src="" class="descr-image" alt="Двое детей, предполагаемый родитель">
+                    <p class="descr">
+                        Исследованию подвергают биологически образцы проверяемых детей и одного предполагаемого
+                        родителя. Биологическое родство между проверяемыми детьми достоверно известно. Биологический
+                        образец второго родителя для исследования недоступен
+                    </p>
+                    <button class="btn btn-secondary descr-ok">
+                        OK
+                    </button>
+                </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Родство между предполагаемым родителем и предполагаемым братом/сестрой достоверно известно">
-                    <input type="radio" name="type" value="3"/> Проверяемое лицо, предполагаемые родитель и брат/сестра
+                    <input type="radio" name="type" value="3" onclick="showHide('sibling-descr')"/> Проверяемое лицо, предполагаемые родитель и брат/сестра
                 </label>
+                <div hidden class="cogn-descr" id="sibling-descr">
+                    <img src="" class="descr-image" alt="Проверяемое лицо, предполагаемые родитель и брат/сестра">
+                    <p class="descr">
+                        Исследованию подвергают биологические образцы проверяемого лица, одного предполагаемого
+                        родителя и одного предполагаемого брата или сестры. Предполагается, что проверяемое лицо
+                        и предполагаемый брат (сестра) имеют общих родителей, биологический образец одного из
+                        которых для исследования недоступен.
+                    </p>
+                    <button class="btn btn-secondary descr-ok">
+                        OK
+                    </button>
+                </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Родство между детьми достоверно известно. Родство между детьми и известным родителем - тоже">
-                    <input type="radio" name="type" value="4"/> Трое детей и предполагаемый родитель
+                    <input type="radio" name="type" value="4" onclick="showHide('threechildren-descr')"/> Трое детей и предполагаемый родитель
                 </label>
+                <div hidden class="cogn-descr" id="threechildren-descr">
+                    <img src="" class="descr-image" alt="Трое детей, предполагаемый родитель">
+                    <p class="descr">
+                        Исследованию подвергают биологические образцы проверяемых детей и одного предполагаемого
+                        родителя. Биологическое родство между проверяемыми детьми достоверно известно. Биологический
+                        образец второго родителя для исследования недоступен
+                    </p>
+                    <button class="btn btn-secondary descr-ok">
+                        OK
+                    </button>
+                </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Родство между детьми достоверно известно. Родство между детьми и известным родителем - тоже">
-                    <input type="radio" name="type" value="5"/> Двое детей, известный и предполагаемый родители
+                    <input type="radio" name="type" value="5"onclick="showHide('twoknownsup-descr')"/> Двое детей, известный и предполагаемый родители
                 </label>
+                <div hidden class="cogn-descr" id="twoknownsup-descr">
+                    <img src="" class="descr-image" alt="Трое детей, известный и предполагаемый родители">
+                    <p class="descr">
+                        Исследованию подвергают биологические образцы проверяемых детей, одного известного и одного
+                        предполагаемого родителя. Биологическое родство между проверяемыми детьми и известным родителем
+                        достоверно известно
+                    </p>
+                    <button class="btn btn-secondary descr-ok">
+                        OK
+                    </button>
+                </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Родство между детьми достоверно известно. Родство между детьми и известным родителем - тоже">
-                    <input type="radio" name="type" value="6"/> Трое детей, известный и предполагаемый родители
+                    <input type="radio" name="type" value="6" onclick="showHide('threeknownsup-descr')"/> Трое детей, известный и предполагаемый родители
                 </label>
+                <div hidden class="cogn-descr" id="threeknownsup-descr">
+                    <img src="" class="descr-image" alt="Трое детей, известный и предполагаемый родители">
+                    <p class="descr">
+                        Исследованию подвергают биологические образцы проверяемых детей, одного известного и одного
+                        предполагаемого родителя. Биологическое родство между проверяемыми детьми и известным родителем
+                        достоверно известно.
+                    </p>
+                    <button class="btn btn-secondary descr-ok">
+                        OK
+                    </button>
+                </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Известно, что предполагаемые родители - именно супружеская пара, а не отдельные лица, с которыми проверяется родство">
-                    <input type="radio" name="type" value="7"/> Проверяемое лицо и супружеская пара
+                    <input type="radio" name="type" value="7" onclick="showHide('couple')"/> Проверяемое лицо и супружеская пара
                 </label>
+                <div hidden class="cogn-descr" id="couple">
+                    <img src="" class="descr-image" alt="Проверяемое лицо и супружеская пара">
+                    <p class="descr">
+                        Исследованию подвергают биологические образцы проверяемого ребенка и двух предполагаемых
+                        родителей. Достоверно известно, что предполагаемые родители являются родительской парой, а
+                        не отдельными лицами, с которыми проверяется родство
+                    </p>
+                    <button class="btn btn-secondary descr-ok">
+                        OK
+                    </button>
+                </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Родство между проверяемым лицом и известным родителем достоверно известно">
-                    <input type="radio" name="type" value="8"/> Проверяемое лицо, известный и предполагаемый родители
+                    <input type="radio" name="type" value="8" onclick="showHide('oneknownsup-descr')"/> Проверяемое лицо, известный и предполагаемый родители
                 </label>
+                <div hidden class="cogn-descr" id="oneknownsup-descr">
+                    <img src="" class="descr-image" alt="Проверяемое лицо, известный и предполагаемый родители">
+                    <p class="descr">
+                        Исследованию подвергают биологические образцы проверяемого ребенка, одного известного
+                        родителя и одного предполагаемого родителя. Биологическое родство между проверяемым
+                        ребенком и известным родителем достоверно известна
+                    </p>
+                    <button class="btn btn-secondary descr-ok">
+                        OK
+                    </button>
+                </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Родство между детьми достоверно известно. Также известно, что предполагаемые родители - именно супружеская пара, а не отдельные лица, с которыми проверяется родство">
-                    <input type="radio" name="type" value="9"/> Двое детей и супружеская пара
+                    <input type="radio" name="type" value="9" onclick="showHide('twocouple-descr')"/> Двое детей и супружеская пара
                 </label>
+                <div hidden class="cogn-descr" id="twocouple-descr">
+                    <img src="" class="descr-image" alt="Двое детей и супружеская пара">
+                    <p class="descr">
+                        Исследованию повергают биологические образцы проверяемых детей и двух предполагаемых
+                        родителей. Достоверно известно, что предполагаемые родители являются родительской парой,
+                        а не отдельными лицами, с которыми проверяется родство. Также достоверно известно
+                        биологическое родство между проверяемыми детьми
+                    </p>
+                    <button class="btn btn-secondary descr-ok">
+                        OK
+                    </button>
+                </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Предполагается, что у участников есть один общий родитель, биоматериал которого недоступен">
-                    <input type="radio" name= value="11"/> Проверяемое лицо и предполагаемый Сводный/единокровный брат/сестра
+                    <input type="radio" name= value="11" onclick="showHide('stepbrother-descr')"/> Проверяемое лицо и предполагаемый Сводный/единокровный брат/сестра
                 </label>
+                <div hidden class="cogn-descr" id="stepbrother-descr">
+                    <img src="" class="descr-image" alt="Проверяемое лицо и предполагаемый Сводный/единокровный брат/сестра">
+                    <p class="descr">
+                        Исследованию подвергают биологические образцы лиц, имеющих одного общего родителя. Это могут
+                        быть единокровные брат/сестра, при условии, что у них общий отец или единоутробные - если
+                        у них общая мать.
+                    </p>
+                    <button class="btn btn-secondary descr-ok">
+                        OK
+                    </button>
+                </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Предполагается, что у участников есть два общих родителя, биоматериал которых недоступен">
-                    <input type="radio" name="type" value="12"/> Проверяемое лицо и предполагаемый брат/сестра
+                    <input type="radio" name="type" value="12" onclick="showHide('brother-descr')"/> Проверяемое лицо и предполагаемый брат/сестра
                 </label>
+                <div hidden class="cogn-descr" id="brother-descr">
+                    <img src="" class="descr-image" alt="Проверяемое лицо и предполагаемый брат/сестра">
+                    <p class="descr">
+                        Исследованию подвергают биологические образцы проверяемого лица и одного предполагаемого
+                        брата или сестры. Предполагается, что исследуемые лица имеют общих родителей, биологические
+                        образцы которых для исследования недоступны
+                    </p>
+                    <button class="btn btn-secondary descr-ok">
+                        OK
+                    </button>
+                </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Родство между братьями/сестрами достоверно известно. Есть общие родители, биоматериал которых недоступен">
-                    <input type="radio" name="type" value="13"/> Проверяемое лицо и двое предполагаемых братьев/сестер
+                    <input type="radio" name="type" value="13" onclick="showHide('twobrothers-descr')"/> Проверяемое лицо и двое предполагаемых братьев/сестер
                 </label>
+                <div hidden class="cogn-descr" id="twobrothers-descr">
+                    <img src="" class="descr-image" alt="Проверяемое лицо и предполагаемый брат/сестра">
+                    <p class="descr">
+                        Исследованию подвергают биологические образцы проверяемого лица и двух предполагаемых братьев или
+                        сестер. Предполагается, что исследуемые лица имеют общих родителей, биологические образцы которых
+                        для исследования недоступны. Экспертная оценка более достоверна, чем при сравнении гаплотипов
+                        исследуемого лица и одного брата или сестры.
+                    </p>
+                    <button class="btn btn-secondary descr-ok">
+                        OK
+                    </button>
+                </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Предполагается, что родители участников - родные братья/сестры, их биоматериал недоступен">
-                    <input type="radio" name="type" value="14"/> Проверяемое лицо и предполагаемый двоюродный брат/сестра
+                    <input type="radio" name="type" value="14" onclick="showHide('cousin-descr')"/> Проверяемое лицо и предполагаемый двоюродный брат/сестра
                 </label>
+                <div hidden class="cogn-descr" id="cousin-descr">
+                    <img src="" class="descr-image" alt="Проверяемое лицо и предполагаемый двоюродный брат/сестра">
+                    <p class="descr">
+                        Исследованию подвергают биологические образцы проверяемого лица и двоюродного брата или
+                        сестры. Предполагается, что один из родителей проверяемого лица является родным братом или сестрой
+                        одному из родителей второго участника. Биологические материалы родителей участников и их общих
+                        бабушки и дедушки недоступны.
+                    </p>
+                    <button class="btn btn-secondary descr-ok">
+                        OK
+                    </button>
+                </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Предполагается, что один из родителей является родным братом/сестрой предполагаемому дяде/тете. Биоматериал родитеелй недоступен">
-                    <input type="radio" name="type" value="15"/> Проверяемое лицо и предполагаемый дядя/тетя
+                    <input type="radio" name="type" value="15" onclick="showHide('uncle-descr')"/> Проверяемое лицо и предполагаемый дядя/тетя
                 </label>
+                <div hidden class="cogn-descr" id="uncle-descr">
+                    <img src="" class="descr-image" alt="Проверяемое лицо и предполагаемый дядя/тетя">
+                    <p class="descr">
+                        Исследованию подвергают биологические образцы проверяемого лица и предполагаемого дяди/тети.
+                        Предполагается, что один из родителей проверяемого лица является родным братом или сестрой
+                        предполагаемого дяди или тети. Биологический материал этого родителя недоступен.
+                    </p>
+                    <button class="btn btn-secondary descr-ok">
+                        OK
+                    </button>
+                </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Биоматериал родителей проверяемого лица недоступен">
-                    <input type="radio" name="type" value="17"/> Проверяемое лицо и предполагаемая бабушка/дедушка
+                    <input type="radio" name="type" value="17" onclick="showHide('grandparent-descr')"/> Проверяемое лицо и предполагаемая бабушка/дедушка
                 </label>
+                <div hidden class="cogn-descr" id="grandparent-descr">
+                    <img src="" class="descr-image" alt="Проверяемое лицо и предполагаемая бабушка/дедушка">
+                    <p class="descr">
+                        Исследованию подвергают биологические образцы проверяемого лица и предполагаемой бабушки
+                        (дедушки). Предполагается, что один из родителей проверяемого лица является дочерью или
+                        сыном предполагаемой бабушки (дедушки). Биологические образцы предполагаемых родителей
+                        проверяемого лица для исследования недоступны
+                    </p>
+                    <button class="btn btn-secondary descr-ok">
+                        OK
+                    </button>
+                </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Предполагаемый родитель - потомок бабушки/дедушки">
-                    <input type="radio" name="type" value="19"/> Проверяемое лицо, предполагаемый родитель и предполагаемая бабушка/дедушка
+                    <input type="radio" name="type" value="19" onclick="showHide('pargrandchildyes-descr')"/> Проверяемое лицо, предполагаемый родитель и предполагаемая бабушка/дедушка
                 </label>
+                <div hidden class="cogn-descr" id="pargrandchildyes-descr">
+                    <img src="" class="descr-image" alt="Проверяемое лицо, предполагаемый родитель и предполагаемая бабушка/дедушка">
+                    <p class="descr">
+                        Исследованию подвергают биологические образцы проверяемого ребенка, его бабушки (дедушки)
+                        и одного предполагаемого родителя ребенка. Предполагается, что предполагаемый родитель
+                        ребенка является потомком бабушки (дедушки). Биологическое родство между проверяемым
+                        ребенком и бабушкой (дедушкой) достоверно известно. Биологический образец второго родителя
+                        ребенка для исследования недоступен
+                    </p>
+                    <button class="btn btn-secondary descr-ok">
+                        OK
+                    </button>
+                </div>
 
             </div>
 
