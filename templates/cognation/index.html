@@ -35,7 +35,7 @@
             <div class="btn-group btn-group-toggle flex-wrap but-bunch" data-toggle="buttons">
 
                 <label class="btn btn-secondary cogn-button" id="parent-button" data-toggle="tooltip" data-placement="top" title="Ребенок и предполагаемый родитель">
-                    <input type="radio" name="type" value="1" onclick="showHide('parent-descr')"/> Отцовство/материнство для двух участников
+                    <input type="radio" name="type" value="1" /> Отцовство/материнство для двух участников
                 </label>
                 <div class="cogn-descr" id="parent-descr">
                     <img src="/static/button_images/ParentFormula.png" class="descr-image" alt="Отцовство/материнство для двух участников">
@@ -172,10 +172,10 @@
                 </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Предполагается, что у участников есть один общий родитель, биоматериал которого недоступен">
-                    <input type="radio" name= value="11" onclick="showHide('stepbrother-descr')"/> Проверяемое лицо и предполагаемый Сводный/единокровный брат/сестра
+                    <input type="radio" name= value="11" onclick="showHide('stepbrother-descr')"/> Проверяемое лицо и предполагаемый cводный/единокровный брат/сестра
                 </label>
                 <div hidden class="cogn-descr" id="stepbrother-descr">
-                    <img src="" class="descr-image" alt="Проверяемое лицо и предполагаемый Сводный/единокровный брат/сестра">
+                    <img src="" class="descr-image" alt="Проверяемое лицо и предполагаемый cводный/единокровный брат/сестра">
                     <p class="descr">
                         Исследованию подвергают биологические образцы лиц, имеющих одного общего родителя. Это могут
                         быть единокровные брат/сестра, при условии, что у них общий отец или единоутробные - если
@@ -307,15 +307,17 @@
                 document.getElementById('show').hidden = true;
             }
 
-            function showHide(element_id) {
-                if (document.getElementById(element_id)) {
-                    let obj = document.getElementById(element_id);
-                    if (obj.style.display === "none") {
-                        obj.style.display = "block";
-                    }
-                    else obj.style.display = "none";
+            for (let i of document.querySelectorAll('label.btn')) {
+                i.onclick = showHide
+            }
+
+            function showHide(event) {
+                let e = event.target.nextElementSibling
+                if (e.style.display === 'block') {
+                    e.style.display = 'none'
+                } else {
+                    e.style.display = 'block'
                 }
-                else alert("Элемент с id: " + element_id + " не найден!");
             }
 
         </script>
