@@ -32,6 +32,21 @@
     margin: auto
 }
 
+.genotype-header {
+    margin-top: 3%;
+    margin-bottom: 1%;
+}
+
+.genotype-button {
+    display: block;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.all-genotypes {
+    display: none;
+}
+
 /* Final table in calculate.html */
 
 table {

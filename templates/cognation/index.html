@@ -21,8 +21,7 @@
             </div>
             <div style="margin:10px 0;">
                 <label for="dataId"></label>
-                <textarea style="background:gainsboro;" id="dataId" name="data" cols="120" rows="24"
-                          class="form-control"></textarea>
+                <textarea id="dataId" name="data" cols="120" rows="24" class="form-control" style="background:gainsboro"></textarea>
             </div>
             <input type="button" id="next" class="btn btn-dark" title="Next" value="Далее"/>
         </div>
@@ -48,6 +47,32 @@
                         OK
                     </button>
                 </div>
+                <div class="all-genotypes">
+                    <div class="add-genotype">
+                        <h5 class="genotype-header">
+                            Введите гаплотип предполагаемого родителя:
+                        </h5>
+                        <div class="text">
+                            <textarea name="parent_data" id="parent" cols="120" rows="24" class="form-control" style="background:gainsboro">
+                            </textarea>
+                        </div>
+                        <button class="btn btn-secondary genotype-button">
+                            Далее
+                        </button>
+                    </div>
+                    <div class="add-genotype">
+                        <h5 class="genotype-header">
+                            Введите гаплотип проверяемого лица:
+                        </h5>
+                        <div class="text">
+                            <textarea name="child_data" id="child" cols="120" rows="24" class="form-control" style="background:gainsboro">
+                            </textarea>
+                        </div>
+                        <button class="btn btn-secondary genotype-button" type="submit">
+                            Рассчитать
+                        </button>
+                    </div>
+                </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Родство между детьми достоверно известно">
                     <input type="radio" name="type" value="2" onclick="showHide('twochildren-descr')"/> Двое детей, предполагаемый родитель
@@ -62,6 +87,44 @@
                     <button class="btn btn-secondary descr-ok">
                         OK
                     </button>
+                </div>
+                <div class="all-genotypes">
+                    <div class="add-genotype">
+                        <h5 class="genotype-header">
+                            Введите гаплотип предполагаемого родителя:
+                        </h5>
+                        <div class="text">
+                            <textarea name="parent_data" id="parent" cols="120" rows="24" class="form-control" style="background:gainsboro">
+                            </textarea>
+                        </div>
+                        <button class="btn btn-secondary genotype-button">
+                            Далее
+                        </button>
+                    </div>
+                    <div class="add-genotype">
+                        <h5 class="genotype-header">
+                            Введите гаплотип первого проверяемого лица:
+                        </h5>
+                        <div class="text">
+                            <textarea name="child_data" cols="120" rows="24" class="form-control" style="background:gainsboro">
+                            </textarea>
+                        </div>
+                        <button class="btn btn-secondary genotype-button">
+                            Далее
+                        </button>
+                    </div>
+                    <div class="add-genotype">
+                        <h5 class="genotype-header">
+                            Введите гаплотип второго проверяемого лица:
+                        </h5>
+                        <div class="text">
+                            <textarea name="child_data" cols="120" rows="24" class="form-control" style="background:gainsboro">
+                            </textarea>
+                        </div>
+                        <button class="btn btn-secondary genotype-button" type="submit">
+                            Рассчитать
+                        </button>
+                    </div>
                 </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Родство между предполагаемым родителем и предполагаемым братом/сестрой достоверно известно">
@@ -79,6 +142,44 @@
                         OK
                     </button>
                 </div>
+                <div class="all-genotypes">
+                    <div class="add-genotype">
+                        <h5 class="genotype-header">
+                            Введите гаплотип предполагаемого родителя:
+                        </h5>
+                        <div class="text">
+                            <textarea name="parent_data" cols="120" rows="24" class="form-control" style="background:gainsboro">
+                            </textarea>
+                        </div>
+                        <button class="btn btn-secondary genotype-button">
+                            Далее
+                        </button>
+                    </div>
+                    <div class="add-genotype">
+                        <h5 class="genotype-header">
+                            Введите гаплотип предполагаемого брата/сестры:
+                        </h5>
+                        <div class="text">
+                            <textarea name="child_data" cols="120" rows="24" class="form-control" style="background:gainsboro">
+                            </textarea>
+                        </div>
+                        <button class="btn btn-secondary genotype-button">
+                            Далее
+                        </button>
+                    </div>
+                    <div class="add-genotype">
+                        <h5 class="genotype-header">
+                            Введите гаплотип проверяемого лица:
+                        </h5>
+                        <div class="text">
+                            <textarea name="child_data" cols="120" rows="24" class="form-control" style="background:gainsboro">
+                            </textarea>
+                        </div>
+                        <button class="btn btn-secondary genotype-button" type="submit">
+                            Рассчитать
+                        </button>
+                    </div>
+                </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Родство между детьми достоверно известно. Родство между детьми и известным родителем - тоже">
                     <input type="radio" name="type" value="4" onclick="showHide('threechildren-descr')"/> Трое детей и предполагаемый родитель
@@ -93,6 +194,44 @@
                     <button class="btn btn-secondary descr-ok">
                         OK
                     </button>
+                </div>
+                <div class="all-genotypes">
+                    <div class="add-genotype">
+                        <h5 class="genotype-header">
+                            Введите гаплотип предполагаемого родителя:
+                        </h5>
+                        <div class="text">
+                            <textarea name="parent_data" cols="120" rows="24" class="form-control" style="background:gainsboro">
+                            </textarea>
+                        </div>
+                        <button class="btn btn-secondary genotype-button">
+                            Далее
+                        </button>
+                    </div>
+                    <div class="add-genotype">
+                        <h5 class="genotype-header">
+                            Введите гаплотип предполагаемого брата/сестры:
+                        </h5>
+                        <div class="text">
+                            <textarea name="child_data" cols="120" rows="24" class="form-control" style="background:gainsboro">
+                            </textarea>
+                        </div>
+                        <button class="btn btn-secondary genotype-button">
+                            Далее
+                        </button>
+                    </div>
+                    <div class="add-genotype">
+                        <h5 class="genotype-header">
+                            Введите гаплотип проверяемого лица:
+                        </h5>
+                        <div class="text">
+                            <textarea name="child_data" cols="120" rows="24" class="form-control" style="background:gainsboro">
+                            </textarea>
+                        </div>
+                        <button class="btn btn-secondary genotype-button" type="submit">
+                            Рассчитать
+                        </button>
+                    </div>
                 </div>
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Родство между детьми достоверно известно. Родство между детьми и известным родителем - тоже">
@@ -124,6 +263,7 @@
                         OK
                     </button>
                 </div>
+
 
                 <label class="btn btn-secondary cogn-button" data-toggle="tooltip" data-placement="top" title="Известно, что предполагаемые родители - именно супружеская пара, а не отдельные лица, с которыми проверяется родство">
                     <input type="radio" name="type" value="7" onclick="showHide('couple')"/> Проверяемое лицо и супружеская пара
