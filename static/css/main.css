@@ -1,19 +1,15 @@
-input[type=radio] {
-    display: none;
-}
-
 .button-wrapper {
     width: 30%;
     margin-right: 3%;
     margin-top: 2%;
+    min-height: 118px;
+}
+
+.wrap-the-text {
     white-space: normal;
 }
 
-.btn-group {
-    padding: auto;
-}
-
-.cogn-button {
+.btn.wrap-normal {
     white-space: normal;
 }
 
@@ -29,6 +25,7 @@ label {
     display: inline-block;
     width: 30%;
     margin-left: 5%;
+    white-space: normal;
 }
 
 .descr {
@@ -37,6 +34,7 @@ label {
     margin-top: 2%;
     margin-right: 4%;
     text-align: center;
+    white-space: normal;
 }
 
 .descr-ok {
@@ -80,4 +78,3 @@ table {
     padding: 40px;
     border-radius: 40px;
 }
-
