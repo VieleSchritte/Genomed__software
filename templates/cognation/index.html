@@ -32,10 +32,10 @@
                             недоступен
                         </p>
                             <div class="ok-back-buttons">
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-back">
                                 Назад
                             </button>
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-ok">
                                 OK
                             </button>
                         </div>
@@ -89,13 +89,13 @@
                             образец второго родителя для исследования недоступен
                         </p>
                             <div class="ok-back-buttons">
-                            <button class="btn btn-dark descr-but descr-back">
-                                Назад
-                            </button>
-                            <button class="btn btn-dark descr-but descr-ok">
-                                OK
-                            </button>
-                        </div>
+                                <button class="btn btn-dark descr-but descr-back">
+                                    Назад
+                                </button>
+                                <button class="btn btn-dark descr-but descr-ok">
+                                    OK
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="all-genotypes">
@@ -162,13 +162,13 @@
                             которых для исследования недоступен.
                         </p>
                             <div class="ok-back-buttons">
-                            <button class="btn btn-dark descr-but">
-                                Назад
-                            </button>
-                            <button class="btn btn-dark descr-but">
-                                OK
-                            </button>
-                        </div>
+                                <button class="btn btn-dark descr-but descr-back">
+                                    Назад
+                                </button>
+                                <button class="btn btn-dark descr-but descr-ok">
+                                    OK
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="all-genotypes">
@@ -1255,17 +1255,41 @@
         </div>
 
         <script>
+            let participants_number = {
+                '1': 2,
+                '2': 3,
+                '3': 3,
+                '4': 4,
+                '5': 4,
+                '6': 5,
+                '7': 3,
+                '8': 3,
+                '9': 4,
+                '10': 5,
+                '11': 2,
+                '12': 2,
+                '13': 3,
+                '14': 2,
+                '15': 2,
+                '16': 0,
+                '17': 2,
+                '18': 0,
+                '19': 3,
+                '20': 0,
+                '21': 0
+            }
+
             /* Behaviour of radio buttons - on click on one of them show its description and hide the rest of buttons */
             for (let i of document.querySelectorAll('label.btn')) {
                 i.onclick = HideFormulaButtons
             }
 
             function HideFormulaButtons(event) {
-                let e = event.target.nextElementSibling
+                let e = event.target.nextElementSibling;
                 e.style.display = 'block';
 
                 for (let i of document.querySelectorAll('label.btn')) {
-                    if (i != event.target) {
+                    if (i !== event.target) {
                         i.style.display = 'none';
                     }
                 }
@@ -1273,15 +1297,39 @@
 
             /* On click on back button - hide description and show the rest of radio buttons */
             for (let i of document.querySelectorAll('button.descr-back')) {
-                i.onclick = HideDescr
-            }
+                for (let j = 1; j < 5; j++) {
+                    i = i.parentElement;
+                }
+                i.onclick = function() {
+                    if (i.style.display === 'block') {
+                        i.style.display = 'none';
+                    }
 
-            function HideDescr(event) {
-                /* take all labels for reading */
-                for (let i of document.querySelectorAll('label.btn')) {
-
+                    for (let k of document.querySelectorAll('label.btn')) {
+                        k.style.display = 'inline';
+                        k.style.checked = false;
+                    }
                 }
             }
+
+            /* On click on OK button - hide description and show first genotype */
+            for (let i of document.querySelectorAll('button.descr-ok')) {
+                for (let j = 1; j < 5; j++) {
+                    i = i.parentElement;
+                }
+                i.onclick = function() {
+                    if (i.style.display === 'block') {
+                        i.style.display = 'none';
+                    }
+
+                    for (let j of document.querySelectorAll('div.all-genotypes')) {
+                        let first_genotype = j.firstChild;
+                        first_genotype.style.display = 'block';
+                    }
+                }
+            }
+
+
 
         </script>
     </form>
