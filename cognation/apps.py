@@ -3,5 +3,10 @@ from __future__ import unicode_literals
 
 from django.apps import AppConfig
 
+
 class CognationConfig(AppConfig):
     name = 'cognation'
+
+
+class StaticFiles(AppConfig):
+    name = 'static'

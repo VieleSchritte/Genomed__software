@@ -689,8 +689,8 @@
                 </div>
 
                 <label class="threecouple btn btn-secondary wrap-normal" title="Родство между детьми достоверно известно. Также известно, что предполагаемые родители - именно супружеская пара, а не отдельные лица, с которыми проверяется родство">
-                        <input type="radio" name="type" value="9" /> Трое детей и супружеская пара
-                    </label>
+                    <input type="radio" name="type" value="9" /> Трое детей и супружеская пара
+                </label>
                 <div class="descr-genotypes">
                     <div class="cogn-descr wrap-normal" id="threecouple-descr">
                         <img src="" class="descr-image wrap-normal" alt="Двое детей и супружеская пара">
@@ -792,7 +792,7 @@
                         <input type="radio" name= value="11" /> Проверяемое лицо и предполагаемый cводный/единокровный брат/сестра
                     </label>
                 <div class="descr-genotypes">
-                    <div hidden class="cogn-descr wrap-normal" id="stepbrother-descr">
+                    <div class="cogn-descr wrap-normal" id="stepbrother-descr">
                         <img src="" class="descr-image wrap-normal" alt="Проверяемое лицо и предполагаемый cводный/единокровный брат/сестра">
                         <p class="descr wrap-normal text-center">
                             Исследованию подвергают биологические образцы лиц, имеющих одного общего родителя. Это могут
@@ -1206,6 +1206,7 @@
         </div>
 
         <script>
+            /*let part_table = {1: 2, 2: 3, 3: 4}*/
             /* for (let i of document.querySelectorAll('label.btn')) {
                 i.onclick = HideFormulaButtons
             }
@@ -1229,9 +1230,9 @@
 
                 for (let i of document.querySelectorAll('label.btn')) {
                     console.log(i)
-                    console.log(i.onclick === true)
-                    if (i.onclick === false) {
-                        i.style.display = 'none'; }
+                    if (i != event.target) {
+                        i.style.display = 'none';
+                    }
                 }
             }
 
