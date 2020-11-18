@@ -10,32 +10,42 @@
 .descr-genotypes {
     display: none;
     width: 100%;
+    margin-top: 3%;
+}
+
+.cogn-descr {
+    display: inline-block;
 }
 
 .descr-image {
     width: 30%;
-    margin: 2% 0 0;
     white-space: normal;
     font-size: 0.8em;
     display: inline-block;
+    vertical-align: sub;
+}
+
+.text-buttons {
+    display: inline-block;
+    width: 60%;
+    vertical-align: top;
+    margin-right: 2%;
+    margin-top: 2%;
 }
 
 .descr {
-    width: 69%;
-    margin: 2% 0 0;
     text-align: center;
     white-space: normal;
-    display: inline-block;
+    display: block;
 }
 
 .ok-back-buttons {
-    display: inline;
-    margin: 5% auto;
+    display: block;
+    text-align: center;
 }
 
 .descr-but {
     display: inline-block;
-    margin: 5% auto;
 }
 
 .descr-but:first-child {
