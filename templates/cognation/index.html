@@ -24,7 +24,7 @@
                 <div class="descr-genotypes">
                     <div class="cogn-descr wrap-normal" id="parent-descr">
                         {% load static %}
-                        <img src="{% static "button_images/ParentFormula.png"%}" class="descr-image wrap-normal" alt="Отцовство/материнство для двух участников">
+                        <img src="{% static "ParentFormula.png"%}" class="descr-image wrap-normal" alt="Отцовство/материнство для двух участников">
                         <p class="descr wrap-normal text-center">
                             Исследованию подвергаются биологические образцы проверяемого ребенка и одного
                             предполагаемого родителя. Биологический образец второго родителя для исследования
@@ -74,22 +74,22 @@
                 </div>
 
                 <label class="twochildren btn btn-secondary wrap-normal" title="Родство между детьми достоверно известно">
-                        <input type="radio" name="type" value="2"/> Двое детей, предполагаемый родитель
-                    </label>
+                    <input type="radio" name="type" value="2"/> Двое детей, предполагаемый родитель
+                </label>
                 <div class="descr-genotypes">
                     <div class="cogn-descr wrap-normal" id="twochildren-descr">
                         {% load static %}
-                        <img src="{% static "button_images/" %}" class="descr-image wrap-normal" alt="Двое детей, предполагаемый родитель">
+                        <img src="{% static "TwoChildrenFormula.png" %}" class="descr-image wrap-normal" alt="Двое детей, предполагаемый родитель">
                         <p class="descr wrap-normal text-center">
                             Исследованию подвергают биологически образцы проверяемых детей и одного предполагаемого
                             родителя. Биологическое родство между проверяемыми детьми достоверно известно. Биологический
                             образец второго родителя для исследования недоступен
                         </p>
                         <div class="ok-back-buttons">
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-back">
                                 Назад
                             </button>
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-ok">
                                 OK
                             </button>
                         </div>
@@ -144,11 +144,12 @@
                 </div>
 
                 <label class="sibling btn btn-secondary wrap-normal" title="Родство между предполагаемым родителем и предполагаемым братом/сестрой достоверно известно">
-                        <input type="radio" name="type" value="3" /> Проверяемое лицо, предполагаемые родитель и брат/сестра
-                    </label>
+                    <input type="radio" name="type" value="3" /> Проверяемое лицо, предполагаемые родитель и брат/сестра
+                </label>
                 <div class="descr-genotypes">
                     <div class="cogn-descr wrap-normal" id="sibling-descr">
-                        <img src="" class="descr-image wrap-normal" alt="Проверяемое лицо, предполагаемые родитель и брат/сестра">
+                        {% load static %}
+                        <img src="{% static "SiblingFormula.png" %}" class="descr-image wrap-normal" alt="Проверяемое лицо, предполагаемые родитель и брат/сестра">
                         <p class="descr wrap-normal text-center">
                             Исследованию подвергают биологические образцы проверяемого лица, одного предполагаемого
                             родителя и одного предполагаемого брата или сестры. Предполагается, что проверяемое лицо
@@ -214,21 +215,22 @@
                 </div>
 
                 <label class="threechildren btn btn-secondary wrap-normal" title="Родство между детьми достоверно известно. Родство между детьми и известным родителем - тоже">
-                        <input type="radio" name="type" value="4" /> Трое детей и предполагаемый родитель
-                    </label>
+                    <input type="radio" name="type" value="4" /> Трое детей и предполагаемый родитель
+                </label>
                 <div class="descr-genotypes">
                     <div class="cogn-descr wrap-normal" id="threechildren-descr">
-                        <img src="" class="descr-image wrap-normal" alt="Трое детей, предполагаемый родитель">
+                        {% load static %}
+                        <img src="{% static "ThreeChildrenFormula.png" %}" class="descr-image wrap-normal" alt="Трое детей, предполагаемый родитель">
                         <p class="descr wrap-normal text-center">
                             Исследованию подвергают биологические образцы проверяемых детей и одного предполагаемого
                             родителя. Биологическое родство между проверяемыми детьми достоверно известно. Биологический
                             образец второго родителя для исследования недоступен
                         </p>
                         <div class="ok-back-buttons">
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-back">
                                 Назад
                             </button>
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-ok">
                                 OK
                             </button>
                         </div>
@@ -283,21 +285,22 @@
                 </div>
 
                 <label class="twoknownsup btn btn-secondary wrap-normal" title="Родство между детьми достоверно известно. Родство между детьми и известным родителем - тоже">
-                        <input type="radio" name="type" value="5" /> Двое детей, известный и предполагаемый родители
-                    </label>
+                    <input type="radio" name="type" value="5" /> Двое детей, известный и предполагаемый родители
+                </label>
                 <div class="descr-genotypes">
                     <div class="cogn-descr wrap-normal" id="twoknownsup-descr">
-                        <img src="" class="descr-image wrap-normal" alt="Двое детей, известный и предполагаемый родители">
+                        {% load static %}
+                        <img src="{% static "TwoKnownSupposed.png" %}" class="descr-image wrap-normal" alt="Двое детей, известный и предполагаемый родители">
                         <p class="descr wrap-normal text-center">
                             Исследованию подвергают биологические образцы проверяемых детей, одного известного и одного
                             предполагаемого родителя. Биологическое родство между проверяемыми детьми и известным родителем
                             достоверно известно
                         </p>
                         <div class="ok-back-buttons">
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-back">
                                 Назад
                             </button>
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-ok">
                                 OK
                             </button>
                         </div>
@@ -367,21 +370,22 @@
                 </div>
 
                 <label class="threeknownsup btn btn-secondary wrap-normal" title="Родство между детьми достоверно известно. Родство между детьми и известным родителем - тоже">
-                        <input type="radio" name="type" value="6" /> Трое детей, известный и предполагаемый родители
-                    </label>
+                    <input type="radio" name="type" value="6" /> Трое детей, известный и предполагаемый родители
+                </label>
                 <div class="descr-genotypes">
                     <div class="cogn-descr wrap-normal" id="threeknownsup-descr">
-                        <img src="" class="descr-image wrap-normal" alt="Трое детей, известный и предполагаемый родители">
+                        {% load static %}
+                        <img src="{% static "ThreeKnownSupposed.png" %}" class="descr-image wrap-normal" alt="Трое детей, известный и предполагаемый родители">
                         <p class="descr wrap-normal text-center">
                             Исследованию подвергают биологические образцы проверяемых детей, одного известного и одного
                             предполагаемого родителя. Биологическое родство между проверяемыми детьми и известным родителем
                             достоверно известно.
                         </p>
                         <div class="ok-back-buttons">
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-back">
                                 Назад
                             </button>
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-ok">
                                 OK
                             </button>
                         </div>
@@ -466,21 +470,22 @@
                 </div>
 
                 <label class="couple btn btn-secondary wrap-normal" title="Известно, что предполагаемые родители - именно супружеская пара, а не отдельные лица, с которыми проверяется родство">
-                        <input type="radio" name="type" value="7" /> Проверяемое лицо и супружеская пара
-                    </label>
+                    <input type="radio" name="type" value="7" /> Проверяемое лицо и супружеская пара
+                </label>
                 <div class="descr-genotypes">
                     <div class="cogn-descr wrap-normal" id="couple">
-                        <img src="" class="descr-image wrap-normal" alt="Проверяемое лицо и супружеская пара">
+                        {% load static %}
+                        <img src="{% static "CoupleFormula.png" %}" class="descr-image wrap-normal" alt="Проверяемое лицо и супружеская пара">
                         <p class="descr wrap-normal text-center">
                             Исследованию подвергают биологические образцы проверяемого ребенка и двух предполагаемых
                             родителей. Достоверно известно, что предполагаемые родители являются родительской парой, а
                             не отдельными лицами, с которыми проверяется родство
                         </p>
                         <div class="ok-back-buttons">
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-back">
                                 Назад
                             </button>
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-ok">
                                 OK
                             </button>
                         </div>
@@ -539,17 +544,18 @@
                     </label>
                 <div class="descr-genotypes">
                     <div class="cogn-descr wrap-normal" id="oneknownsup-descr">
-                        <img src="" class="descr-image wrap-normal" alt="Проверяемое лицо, известный и предполагаемый родители">
+                        {% load static %}
+                        <img src="{% static "OneKnownSupposed.png" %}" class="descr-image wrap-normal" alt="Проверяемое лицо, известный и предполагаемый родители">
                         <p class="descr wrap-normal text-center">
                             Исследованию подвергают биологические образцы проверяемого ребенка, одного известного
                             родителя и одного предполагаемого родителя. Биологическое родство между проверяемым
                             ребенком и известным родителем достоверно известна
                         </p>
                         <div class="ok-back-buttons">
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-back">
                                 Назад
                             </button>
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-ok">
                                 OK
                             </button>
                         </div>
@@ -603,12 +609,13 @@
                     </div>
                 </div>
 
-                 <label class="twocouple btn btn-secondary wrap-normal" title="Родство между детьми достоверно известно. Также известно, что предполагаемые родители - именно супружеская пара, а не отдельные лица, с которыми проверяется родство">
-                        <input type="radio" name="type" value="9" /> Двое детей и супружеская пара
-                    </label>
+                <label class="twocouple btn btn-secondary wrap-normal" title="Родство между детьми достоверно известно. Также известно, что предполагаемые родители - именно супружеская пара, а не отдельные лица, с которыми проверяется родство">
+                    <input type="radio" name="type" value="9" /> Двое детей и супружеская пара
+                </label>
                 <div class="descr-genotypes">
                     <div class="cogn-descr wrap-normal" id="twocouple-descr">
-                        <img src="" class="descr-image wrap-normal" alt="Двое детей и супружеская пара">
+                        {% load static %}
+                        <img src="{% static "TwoCoupleFormula.png" %}" class="descr-image wrap-normal" alt="Двое детей и супружеская пара">
                         <p class="descr wrap-normal text-center">
                             Исследованию повергают биологические образцы проверяемых детей и двух предполагаемых
                             родителей. Достоверно известно, что предполагаемые родители являются родительской парой,
@@ -616,10 +623,10 @@
                             биологическое родство между проверяемыми детьми
                         </p>
                         <div class="ok-back-buttons">
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-back">
                                 Назад
                             </button>
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-ok">
                                 OK
                             </button>
                         </div>
@@ -689,11 +696,12 @@
                 </div>
 
                 <label class="threecouple btn btn-secondary wrap-normal" title="Родство между детьми достоверно известно. Также известно, что предполагаемые родители - именно супружеская пара, а не отдельные лица, с которыми проверяется родство">
-                    <input type="radio" name="type" value="9" /> Трое детей и супружеская пара
+                    <input type="radio" name="type" value="10" /> Трое детей и супружеская пара
                 </label>
                 <div class="descr-genotypes">
                     <div class="cogn-descr wrap-normal" id="threecouple-descr">
-                        <img src="" class="descr-image wrap-normal" alt="Двое детей и супружеская пара">
+                        {% load static %}
+                        <img src="{% static "ThreeCoupleFormula.png" %}" class="descr-image wrap-normal" alt="Двое детей и супружеская пара">
                         <p class="descr wrap-normal text-center">
                             Исследованию повергают биологические образцы проверяемых детей и двух предполагаемых
                             родителей. Достоверно известно, что предполагаемые родители являются родительской парой,
@@ -701,10 +709,10 @@
                             биологическое родство между проверяемыми детьми
                         </p>
                         <div class="ok-back-buttons">
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-back">
                                 Назад
                             </button>
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-ok">
                                 OK
                             </button>
                         </div>
@@ -789,21 +797,22 @@
                 </div>
 
                 <label class="stepbrother btn btn-secondary wrap-normal" title="Предполагается, что у участников есть один общий родитель, биоматериал которого недоступен">
-                        <input type="radio" name= value="11" /> Проверяемое лицо и предполагаемый cводный/единокровный брат/сестра
-                    </label>
+                    <input type="radio" name= value="11" /> Проверяемое лицо и предполагаемый cводный/единокровный брат/сестра
+                </label>
                 <div class="descr-genotypes">
                     <div class="cogn-descr wrap-normal" id="stepbrother-descr">
-                        <img src="" class="descr-image wrap-normal" alt="Проверяемое лицо и предполагаемый cводный/единокровный брат/сестра">
+                        {% load static %}
+                        <img src="{% static "" %}" class="descr-image wrap-normal" alt="Проверяемое лицо и предполагаемый cводный/единокровный брат/сестра">
                         <p class="descr wrap-normal text-center">
                             Исследованию подвергают биологические образцы лиц, имеющих одного общего родителя. Это могут
                             быть единокровные брат/сестра, при условии, что у них общий отец или единоутробные - если
                             у них общая мать.
                         </p>
                         <div class="ok-back-buttons">
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-back">
                                 Назад
                             </button>
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-ok">
                                 OK
                             </button>
                         </div>
@@ -842,22 +851,23 @@
                     </div>
                 </div>
 
-                 <label class="brother btn btn-secondary wrap-normal" title="Предполагается, что у участников есть два общих родителя, биоматериал которых недоступен">
-                        <input type="radio" name="type" value="12" /> Проверяемое лицо и предполагаемый брат/сестра
-                    </label>
+                <label class="brother btn btn-secondary wrap-normal" title="Предполагается, что у участников есть два общих родителя, биоматериал которых недоступен">
+                    <input type="radio" name="type" value="12" /> Проверяемое лицо и предполагаемый брат/сестра
+                </label>
                 <div class="descr-genotypes">
                     <div class="cogn-descr wrap-normal" id="brother-descr">
-                        <img src="" class="descr-image wrap-normal" alt="Проверяемое лицо и предполагаемый брат/сестра">
+                        {% load static %}
+                        <img src="{% static "BrotherFormula.png" %}" class="descr-image wrap-normal" alt="Проверяемое лицо и предполагаемый брат/сестра">
                         <p class="descr wrap-normal text-center">
                             Исследованию подвергают биологические образцы проверяемого лица и одного предполагаемого
                             брата или сестры. Предполагается, что исследуемые лица имеют общих родителей, биологические
                             образцы которых для исследования недоступны
                         </p>
                         <div class="ok-back-buttons">
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-back">
                                 Назад
                             </button>
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-ok">
                                 OK
                             </button>
                         </div>
@@ -897,11 +907,12 @@
                 </div>
 
                 <label class="twobrothers btn btn-secondary wrap-normal" title="Родство между братьями/сестрами достоверно известно. Есть общие родители, биоматериал которых недоступен">
-                        <input type="radio" name="type" value="13" /> Проверяемое лицо и двое предполагаемых братьев/сестер
-                    </label>
+                    <input type="radio" name="type" value="13" /> Проверяемое лицо и двое предполагаемых братьев/сестер
+                </label>
                 <div class="descr-genotypes">
                     <div class="cogn-descr wrap-normal" id="twobrothers-descr">
-                        <img src="" class="descr-image wrap-normal" alt="Проверяемое лицо и предполагаемый брат/сестра">
+                        {% load static %}
+                        <img src="{% static "TwoBrothersFormula.png" %}" class="descr-image wrap-normal" alt="Проверяемое лицо и предполагаемый брат/сестра">
                         <p class="descr wrap-normal text-center">
                             Исследованию подвергают биологические образцы проверяемого лица и двух предполагаемых братьев или
                             сестер. Предполагается, что исследуемые лица имеют общих родителей, биологические образцы которых
@@ -909,10 +920,10 @@
                             исследуемого лица и одного брата или сестры.
                         </p>
                         <div class="ok-back-buttons">
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-back">
                                 Назад
                             </button>
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-ok">
                                 OK
                             </button>
                         </div>
@@ -967,10 +978,11 @@
                 </div>
 
                 <label class="cousin btn btn-secondary wrap-normal" title="Предполагается, что родители участников - родные братья/сестры, их биоматериал недоступен">
-                        <input type="radio" name="type" value="14" /> Проверяемое лицо и предполагаемый двоюродный брат/сестра
-                    </label>
+                    <input type="radio" name="type" value="14" /> Проверяемое лицо и предполагаемый двоюродный брат/сестра
+                </label>
                 <div class="descr-genotypes">
                     <div class="cogn-descr wrap-normal" id="cousin-descr">
+                        {% load static %}
                         <img src="" class="descr-image wrap-normal" alt="Проверяемое лицо и предполагаемый двоюродный брат/сестра">
                         <p class="descr wrap-normal text-center">
                             Исследованию подвергают биологические образцы проверяемого лица и двоюродного брата или
@@ -979,10 +991,10 @@
                             бабушки и дедушки недоступны.
                         </p>
                         <div class="ok-back-buttons">
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-back">
                                 Назад
                             </button>
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-ok">
                                 OK
                             </button>
                         </div>
@@ -1022,10 +1034,11 @@
                 </div>
 
                 <label class="uncle btn btn-secondary wrap-normal" title="Предполагается, что один из родителей является родным братом/сестрой предполагаемому дяде/тете. Биоматериал родитеелй недоступен">
-                        <input type="radio" name="type" value="15" /> Проверяемое лицо и предполагаемый дядя/тетя
-                    </label>
+                    <input type="radio" name="type" value="15" /> Проверяемое лицо и предполагаемый дядя/тетя
+                </label>
                 <div class="descr-genotypes">
                     <div class="cogn-descr wrap-normal" id="uncle-descr">
+                        {% load static %}
                         <img src="" class="descr-image wrap-normal" alt="Проверяемое лицо и предполагаемый дядя/тетя">
                         <p class="descr wrap-normal text-center">
                             Исследованию подвергают биологические образцы проверяемого лица и предполагаемого дяди/тети.
@@ -1033,10 +1046,10 @@
                             предполагаемого дяди или тети. Биологический материал этого родителя недоступен.
                         </p>
                         <div class="ok-back-buttons">
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-back">
                                 Назад
                             </button>
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-ok">
                                 OK
                             </button>
                         </div>
@@ -1076,11 +1089,12 @@
                 </div>
 
                 <label class="grandparent btn btn-secondary wrap-normal" title="Биоматериал родителей проверяемого лица недоступен">
-                        <input type="radio" name="type" value="17" /> Проверяемое лицо и предполагаемая бабушка/дедушка
-                    </label>
+                    <input type="radio" name="type" value="17" /> Проверяемое лицо и предполагаемая бабушка/дедушка
+                </label>
                 <div class="descr-genotypes">
                     <div class="cogn-descr wrap-normal" id="grandparent-descr">
-                        <img src="" class="descr-image wrap-normal" alt="Проверяемое лицо и предполагаемая бабушка/дедушка">
+                        {% load static %}
+                        <img src="{% static "GrandParentFormula.png" %}" class="descr-image wrap-normal" alt="Проверяемое лицо и предполагаемая бабушка/дедушка">
                         <p class="descr wrap-normal text-center">
                             Исследованию подвергают биологические образцы проверяемого лица и предполагаемой бабушки
                             (дедушки). Предполагается, что один из родителей проверяемого лица является дочерью или
@@ -1088,10 +1102,10 @@
                             проверяемого лица для исследования недоступны
                         </p>
                         <div class="ok-back-buttons">
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-back">
                                 Назад
                             </button>
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-ok">
                                 OK
                             </button>
                         </div>
@@ -1131,11 +1145,12 @@
                 </div>
 
                 <label class="pargrandchildyes btn btn-secondary wrap-normal" title="Предполагаемый родитель - потомок бабушки/дедушки">
-                        <input type="radio" name="type" value="19" /> Проверяемое лицо, предполагаемый родитель и предполагаемая бабушка/дедушка
-                    </label>
+                    <input type="radio" name="type" value="19" /> Проверяемое лицо, предполагаемый родитель и предполагаемая бабушка/дедушка
+                </label>
                 <div class="descr-genotypes">
                     <div class="cogn-descr wrap-normal" id="pargrandchildyes-descr">
-                        <img src="" class="descr-image wrap-normal" alt="Проверяемое лицо, предполагаемый родитель и предполагаемая бабушка/дедушка">
+                        {% load static %}
+                        <img src="{% static "" %}" class="descr-image wrap-normal" alt="Проверяемое лицо, предполагаемый родитель и предполагаемая бабушка/дедушка">
                         <p class="descr wrap-normal text-center">
                             Исследованию подвергают биологические образцы проверяемого ребенка, его бабушки (дедушки)
                             и одного предполагаемого родителя ребенка. Предполагается, что предполагаемый родитель
@@ -1144,10 +1159,10 @@
                             ребенка для исследования недоступен
                         </p>
                         <div class="ok-back-buttons">
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-back">
                                 Назад
                             </button>
-                            <button class="btn btn-dark descr-but">
+                            <button class="btn btn-dark descr-but descr-ok">
                                 OK
                             </button>
                         </div>
@@ -1206,20 +1221,7 @@
         </div>
 
         <script>
-            /*let part_table = {1: 2, 2: 3, 3: 4}*/
-            /* for (let i of document.querySelectorAll('label.btn')) {
-                i.onclick = HideFormulaButtons
-            }
-
-            function showHide(event) {
-                let e = event.target.nextElementSibling
-                if (e.style.display === 'block') {
-                    e.style.display = 'none';
-                } else {
-                    e.style.display = 'block';
-                }
-            } */
-
+            /* Behaviour of radio buttons - on click on one of them show its description and hide the rest of buttons */
             for (let i of document.querySelectorAll('label.btn')) {
                 i.onclick = HideFormulaButtons
             }
@@ -1229,10 +1231,21 @@
                 e.style.display = 'block';
 
                 for (let i of document.querySelectorAll('label.btn')) {
-                    console.log(i)
                     if (i != event.target) {
                         i.style.display = 'none';
                     }
+                }
+            }
+
+            /* On click on back button - hide description and show the rest of radio buttons */
+            for (let i of document.querySelectorAll('button.descr-back')) {
+                i.onclick = HideDescr
+            }
+
+            function HideDescr(event) {
+                /* take all labels for reading */
+                for (let i of document.querySelectorAll('label.btn')) {
+
                 }
             }
 
