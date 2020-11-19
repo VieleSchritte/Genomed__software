@@ -1192,13 +1192,13 @@
                             ребенка для исследования недоступен
                             </p>
                             <div class="ok-back-buttons">
-                            <button class="btn btn-dark descr-but descr-back">
-                                Назад
-                            </button>
-                            <button class="btn btn-dark descr-but descr-ok">
-                                OK
-                            </button>
-                        </div>
+                                <button class="btn btn-dark descr-but descr-back">
+                                    Назад
+                                </button>
+                                <button class="btn btn-dark descr-but descr-ok">
+                                    OK
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="all-genotypes">
@@ -1213,7 +1213,10 @@
                                 </label>
                             </div>
                             {% csrf_token %}
-                            <button class="btn btn-secondary genotype-button">
+                            <button class="btn btn-secondary genotype-button genotype-back">
+                                Назад
+                            </button>
+                            <button class="btn btn-secondary genotype-button genotype-further">
                                 Далее
                             </button>
                         </div>
@@ -1228,7 +1231,10 @@
                                 </label>
                             </div>
                             {% csrf_token %}
-                            <button class="btn btn-secondary genotype-button">
+                            <button class="btn btn-secondary genotype-button genotype-back">
+                                Назад
+                            </button>
+                            <button class="btn btn-secondary genotype-button genotype-further">
                                 Далее
                             </button>
                         </div>
@@ -1243,7 +1249,10 @@
                                 </label>
                             </div>
                             {% csrf_token %}
-                            <button class="btn btn-secondary genotype-button" type="submit">
+                            <button class="btn btn-secondary genotype-button genotype-back">
+                                Назад
+                            </button>
+                            <button class="btn btn-secondary genotype-button genotype-submit" type="submit">
                                 Рассчитать
                             </button>
                         </div>
@@ -1280,56 +1289,51 @@
             }
 
             /* Behaviour of radio buttons - on click on one of them show its description and hide the rest of buttons */
-            for (let i of document.querySelectorAll('label.btn')) {
-                i.onclick = HideFormulaButtons
+            for (let label of document.querySelectorAll('label.btn')) {
+                label.onclick = HideFormulaButtons
             }
 
             function HideFormulaButtons(event) {
-                let e = event.target.nextElementSibling;
-                e.style.display = 'block';
+                let currentLabel = event.target.nextElementSibling;
+                currentLabel.style.display = 'block';
 
-                for (let i of document.querySelectorAll('label.btn')) {
-                    if (i !== event.target) {
-                        i.style.display = 'none';
+                for (let label of document.querySelectorAll('label.btn')) {
+                    if (label !== event.target) {
+                        label.style.display = 'none';
                     }
                 }
             }
 
             /* On click on back button - hide description and show the rest of radio buttons */
-            for (let i of document.querySelectorAll('button.descr-back')) {
-                for (let j = 1; j < 5; j++) {
-                    i = i.parentElement;
-                }
-                i.onclick = function() {
-                    if (i.style.display === 'block') {
-                        i.style.display = 'none';
-                    }
+            for (let backButton of document.querySelectorAll('button.descr-back')) {
+                backButton.onclick = function OnBackButtonClick() {
+                    backButton.closest('.descr-genotypes').style.display = 'none';
 
-                    for (let k of document.querySelectorAll('label.btn')) {
-                        k.style.display = 'inline';
-                        k.style.checked = false;
+                    for (let label of document.querySelectorAll('label.btn')) {
+                        label.style.display = 'inline';
+                        label.classList.remove("active");
+                        label.firstChild.checked = false;
                     }
                 }
             }
 
-            /* On click on OK button - hide description and show first genotype */
-            for (let i of document.querySelectorAll('button.descr-ok')) {
-                for (let j = 1; j < 5; j++) {
-                    i = i.parentElement;
-                }
-                i.onclick = function() {
-                    if (i.style.display === 'block') {
-                        i.style.display = 'none';
-                    }
+            /* On click on ok button - hide description and label, show first field fof genotype */
+            for (let okButton of document.querySelectorAll('button.descr-ok')) {
+                okButton.onclick = function OnOKButtonClick() {
+                    /* hiding label */
+                    let labelToHide = okButton.closest('.descr-genotypes').previousElementSibling;
+                    labelToHide.style.display = 'none';
 
-                    for (let j of document.querySelectorAll('div.all-genotypes')) {
-                        let first_genotype = j.firstChild;
-                        first_genotype.style.display = 'block';
-                    }
+                    /* hiding description */
+                    let cognDescr = okButton.closest('.cogn-descr')
+                    cognDescr.style.display = 'none';
+
+                    /* showing first field for genotype */
+                    let addGenotype = cognDescr.nextElementSibling.firstElementChild;
+                    console.log(addGenotype)
+                    addGenotype.style.display = 'block';
                 }
             }
-
-
 
         </script>
     </form>
