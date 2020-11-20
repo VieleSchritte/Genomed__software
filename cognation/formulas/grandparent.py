@@ -14,6 +14,10 @@ class GrandParentFormula(Formula):
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 
+        # If it's AMEL locus, LR = 1
+        if locus == 'AMEL':
+            return self.make_result(locus, 1, dict_make_result)
+
         freq_dict = self.get_frequencies(locus, grandchild_set)
         calc = Calculations()
         conf = Confirmations()
