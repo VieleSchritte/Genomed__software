@@ -114,13 +114,15 @@ input[type=radio] {
 }
 
 .description-image {
-    width: 30%;
+    width: 36%;
     white-space: normal;
     font-size: 0.8em;
     display: inline-block;
     vertical-align: sub;
     border-color: rgba(17,42,45,0.93);
     border-radius: 15px;
+    margin-top: 2.1rem;
+    margin-left: 1rem;
 }
 
 .text-buttons {
@@ -136,6 +138,7 @@ input[type=radio] {
     text-align: center;
     white-space: normal;
     display: block;
+    font-size: 1.2rem;
 }
 
 .ok-back-buttons {
