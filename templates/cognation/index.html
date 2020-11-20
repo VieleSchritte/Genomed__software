@@ -22,9 +22,9 @@
                         <label class="cognation-button" title="{{ f.name }}">
                             <input type="radio" class="target" name="type" value="{{ f.value }}"/> {{ f.name }}
                         </label>
-                        <div class="descr-genotypes">
+                        <div class="description-genotypes">
                             <div class="description">
-                                <h2>
+                                <h2 class="description-header">
                                     {{ f.name }}
                                 </h2>
                                 <img src="{% static f.image %}" class="description-image"
@@ -70,7 +70,6 @@
                 </div>
             </div>
         </div>
-
         <script>
 
             /* Behaviour of radio buttons - on click on one of them show its description and hide the rest of buttons */
@@ -79,8 +78,8 @@
             }
 
             function HideFormulaButtons(event) {
-                let descrGenotypes = event.target.nextElementSibling;
-                descrGenotypes.style.display = 'block';
+                let descriptionGenotypes = event.target.nextElementSibling;
+                descriptionGenotypes.style.display = 'block';
                 let startHeader = document.getElementById('start-header')
                 startHeader.style.display = 'none';
 
@@ -92,9 +91,13 @@
 
             /* On click on back button in a description - hide description and show the rest of radio buttons */
             for (let descriptionBack of document.querySelectorAll('button.description-back')) {
-                descriptionBack.onclick = function OnBackButtonClick() {
-                    let description = descriptionBack.closest('.description');
-                    console.log(description);
+                let description = descriptionBack.parentElement.closest('.description');
+                descriptionBack.onclick = function DescriptionBackClick() {
+                    description.style.display = 'none';
+
+                    for (let label of document.querySelectorAll('label.cognation-button')) {
+                        label.style.display = 'inline';
+                    }
                 }
             }
 

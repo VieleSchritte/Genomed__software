@@ -92,8 +92,11 @@
 
         </tfoot>
     </table>
-    <a href="{% url 'cognation:index' %}" class="btn btn-dark">Start Over</a>
-    <a href="#" class="btn btn-dark" id="saveResults">Save results</a>
+    <div class="link-group">
+        <a href="{% url 'cognation:index' %}" class="btn btn-dark">К выбору родства</a>
+        <a href="#" class="btn btn-dark" id="saveResults">Сохранить результаты</a>
+    </div>
+
 {% endblock content %}
 
 {% block footer %}
@@ -142,7 +145,7 @@
 {% endblock footer %}
 
 {% block scripts %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
 <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 <script type="text/javascript">
 /*$(document).ready(function(){
@@ -207,5 +210,5 @@
     });
 });
 */
-</script>
+</script> -->
 {% endblock scripts %}

@@ -3,7 +3,7 @@
     src: url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 }
 
-p, h1, h2, input, button {
+p, h1, h2, input, button, a, table {
     font-family: 'Roboto', sans-serif;
 }
 
@@ -37,8 +37,16 @@ h1 {
     margin-top: 0;
 }
 
+p {
+    text-align: center;
+}
+
 label {
     font-family: 'Roboto', sans-serif;
+}
+
+label, button, a {
+    cursor: pointer;
 }
 
 input[type=radio] {
@@ -58,7 +66,7 @@ input[type=radio] {
     box-sizing: border-box;
 }
 
-.cognation-button, .description-button  {
+.cognation-button, .description-button, a {
     width: 24%;
     min-width: 9rem;
     min-height: 7rem;
@@ -73,7 +81,7 @@ input[type=radio] {
     padding: 1rem;
     line-height: 1.5;
     background-color: #333333;
-    color: whitesmoke;
+    color: #f5f5f5;
     border-radius: 1rem;
     opacity: .85;
     margin: 0.2rem;
@@ -103,7 +111,7 @@ input[type=radio] {
     flex: 0 1 auto;
 }
 
-.descr-genotypes {
+.description-genotypes {
     display: none;
     width: 100%;
     margin-top: 3%;
@@ -113,8 +121,12 @@ input[type=radio] {
     display: inline-block;
 }
 
+.description-header {
+    margin: 0;
+}
+
 .description-image {
-    width: 36%;
+    width: 30%;
     white-space: normal;
     font-size: 0.8em;
     display: inline-block;
@@ -197,4 +209,13 @@ table {
 
 .meaning {
     text-align: right;
+}
+
+a {
+    text-decoration: none;
+    font-weight: 800;
+}
+
+.link-group {
+    margin-top: 2rem;
 }
