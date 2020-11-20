@@ -68,6 +68,8 @@ class Formula(abc.ABC):
                 raise AllelesException(locus, part)
             part_sets.append(set(part))
 
+        freqs = self.get_frequencies(locus, part_alleles[0] + part_alleles[1])
+
         intersections = []
         for i in range(len(part_alleles)):
             for j in range(len(part_alleles)):
