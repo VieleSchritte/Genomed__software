@@ -1,60 +1,143 @@
-.but-bunch {
-    margin: auto;
+html {
+    -webkit-tap-highlight-color: transparent;
 }
 
-.btn {
-    width: 30%;
+body {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: left;
+}
+
+form {
+    color: #343a40!important;
+}
+
+.but-bunch {
+    margin: auto;
+    flex-wrap: wrap!important;
+    position: relative;
+    display: inline-flex;
+    vertical-align: middle;
+}
+
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+.cognation-button {
+    width: 20%;
     white-space: normal;
+    font-size: 0.9rem;
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.but-bunch>.but-bunch:not(:last-child)>.cognation-button, .but-bunch>.cognation-button:not(:last-child):not(.dropdown-toggle) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.but-bunch>.cognation-button:first-child {
+    margin-left: 0;
+}
+
+.cognation-button:not(:disabled):not(.disabled) {
+    cursor: pointer;
+}
+
+.but-bunch-toggle>.cognation-button, .but-bunch-toggle>.but-bunch>.cognation-button {
+    margin-bottom: 0;
+}
+
+.but-bunch-vertical>.cognation-button, .but-bunch>.cognation-button {
+    position: relative;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 1 auto;
+    flex: 0 1 auto;
 }
 
 .descr-genotypes {
     display: none;
     width: 100%;
+    margin-top: 3%;
 }
 
-.descr-image {
+.description {
+    display: inline-block;
+}
+
+.description-image {
     width: 30%;
-    margin: 2% 0 0;
     white-space: normal;
     font-size: 0.8em;
     display: inline-block;
+    vertical-align: sub;
 }
 
-.descr {
-    width: 69%;
-    margin: 2% 0 0;
+.text-buttons {
+    display: inline-block;
+    width: 60%;
+    vertical-align: top;
+    margin-right: 2%;
+    margin-top: 2%;
+    margin-left: 5%;
+}
+
+.description-text {
     text-align: center;
     white-space: normal;
-    display: inline-block;
+    display: block;
 }
 
 .ok-back-buttons {
-    display: inline;
-    margin: 5% auto;
+    display: block;
+    text-align: center;
 }
 
-.descr-but {
+.description-button {
     display: inline-block;
-    margin: 5% auto;
 }
 
-.descr-but:first-child {
+.description-button:first-child {
     margin-right: 2%;
 }
 
-.genotype-header {
-    margin-top: 3%;
-    margin-bottom: 1%;
+.all-genotypes {
+    width: 100%;
 }
 
-.genotype-button {
+.add-genotype, .first-genotype {
+    display: none;
+    width: 100%;
+}
+
+.genotype-header {
+    margin-top: 0;
+    margin-bottom: 5%;
+}
+
+.genotype-button-group {
     display: block;
     margin-top: 2%;
     margin-bottom: 2%;
 }
 
-.all-genotypes {
-    display: none;
+.genotype-back, .genotype-next, .genotype-submit {
+    display: inline-block;
+}
+
+.genotype-back {
+    margin-right: 2%;
 }
 
 /* Final table in calculate.html */
@@ -63,7 +146,7 @@ table {
     text-align: center;
 }
 
-.descr, .freqused {
+.description-text, .freqused {
     text-align: left;
 }
 

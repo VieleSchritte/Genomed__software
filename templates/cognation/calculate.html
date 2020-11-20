@@ -70,13 +70,13 @@
         </tbody>
         <tfoot>
             <tr>
-                <td class="descr" colspan="{{ participants|add:1 }}">Индекс отцовства (Combined Paternity Index)</td>
+                <td class="description-text" colspan="{{ participants|add:1 }}">Индекс отцовства (Combined Paternity Index)</td>
                 <td class="meaning">
                     CPI=<span class="fair-result" data-result="{{ cpi|floatformat:0 }}">{% if mutations %}0{% else %}{{ cpi|floatformat:0 }}{% endif %}</span>
                 </td>
             </tr>
             <tr>
-                <td class="descr" colspan="{{ participants|add:1 }}">Вероятность отцовства</td>
+                <td class="description-text" colspan="{{ participants|add:1 }}">Вероятность отцовства</td>
                 <td class="meaning">P=<span class="fair-result" data-result="{{ prob }}">{% if mutations %}0{% else %}{{ prob }}{% endif %}</span></td>
             </tr>
             <tr>
@@ -145,7 +145,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
 <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){
+/*$(document).ready(function(){
     $('.btn-mutations').on('click', function (event) {
         $('.fair-result').each(function() {
             $(this).html($(this).data('result'));
@@ -206,5 +206,6 @@ $(document).ready(function(){
         XLSX.writeFile(wb, 'Results.xlsx');
     });
 });
+*/
 </script>
 {% endblock scripts %}
