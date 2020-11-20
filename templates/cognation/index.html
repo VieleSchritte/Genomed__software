@@ -93,11 +93,16 @@
             for (let descriptionBack of document.querySelectorAll('button.description-back')) {
                 let description = descriptionBack.parentElement.closest('.description');
                 descriptionBack.onclick = function DescriptionBackClick() {
+                    console.log('there was a redirect!')
                     description.style.display = 'none';
+                    console.log('hide description')
 
                     for (let label of document.querySelectorAll('label.cognation-button')) {
                         label.style.display = 'inline';
+                        console.log('show lables')
                     }
+                    let startHeader = document.getElementById('start-header')
+                    startHeader.style.display = 'block';
                 }
             }
 

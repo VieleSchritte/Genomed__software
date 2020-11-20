@@ -69,9 +69,9 @@ input[type=radio] {
 .cognation-button, .description-button, a {
     width: 24%;
     min-width: 9rem;
-    min-height: 7rem;
+    min-height: 8rem;
     white-space: normal;
-    font-size: 0.9rem;
+    font-size: 1rem;
     display: inline-block;
     font-weight: 200;
     text-align: -webkit-center;
@@ -85,7 +85,6 @@ input[type=radio] {
     border-radius: 1rem;
     opacity: .85;
     margin: 0.2rem;
-
 }
 
 .cognation-button:first-child {
