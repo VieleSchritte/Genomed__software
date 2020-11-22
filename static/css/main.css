@@ -17,6 +17,18 @@ body {
     text-align: center;
 }
 
+textarea {
+    width: 100%;
+    font-size: 1rem;
+    padding: .375rem .75rem;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    overflow: auto;
+    resize: vertical;
+    margin: 0;
+    text-align: start;
+}
+
 
 .container-content {
     background: lightgray;
@@ -49,7 +61,7 @@ label, button, a {
     cursor: pointer;
 }
 
-input[type=radio] {
+input[type=radio], input[type=button] {
     display: none;
 }
 
@@ -60,13 +72,14 @@ input[type=radio] {
     vertical-align: middle;
     margin-right: auto;
     margin-left: auto;
+    justify-content: center;
 }
 
 *, ::after, ::before {
     box-sizing: border-box;
 }
 
-.cognation-button, .description-button, a {
+.cognation-button, .description-button, .genotype-button,  a {
     width: 24%;
     min-width: 9rem;
     min-height: 8rem;
@@ -152,19 +165,19 @@ input[type=radio] {
     font-size: 1.2rem;
 }
 
-.ok-back-buttons {
+.ok-back-buttons, .genotype-button-group {
     display: block;
     text-align: center;
 }
 
-.description-button {
+.description-button, .genotype-button {
     display: inline-block;
     min-height: 1rem;
     font-weight: 600;
     letter-spacing: 0.07rem;
 }
 
-.description-button:first-child {
+.description-button:first-child, .genotype-button:first-child {
     margin-right: 2%;
 }
 
@@ -179,7 +192,7 @@ input[type=radio] {
 
 .genotype-header {
     margin-top: 0;
-    margin-bottom: 5%;
+    margin-bottom: 1rem;
 }
 
 .genotype-button-group {
@@ -202,10 +215,6 @@ table {
     text-align: center;
 }
 
-.description-text, .freqused {
-    text-align: left;
-}
-
 .meaning {
     text-align: right;
 }
@@ -213,6 +222,7 @@ table {
 a {
     text-decoration: none;
     font-weight: 800;
+    min-height: 5rem;
 }
 
 .link-group {

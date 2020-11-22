@@ -34,12 +34,12 @@
                                         {{ f.desc }}
                                     </p>
                                     <div class="ok-back-buttons">
-                                        <button class="description-button description-back">
-                                            Назад
-                                        </button>
-                                        <button class="description-button description-ok">
-                                            OK
-                                        </button>
+                                        <label class="description-button description-back">
+                                            <input type="button" value="Назад">Назад
+                                        </label>
+                                        <label class="description-button description-ok">
+                                            <input type="button" value="OK">OK
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -56,12 +56,12 @@
                                     </label>
                                     {% csrf_token %}
                                     <div class="genotype-button-group">
-                                        <button class="first-back">
-                                            Назад
-                                        </button>
-                                        <button class="genotype-next">
-                                            Далее
-                                        </button>
+                                        <label class="genotype-button first-back">
+                                            <input type="button" value="Назад">Назад
+                                        </label>
+                                        <label class="genotype-button genotype-next">
+                                            <input type="button" value="Далее">Далее
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -89,59 +89,51 @@
             }
 
 
-            /* On click on back button in a description - hide description and show the rest of radio buttons */
-            for (let descriptionBack of document.querySelectorAll('button.description-back')) {
-                let description = descriptionBack.parentElement.closest('.description');
-                descriptionBack.onclick = function DescriptionBackClick() {
-                    console.log('there was a redirect!')
-                    description.style.display = 'none';
-                    console.log('hide description')
+            /* On click on back button - hide description and show the rest of radio buttons */
+            for (let backButton of document.querySelectorAll('label.description-back')) {
+                backButton.onclick = function OnBackButtonClick() {
+                    backButton.closest('.description-genotypes').style.display = 'none';
 
                     for (let label of document.querySelectorAll('label.cognation-button')) {
                         label.style.display = 'inline';
-                        console.log('show lables')
+                        label.classList.remove("active");
+                        let startHeader = document.getElementById('start-header');
+                        startHeader.style.display = 'block';
                     }
-                    let startHeader = document.getElementById('start-header')
-                    startHeader.style.display = 'block';
                 }
             }
 
-            /* On click on ok button in a description - hide description and label, show first field fof genotype, hide start header
-            for (let okButton of document.querySelectorAll('button.descr-ok')) {
+            /* On click on ok button in a description - hide description and label, show first field fof genotype, hide start header */
+            for (let okButton of document.querySelectorAll('label.description-ok')) {
                 okButton.onclick = function OnOKButtonClick() {
-                    /* hiding label
-                    let labelToHide = okButton.closest('.descr-genotypes').previousElementSibling;
+                    /* hiding label */
+                    let labelToHide = okButton.closest('.description-genotypes').previousElementSibling;
                     labelToHide.style.display = 'none';
 
-                    /* hiding description
-                    let cognDescr = okButton.closest('.cogn-descr')
+                    /* hiding description */
+                    let cognDescr = okButton.closest('.description')
                     cognDescr.style.display = 'none';
 
-                    /* hiding start header
+                    /* hiding start header */
                     document.getElementById('start-header').style.display = 'none';
 
-                    /* showing first field for genotype
+                    /* showing first field for genotype */
                     let addGenotype = cognDescr.nextElementSibling.firstElementChild;
                     console.log(addGenotype)
                     addGenotype.style.display = 'block';
                 }
             }
 
-            /* First child back - hides itself, shows description
+            /* First child back - hides itself, shows description */
             for (let allGenotypes of document.querySelectorAll('div.all-genotypes')) {
                 let buttonGroup = allGenotypes.querySelector('div.first-genotype').querySelector('div.genotype-button-group');
-                let firstBackButton = buttonGroup.querySelector('button.first-back');
+                let firstBackButton = buttonGroup.querySelector('label.first-back');
                 firstBackButton.onclick = function firstBackButtonBehaviour() {
                     let firstGenotype = allGenotypes.firstElementChild;
                     firstGenotype.style.display = 'none';
 
                     let description = allGenotypes.previousElementSibling;
                     description.style.display = 'block';
-
-                    let connectedLabel = description.parentElement.previousElementSibling;
-                    connectedLabel.style.display = 'inline';
-
-                    document.getElementById('start-header').style.display = 'block';
                 }
             }
 
@@ -158,7 +150,7 @@
                 }
             }
 
-            /* Next button always shows next genotype
+            /* Next button always shows next genotype */
             for (let allGenotypes of document.querySelectorAll('div.all-genotypes')) {
                 let firstGenotype = allGenotypes.firstElementChild;
                 let nextButton = firstGenotype.querySelector('button.genotype-next');
@@ -169,7 +161,7 @@
                 }
             }
 
-            for (let allGenotypes of document.querySelectorAll('div.all-genotypes')) {
+          /*  for (let allGenotypes of document.querySelectorAll('div.all-genotypes')) {
                 let addGenotype = allGenotypes.querySelector('div.add-genotype');
                 let nextButton = addGenotype.querySelector('button.genotype-next');
                 if (nextButton !== null) {
