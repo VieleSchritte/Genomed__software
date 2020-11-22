@@ -43,9 +43,9 @@ numToFormula = {
 }
 
 
-def formula_builder(data_type, data):
+def formula_builder(data_type, participants_data):
     normalized_type = int(data_type)
     if normalized_type in numToFormula.keys():
-        return numToFormula[normalized_type](data)
+        return numToFormula[normalized_type](participants_data)
     else:
         raise UnknownFormulaException(data_type)

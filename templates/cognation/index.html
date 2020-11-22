@@ -43,16 +43,13 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="all-genotypes">
                                 <div class="first-genotype">
                                     <h2 class="genotype-header">
                                         {{ f.parts.1 }}
                                     </h2>
                                     <label>
-                                        <textarea name="{{ f.names.0 }}" cols="120" rows="24" class="form-control"
-                                                  style="background:gainsboro">
-                                        </textarea>
+                                        <textarea name="{{ f.names.0 }}" cols="120" rows="24" class="form-control"></textarea>
                                     </label>
                                     {% csrf_token %}
                                     <div class="genotype-button-group">
@@ -64,6 +61,174 @@
                                         </label>
                                     </div>
                                 </div>
+                                {% if f.parts.0 == 2%}
+                                    <div class="add-genotype">
+                                        <h2 class="genotype-header">
+                                            {{ f.parts.2 }}
+                                        </h2>
+                                        <label>
+                                            <textarea name="{{ f.names.1 }}" cols="120" rows="24" class="form-control"></textarea>
+                                        </label>
+                                        <div class="genotype-button-group">
+                                            <label class="genotype-button genotype-back">
+                                                <input type="button" value="Назад">Назад
+                                            </label>
+                                            <button class="genotype-button genotype-submit">
+                                                Рассчитать
+                                            </button>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if f.parts.0 == 3 %}
+                                    <div class="add-genotype">
+                                        <h2 class="genotype-header">
+                                            {{ f.parts.2 }}
+                                        </h2>
+                                        <label>
+                                            <textarea name="{{ f.names.1 }}" cols="120" rows="24" class="form-control"></textarea>
+                                        </label>
+                                        <div class="genotype-button-group">
+                                            <label class="genotype-button genotype-back">
+                                                <input type="button" value="Назад">Назад
+                                            </label>
+                                            <label class="genotype-button genotype-next">
+                                                <input type="button" value="Назад">Далее
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="add-genotype">
+                                        <h2 class="genotype-header">
+                                            {{ f.parts.3 }}
+                                        </h2>
+                                        <label>
+                                            <textarea name="{{ f.names.2 }}" cols="120" rows="24" class="form-control"></textarea>
+                                        </label>
+                                        <div class="genotype-button-group">
+                                            <label class="genotype-button genotype-back">
+                                                <input type="button" value="Назад">Назад
+                                            </label>
+                                            <button class="genotype-button genotype-submit">
+                                                Рассчитать
+                                            </button>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if f.parts.0 == 4 %}
+                                    <div class="add-genotype">
+                                        <h2 class="genotype-header">
+                                            {{ f.parts.2 }}
+                                        </h2>
+                                        <label>
+                                            <textarea name="{{ f.names.1 }}" cols="120" rows="24" class="form-control"></textarea>
+                                        </label>
+                                        <div class="genotype-button-group">
+                                            <label class="genotype-button genotype-back">
+                                                <input type="button" value="Назад">Назад
+                                            </label>
+                                            <label class="genotype-button genotype-next">
+                                                <input type="button" value="Назад">Далее
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="add-genotype">
+                                        <h2 class="genotype-header">
+                                            {{ f.parts.3 }}
+                                        </h2>
+                                        <label>
+                                            <textarea name="{{ f.names.2 }}" cols="120" rows="24" class="form-control"></textarea>
+                                        </label>
+                                        <div class="genotype-button-group">
+                                            <label class="genotype-button genotype-back">
+                                                <input type="button" value="Назад">Назад
+                                            </label>
+                                            <label class="genotype-button genotype-next">
+                                                <input type="button" value="Назад">Далее
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="add-genotype">
+                                        <h2 class="genotype-header">
+                                            {{ f.parts.4 }}
+                                        </h2>
+                                        <label>
+                                            <textarea name="{{ f.names.3 }}" cols="120" rows="24" class="form-control"></textarea>
+                                        </label>
+                                        <div class="genotype-button-group">
+                                            <label class="genotype-button genotype-back">
+                                                <input type="button" value="Назад">Назад
+                                            </label>
+                                            <button class="genotype-button genotype-submit">
+                                                Рассчитать
+                                            </button>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if f.parts.0 == 5 %}
+                                    <div class="add-genotype">
+                                        <h2 class="genotype-header">
+                                            {{ f.parts.2 }}
+                                        </h2>
+                                        <label>
+                                            <textarea name="{{ f.names.1 }}" cols="120" rows="24" class="form-control"></textarea>
+                                        </label>
+                                        <div class="genotype-button-group">
+                                            <label class="genotype-button genotype-back">
+                                                <input type="button" value="Назад">Назад
+                                            </label>
+                                            <label class="genotype-button genotype-next">
+                                                <input type="button" value="Назад">Далее
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="add-genotype">
+                                        <h2 class="genotype-header">
+                                            {{ f.parts.3 }}
+                                        </h2>
+                                        <label>
+                                            <textarea name="{{ f.names.2 }}" cols="120" rows="24" class="form-control"></textarea>
+                                        </label>
+                                        <div class="genotype-button-group">
+                                            <label class="genotype-button genotype-back">
+                                                <input type="button" value="Назад">Назад
+                                            </label>
+                                            <label class="genotype-button genotype-next">
+                                                <input type="button" value="Назад">Далее
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="add-genotype">
+                                        <h2 class="genotype-header">
+                                            {{ f.parts.4 }}
+                                        </h2>
+                                        <label>
+                                            <textarea name="{{ f.names.3 }}" cols="120" rows="24" class="form-control"></textarea>
+                                        </label>
+                                        <div class="genotype-button-group">
+                                            <label class="genotype-button genotype-back">
+                                                <input type="button" value="Назад">Назад
+                                            </label>
+                                            <label class="genotype-button genotype-next">
+                                                <input type="button" value="Назад">Далее
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="add-genotype">
+                                        <h2 class="genotype-header">
+                                            {{ f.parts.5 }}
+                                        </h2>
+                                        <label>
+                                            <textarea name="{{ f.names.4 }}" cols="120" rows="24" class="form-control"></textarea>
+                                        </label>
+                                        <div class="genotype-button-group">
+                                            <label class="genotype-button genotype-back">
+                                                <input type="button" value="Назад">Назад
+                                            </label>
+                                            <button class="genotype-button genotype-submit">
+                                                Рассчитать
+                                            </button>
+                                        </div>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     {% endfor %}
@@ -87,7 +252,6 @@
                     label.style.display = 'none';
                 }
             }
-
 
             /* On click on back button - hide description and show the rest of radio buttons */
             for (let backButton of document.querySelectorAll('label.description-back')) {
@@ -119,7 +283,6 @@
 
                     /* showing first field for genotype */
                     let addGenotype = cognDescr.nextElementSibling.firstElementChild;
-                    console.log(addGenotype)
                     addGenotype.style.display = 'block';
                 }
             }
@@ -137,42 +300,27 @@
                 }
             }
 
-            /* All other back buttons - hide themselves, show previous genotypes
-            for (let allGenotypes of document.querySelectorAll('div.all-genotypes')) {
-                let addGenotype = allGenotypes.querySelector('div.add-genotype');
-                console.log(addGenotype);
-                let backButton = addGenotype.querySelector('button.genotype-back');
-                backButton.onclick = function BackButtonBehaviour() {
-                    console.log('back genotype')
-                    addGenotype.style.display = 'none';
-                    let previousGenotype = addGenotype.previousElementSibling;
+            /* All other back buttons - hide themselves, show previous genotypes */
+            for (let genotypeBackButton of document.querySelectorAll('label.genotype-back')) {
+                let buttonGroup = genotypeBackButton.closest('.genotype-button-group');
+                let currentGenotype = buttonGroup.parentElement;
+                let previousGenotype = currentGenotype.previousElementSibling;
+                genotypeBackButton.onclick = function OnBackClick() {
+                    currentGenotype.style.display = 'none';
                     previousGenotype.style.display = 'block';
                 }
             }
 
             /* Next button always shows next genotype */
-            for (let allGenotypes of document.querySelectorAll('div.all-genotypes')) {
-                let firstGenotype = allGenotypes.firstElementChild;
-                let nextButton = firstGenotype.querySelector('button.genotype-next');
-                nextButton.onclick = function FirstNextButtonBehaviour() {
-                    let nextGenotype = firstGenotype.nextElementSibling;
+            for (let genotypeNextButton of document.querySelectorAll('label.genotype-next')) {
+                let buttonGroup = genotypeNextButton.closest('.genotype-button-group');
+                let currentGenotype = buttonGroup.parentElement;
+                let nextGenotype = currentGenotype.nextElementSibling;
+                genotypeNextButton.onclick = function OnNextClick() {
+                    currentGenotype.style.display = 'none';
                     nextGenotype.style.display = 'block';
-                    firstGenotype.style.display = 'none';
                 }
             }
-
-          /*  for (let allGenotypes of document.querySelectorAll('div.all-genotypes')) {
-                let addGenotype = allGenotypes.querySelector('div.add-genotype');
-                let nextButton = addGenotype.querySelector('button.genotype-next');
-                if (nextButton !== null) {
-                    nextButton.onclick = function NextButtonBehaviour() {
-                        let nextGenotype = addGenotype.nextElementSibling;
-                        nextGenotype.style.display = 'block';
-                        addGenotype.style.display = 'none';
-                    }
-                }
-            }
-            */
 
         </script>
     </form>

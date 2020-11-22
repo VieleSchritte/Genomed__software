@@ -3,7 +3,7 @@
     src: url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 }
 
-p, h1, h2, input, button, a, table {
+p, h1, h2, input, button, a, table, textarea {
     font-family: 'Roboto', sans-serif;
 }
 
@@ -19,7 +19,7 @@ body {
 
 textarea {
     width: 100%;
-    font-size: 1rem;
+    font-size: 1.5rem;
     padding: .375rem .75rem;
     border: 1px solid #ced4da;
     border-radius: .25rem;
@@ -27,6 +27,7 @@ textarea {
     resize: vertical;
     margin: 0;
     text-align: start;
+    background-color: gainsboro;
 }
 
 
