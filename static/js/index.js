@@ -1,5 +1,3 @@
-var formulas_dump = require('scripts/views.py')
-
 const STEP_CHOOSE_COGNATION = 'choose_cognation';
 const STEP_COGNATION_PREVIEW = 'cognation_preview';
 const STEP_FILL_IN_DATA = 'fill_in_data';

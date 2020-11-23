@@ -136,16 +136,11 @@
                 console.log(event.target)
                 let label = event.target
                 let input = label.querySelector('input')
-                let value = input.getAttribute('value');
-                let imageUrl = input.getAttribute('data-image-url')
+                let value = Number(input.getAttribute('value'));
+                let imageUrl = input.getAttribute('data-image-url');
                 console.log(value)
-                let currentFormula
-                for (let formula of formulas) {
-                    if (formula['value'] === Number(value)) {
-                        currentFormula = formula
-                        break
-                    }
-                }
+                let currentFormula = formulas.find((f) => f['value'] === value)
+
                 let cognationPreview = document.getElementById('cognation-preview');
                 cognationPreview.querySelector('.preview-header').innerHTML = currentFormula['name'];
                 let imageForm = cognationPreview.querySelector('.preview-image')
