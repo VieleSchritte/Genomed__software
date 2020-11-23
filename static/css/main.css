@@ -30,7 +30,6 @@ textarea {
     background-color: gainsboro;
 }
 
-
 .container-content {
     background: lightgray;
     opacity: 0.9;
@@ -54,10 +53,6 @@ p {
     text-align: center;
 }
 
-.choose-cognation {
-    display: inline;
-}
-
 label {
     font-family: 'Roboto', sans-serif;
 }
@@ -67,6 +62,14 @@ label, button, a {
 }
 
 input[type=radio], input[type=button] {
+    display: none;
+}
+
+.choose-cognation {
+    display: block;
+}
+
+.cognation-preview, .add-genotype {
     display: none;
 }
 
@@ -191,7 +194,6 @@ input[type=radio], input[type=button] {
 }
 
 .add-genotype {
-    display: none;
     width: 100%;
 }
 
@@ -208,10 +210,6 @@ input[type=radio], input[type=button] {
 
 .genotype-back, .genotype-next {
     display: inline-block;
-}
-
-.genotype-submit {
-    display: none;
 }
 
 .genotype-back {

@@ -16,24 +16,24 @@
             <div id="select-formula">
                 <div class="but-bunch" data-toggle="buttons">
                     <h1 id="start-header">Выберите тип родства:</h1>
-
                     <div id="cognation-screen" class="choose-cognation">
                         {% for formula in formulas %}
                         <label class="cognation-button" title="{{ formula.name }}">
-                            <input type="radio" class="target" value="{{ formula.value }}" name="type"/> {{ formula.name }}
+                            <input
+                                    type="radio"
+                                    class="target"
+                                    value="{{ formula.value }}"
+                                    name="type"
+                                    data-image-url="{% static formula.image %}"/> {{ formula.name }}
                         </label>
                         {% endfor %}
                     </div>
 
                     <div id="cognation-preview" class="cognation-preview">
-                        <h2 class="preview-header">
-                            {{ formula.name }}
-                        </h2>
-                        <img src="{% static formula.image %}" class="preview-image" alt="{{ formula.name }}">
+                        <h2 class="preview-header"></h2>
+                        <img class="preview-image" src="" alt="">
                         <div class="text-buttons">
-                            <p class="preview-text">
-                                {{ formula.desc }}
-                            </p>
+                            <p class="preview-text"></p>
                             <div class="ok-back-buttons">
                                 <label class="description-button description-back">
                                     <input type="button" value="Назад">Назад
@@ -56,7 +56,7 @@
                             <label class="genotype-button genotype-back">
                                 <input type="button" value="Назад">Назад
                             </label>
-                            <label class="genotype-button genotype-next">
+                            <label id="next-button" class="genotype-button genotype-next">
                                 <input type="button" value="Далее">Далее
                             </label>
                             <button id="submit-button" class="genotype-button genotype-submit">
@@ -80,168 +80,117 @@
             let fillInPart = 0;
             let data = [];
 
-            function showCognationScreen() {
-                let startHeader = document.getElementById('start-header')
-                let cognationScreen = document.getElementById('cognation-screen');
-                cognationScreen.style.display = 'inline';
-                startHeader.style.display = 'block';
-            }
-
-            function hideChooseCognationScreen(labelsValue) {
-                /* It's only hides radio buttons and shows preview */
-                let startHeader = document.getElementById('start-header')
+            function HideCognationScreen() {
+                console.log('call', 'HideCognationScreen')
                 let cognationScreen = document.getElementById('cognation-screen');
                 cognationScreen.style.display = 'none';
-                startHeader.style.display = 'none';
+            }
 
-                /* Show preview */
+            function ShowCognationScreen() {
+                let cognationScreen = document.getElementById('cognation-screen');
+                cognationScreen.style.display = 'block';
+            }
+
+            function HideCognationPreview() {
                 let cognationPreview = document.getElementById('cognation-preview');
-                for (let formula in formulas) {
-                    if (formula['value'] === Number(labelsValue)) {
-                        let previewHeader = cognationPreview.firstElementChild;
-                        previewHeader.setAttribute('value', formula['name'])
-                    }
-                }
+                cognationPreview.style.display = 'none'
+            }
+
+            function ShowCognationPreview() {
+                let cognationPreview = document.getElementById('cognation-preview');
                 cognationPreview.style.display = 'block';
             }
 
-            function hideCognationPreviewScreen() {
-                let cognationPreviewScreen = document.getElementById('cognation-preview')
-                cognationPreviewScreen.style.display = 'none';
+            function HideAddGenotype() {
+                let addGenotype = document.getElementById('add-genotype');
+                addGenotype.style.display = 'none';
             }
 
-            function showAddGenotypeScreen() {
-                let addGenotypeScreen = document.getElementById('add-genotype');
-                addGenotypeScreen.style.display = 'block';
+            function ShowAddGenotype() {
+                let addGenotype = document.getElementById('add-genotype');
+                addGenotype.style.display = 'block';
             }
 
-            function hideAddGenotypeScreen() {
-                let addGenotypeScreen = document.getElementById('add-genotype');
-                addGenotypeScreen.style.display = 'none';
+            function HideNextButton() {
+                let nextButton = document.getElementById('next-button');
+                nextButton.style.display = 'none';
             }
 
-            function showSubmitButton() {
-                let submitButton = document.getElementById('submit-button');
-                submitButton.style.display = 'inline-block';
+            function ShowNextButton() {
+                let nextButton = document.getElementById('next-button');
+                nextButton.style.display = 'inline-block';
             }
 
-            function hideSubmitButton() {
+            function HideSubmitButton() {
                 let submitButton = document.getElementById('submit-button');
                 submitButton.style.display = 'none';
             }
 
+            function ShowSubmitButton() {
+                let submitButton = document.getElementById('submit-button');
+                submitButton.style.display = 'inline-block';
+            }
 
-            function onBackClick(event) {
+
+            function OnRadioClick(event) {
+                console.log(event.target)
+                let label = event.target
+                let input = label.querySelector('input')
+                let value = input.getAttribute('value');
+                let imageUrl = input.getAttribute('data-image-url')
+                console.log(value)
+                let currentFormula
+                for (let formula of formulas) {
+                    if (formula['value'] === Number(value)) {
+                        currentFormula = formula
+                        break
+                    }
+                }
+                let cognationPreview = document.getElementById('cognation-preview');
+                cognationPreview.querySelector('.preview-header').innerHTML = currentFormula['name'];
+                let imageForm = cognationPreview.querySelector('.preview-image')
+                imageForm.setAttribute('src', imageUrl);
+                imageForm.setAttribute('alt', currentFormula['name']);
+                let previewText = cognationPreview.querySelector('.preview-text');
+                previewText.innerHTML = currentFormula['desc'];
+                HideCognationScreen();
+                ShowCognationPreview();
+            }
+
+            /* behaviour of RadioButtons */
+            window.onload = function setUpHanlders() {
+                for (let label of document.querySelectorAll('label.cognation-button')) {
+                    label.addEventListener("click",OnRadioClick,{once:true});
+                }
+            }
+
+            function OnBackClick() {
                 if (step === STEP_COGNATION_PREVIEW) {
                     step = STEP_CHOOSE_COGNATION;
-                    /* hide cognation preview, show radio buttons */
-                    event = hideCognationPreviewScreen;
-                    event = showCognationScreen;
+                    HideCognationPreview();
+                    ShowCognationScreen();
                 }
                 if (step === STEP_FILL_IN_DATA) {
-                    if (fillInPart === 0) {
-                        /* on the first fill in => show preview, hide fill in */
-                        step = STEP_CHOOSE_COGNATION;
-                        showCognationPreviewScreen;
-                        hideAddGenotypeScreen;
-                    }
-                    if (fillInPart !== 0) {
-                        /* on other fill ins => show previous fill in, hide current */
-                        fillInPart --;
+                    if (fillInPart === 1) {
+                        fillInPart = 0;
+                        step = STEP_COGNATION_PREVIEW;
+                        HideAddGenotype();
+                        ShowCognationPreview();
+                    } else {
+                        fillInPart--;
+
                     }
                 }
             }
 
-            function onNextClick() {
+            function OnNextClick() {
                 if (step === STEP_COGNATION_PREVIEW) {
                     step = STEP_FILL_IN_DATA;
-                    /* hide cognation preview, show fill in first */
-                    hideCognationPreviewScreen;
-                    showAddGenotypeScreen;
+                    HideCognationPreview();
+                    ShowAddGenotype();
                 }
                 if (step === STEP_FILL_IN_DATA) {
-                    fillInPart ++;
-                    /* hide current fill in, show next */
-                }
-            }
 
-            function onSubmitClick(event) {
-
-            }
-
-            /* Behaviour of radio buttons - on click on one of them show its description and hide the rest of buttons */
-            for (let label of document.querySelectorAll('label.cognation-button')) {
-                step = STEP_COGNATION_PREVIEW;
-                let labelsValue = label.firstElementChild.getAttribute('value')
-                label.onclick = hideChooseCognationScreen(labelsValue)
-            }
-
-            /* On click on back button - hide description and show the rest of radio buttons */
-            for (let backButton of document.querySelectorAll('label.description-back')) {
-                backButton.onclick = function OnBackButtonClick() {
-                    backButton.closest('.description-genotypes').style.display = 'none';
-
-                    for (let label of document.querySelectorAll('label.cognation-button')) {
-                        label.style.display = 'inline';
-                        label.classList.remove("active");
-                        let startHeader = document.getElementById('start-header');
-                        startHeader.style.display = 'block';
-                    }
-                }
-            }
-
-            /* On click on ok button in a description - hide description and label, show first field fof genotype, hide start header */
-            for (let okButton of document.querySelectorAll('label.description-ok')) {
-                okButton.onclick = function OnOKButtonClick() {
-                    /* hiding label */
-                    let labelToHide = okButton.closest('.description-genotypes').previousElementSibling;
-                    labelToHide.style.display = 'none';
-
-                    /* hiding description */
-                    let cognDescr = okButton.closest('.description')
-                    cognDescr.style.display = 'none';
-
-                    /* hiding start header */
-                    document.getElementById('start-header').style.display = 'none';
-
-                    /* showing first field for genotype */
-                    let addGenotype = cognDescr.nextElementSibling.firstElementChild;
-                    addGenotype.style.display = 'block';
-                }
-            }
-
-            /* First child back - hides itself, shows description */
-            for (let allGenotypes of document.querySelectorAll('div.all-genotypes')) {
-                let buttonGroup = allGenotypes.querySelector('div.first-genotype').querySelector('div.genotype-button-group');
-                let firstBackButton = buttonGroup.querySelector('label.first-back');
-                firstBackButton.onclick = function firstBackButtonBehaviour() {
-                    let firstGenotype = allGenotypes.firstElementChild;
-                    firstGenotype.style.display = 'none';
-
-                    let description = allGenotypes.previousElementSibling;
-                    description.style.display = 'block';
-                }
-            }
-
-            /* All other back buttons - hide themselves, show previous genotypes */
-            for (let genotypeBackButton of document.querySelectorAll('label.genotype-back')) {
-                let buttonGroup = genotypeBackButton.closest('.genotype-button-group');
-                let currentGenotype = buttonGroup.parentElement;
-                let previousGenotype = currentGenotype.previousElementSibling;
-                genotypeBackButton.onclick = function OnBackClick() {
-                    currentGenotype.style.display = 'none';
-                    previousGenotype.style.display = 'block';
-                }
-            }
-
-            /* Next button always shows next genotype */
-            for (let genotypeNextButton of document.querySelectorAll('label.genotype-next')) {
-                let buttonGroup = genotypeNextButton.closest('.genotype-button-group');
-                let currentGenotype = buttonGroup.parentElement;
-                let nextGenotype = currentGenotype.nextElementSibling;
-                genotypeNextButton.onclick = function OnNextClick() {
-                    currentGenotype.style.display = 'none';
-                    nextGenotype.style.display = 'block';
                 }
             }
 

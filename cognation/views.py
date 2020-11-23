@@ -4,12 +4,13 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.template.defaultfilters import register
+from django.conf.urls.static import static
 import json
 # from django.core.serializers.json import DjangoJSONEncoder
 
 from .formulas import formula_builder
 from .models import Locus
-
+print(static('ParentFormula.png'))
 formulas = [
     {
         'name': 'Отцовство/материнство для двух участников',
