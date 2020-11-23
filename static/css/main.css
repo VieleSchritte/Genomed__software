@@ -54,6 +54,10 @@ p {
     text-align: center;
 }
 
+.choose-cognation {
+    display: inline;
+}
+
 label {
     font-family: 'Roboto', sans-serif;
 }
@@ -130,15 +134,15 @@ input[type=radio], input[type=button] {
     margin-top: 3%;
 }
 
-.description {
-    display: inline-block;
+.cognation-preview {
+    display: none;
 }
 
-.description-header {
+.preview-header {
     margin: 0;
 }
 
-.description-image {
+.preview-image {
     width: 30%;
     white-space: normal;
     font-size: 0.8em;
@@ -159,7 +163,7 @@ input[type=radio], input[type=button] {
     margin-left: 5%;
 }
 
-.description-text {
+.preview-text {
     text-align: center;
     white-space: normal;
     display: block;
@@ -186,7 +190,7 @@ input[type=radio], input[type=button] {
     width: 100%;
 }
 
-.add-genotype, .first-genotype {
+.add-genotype {
     display: none;
     width: 100%;
 }
@@ -202,8 +206,12 @@ input[type=radio], input[type=button] {
     margin-bottom: 2%;
 }
 
-.genotype-back, .genotype-next, .genotype-submit {
+.genotype-back, .genotype-next {
     display: inline-block;
+}
+
+.genotype-submit {
+    display: none;
 }
 
 .genotype-back {

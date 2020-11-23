@@ -70,13 +70,13 @@
         </tbody>
         <tfoot>
             <tr>
-                <td class="description-text" colspan="{{ participants|add:1 }}">Индекс отцовства (Combined Paternity Index)</td>
+                <td class="preview-text" colspan="{{ participants|add:1 }}">Индекс отцовства (Combined Paternity Index)</td>
                 <td class="meaning">
                     CPI=<span class="fair-result" data-result="{{ cpi|floatformat:0 }}">{% if mutations %}0{% else %}{{ cpi|floatformat:0 }}{% endif %}</span>
                 </td>
             </tr>
             <tr>
-                <td class="description-text" colspan="{{ participants|add:1 }}">Вероятность отцовства</td>
+                <td class="preview-text" colspan="{{ participants|add:1 }}">Вероятность отцовства</td>
                 <td class="meaning">P=<span class="fair-result" data-result="{{ prob }}">{% if mutations %}0{% else %}{{ prob }}{% endif %}</span></td>
             </tr>
             <tr>

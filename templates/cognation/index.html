@@ -12,245 +12,168 @@
     {{ block.super }}
     <form action="{% url 'cognation:calculate' %}" method="post" id="cognationForm" class="text-dark">
         <div class="wrapper">
-            <div>
-                <h1 id="start-header">Выберите тип родства:</h1>
-            </div>
             {% load static %}
             <div id="select-formula">
                 <div class="but-bunch" data-toggle="buttons">
-                    {% for f in formulas %}
-                        <label class="cognation-button" title="{{ f.name }}">
-                            <input type="radio" class="target" name="type" value="{{ f.value }}"/> {{ f.name }}
+                    <h1 id="start-header">Выберите тип родства:</h1>
+
+                    <div id="cognation-screen" class="choose-cognation">
+                        {% for formula in formulas %}
+                        <label class="cognation-button" title="{{ formula.name }}">
+                            <input type="radio" class="target" value="{{ formula.value }}" name="type"/> {{ formula.name }}
                         </label>
-                        <div class="description-genotypes">
-                            <div class="description">
-                                <h2 class="description-header">
-                                    {{ f.name }}
-                                </h2>
-                                <img src="{% static f.image %}" class="description-image"
-                                     alt="{{ f.name }}">
-                                <div class="text-buttons">
-                                    <p class="description-text">
-                                        {{ f.desc }}
-                                    </p>
-                                    <div class="ok-back-buttons">
-                                        <label class="description-button description-back">
-                                            <input type="button" value="Назад">Назад
-                                        </label>
-                                        <label class="description-button description-ok">
-                                            <input type="button" value="OK">OK
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="all-genotypes">
-                                <div class="first-genotype">
-                                    <h2 class="genotype-header">
-                                        {{ f.parts.1 }}
-                                    </h2>
-                                    <label>
-                                        <textarea name="{{ f.names.0 }}" cols="120" rows="24" class="form-control"></textarea>
-                                    </label>
-                                    {% csrf_token %}
-                                    <div class="genotype-button-group">
-                                        <label class="genotype-button first-back">
-                                            <input type="button" value="Назад">Назад
-                                        </label>
-                                        <label class="genotype-button genotype-next">
-                                            <input type="button" value="Далее">Далее
-                                        </label>
-                                    </div>
-                                </div>
-                                {% if f.parts.0 == 2%}
-                                    <div class="add-genotype">
-                                        <h2 class="genotype-header">
-                                            {{ f.parts.2 }}
-                                        </h2>
-                                        <label>
-                                            <textarea name="{{ f.names.1 }}" cols="120" rows="24" class="form-control"></textarea>
-                                        </label>
-                                        <div class="genotype-button-group">
-                                            <label class="genotype-button genotype-back">
-                                                <input type="button" value="Назад">Назад
-                                            </label>
-                                            <button class="genotype-button genotype-submit">
-                                                Рассчитать
-                                            </button>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                                {% if f.parts.0 == 3 %}
-                                    <div class="add-genotype">
-                                        <h2 class="genotype-header">
-                                            {{ f.parts.2 }}
-                                        </h2>
-                                        <label>
-                                            <textarea name="{{ f.names.1 }}" cols="120" rows="24" class="form-control"></textarea>
-                                        </label>
-                                        <div class="genotype-button-group">
-                                            <label class="genotype-button genotype-back">
-                                                <input type="button" value="Назад">Назад
-                                            </label>
-                                            <label class="genotype-button genotype-next">
-                                                <input type="button" value="Назад">Далее
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="add-genotype">
-                                        <h2 class="genotype-header">
-                                            {{ f.parts.3 }}
-                                        </h2>
-                                        <label>
-                                            <textarea name="{{ f.names.2 }}" cols="120" rows="24" class="form-control"></textarea>
-                                        </label>
-                                        <div class="genotype-button-group">
-                                            <label class="genotype-button genotype-back">
-                                                <input type="button" value="Назад">Назад
-                                            </label>
-                                            <button class="genotype-button genotype-submit">
-                                                Рассчитать
-                                            </button>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                                {% if f.parts.0 == 4 %}
-                                    <div class="add-genotype">
-                                        <h2 class="genotype-header">
-                                            {{ f.parts.2 }}
-                                        </h2>
-                                        <label>
-                                            <textarea name="{{ f.names.1 }}" cols="120" rows="24" class="form-control"></textarea>
-                                        </label>
-                                        <div class="genotype-button-group">
-                                            <label class="genotype-button genotype-back">
-                                                <input type="button" value="Назад">Назад
-                                            </label>
-                                            <label class="genotype-button genotype-next">
-                                                <input type="button" value="Назад">Далее
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="add-genotype">
-                                        <h2 class="genotype-header">
-                                            {{ f.parts.3 }}
-                                        </h2>
-                                        <label>
-                                            <textarea name="{{ f.names.2 }}" cols="120" rows="24" class="form-control"></textarea>
-                                        </label>
-                                        <div class="genotype-button-group">
-                                            <label class="genotype-button genotype-back">
-                                                <input type="button" value="Назад">Назад
-                                            </label>
-                                            <label class="genotype-button genotype-next">
-                                                <input type="button" value="Назад">Далее
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="add-genotype">
-                                        <h2 class="genotype-header">
-                                            {{ f.parts.4 }}
-                                        </h2>
-                                        <label>
-                                            <textarea name="{{ f.names.3 }}" cols="120" rows="24" class="form-control"></textarea>
-                                        </label>
-                                        <div class="genotype-button-group">
-                                            <label class="genotype-button genotype-back">
-                                                <input type="button" value="Назад">Назад
-                                            </label>
-                                            <button class="genotype-button genotype-submit">
-                                                Рассчитать
-                                            </button>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                                {% if f.parts.0 == 5 %}
-                                    <div class="add-genotype">
-                                        <h2 class="genotype-header">
-                                            {{ f.parts.2 }}
-                                        </h2>
-                                        <label>
-                                            <textarea name="{{ f.names.1 }}" cols="120" rows="24" class="form-control"></textarea>
-                                        </label>
-                                        <div class="genotype-button-group">
-                                            <label class="genotype-button genotype-back">
-                                                <input type="button" value="Назад">Назад
-                                            </label>
-                                            <label class="genotype-button genotype-next">
-                                                <input type="button" value="Назад">Далее
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="add-genotype">
-                                        <h2 class="genotype-header">
-                                            {{ f.parts.3 }}
-                                        </h2>
-                                        <label>
-                                            <textarea name="{{ f.names.2 }}" cols="120" rows="24" class="form-control"></textarea>
-                                        </label>
-                                        <div class="genotype-button-group">
-                                            <label class="genotype-button genotype-back">
-                                                <input type="button" value="Назад">Назад
-                                            </label>
-                                            <label class="genotype-button genotype-next">
-                                                <input type="button" value="Назад">Далее
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="add-genotype">
-                                        <h2 class="genotype-header">
-                                            {{ f.parts.4 }}
-                                        </h2>
-                                        <label>
-                                            <textarea name="{{ f.names.3 }}" cols="120" rows="24" class="form-control"></textarea>
-                                        </label>
-                                        <div class="genotype-button-group">
-                                            <label class="genotype-button genotype-back">
-                                                <input type="button" value="Назад">Назад
-                                            </label>
-                                            <label class="genotype-button genotype-next">
-                                                <input type="button" value="Назад">Далее
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="add-genotype">
-                                        <h2 class="genotype-header">
-                                            {{ f.parts.5 }}
-                                        </h2>
-                                        <label>
-                                            <textarea name="{{ f.names.4 }}" cols="120" rows="24" class="form-control"></textarea>
-                                        </label>
-                                        <div class="genotype-button-group">
-                                            <label class="genotype-button genotype-back">
-                                                <input type="button" value="Назад">Назад
-                                            </label>
-                                            <button class="genotype-button genotype-submit">
-                                                Рассчитать
-                                            </button>
-                                        </div>
-                                    </div>
-                                {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <div id="cognation-preview" class="cognation-preview">
+                        <h2 class="preview-header">
+                            {{ formula.name }}
+                        </h2>
+                        <img src="{% static formula.image %}" class="preview-image" alt="{{ formula.name }}">
+                        <div class="text-buttons">
+                            <p class="preview-text">
+                                {{ formula.desc }}
+                            </p>
+                            <div class="ok-back-buttons">
+                                <label class="description-button description-back">
+                                    <input type="button" value="Назад">Назад
+                                </label>
+                                <label class="description-button description-ok">
+                                    <input type="button" value="OK">OK
+                                </label>
                             </div>
                         </div>
-                    {% endfor %}
+                    </div>
+
+                    <div id="add-genotype" class="add-genotype">
+                        <h2 class="genotype-header">
+                            {{ formula.parts.1 }}
+                        </h2>
+                        <label for="part{{ forloop.counter }}Id"></label>
+                            <textarea name="part{{ forloop.counter }}" id="part{{ forloop.counter }}Id" cols="120" rows="24" class="form-control"></textarea>
+                        {% csrf_token %}
+                        <div class="genotype-button-group">
+                            <label class="genotype-button genotype-back">
+                                <input type="button" value="Назад">Назад
+                            </label>
+                            <label class="genotype-button genotype-next">
+                                <input type="button" value="Далее">Далее
+                            </label>
+                            <button id="submit-button" class="genotype-button genotype-submit">
+                                Рассчитать
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
         <script>
+            let formulas = {{ formulas_dump|safe }};
+            console.log(formulas);
+            const STEP_CHOOSE_COGNATION = 'choose_cognation';
+            const STEP_COGNATION_PREVIEW = 'cognation_preview';
+            const STEP_FILL_IN_DATA = 'fill_in_data';
+
+            let step = STEP_CHOOSE_COGNATION;
+            /* variable for comparing data.length and participants number (is data list full or not) */
+            let fillInPart = 0;
+            let data = [];
+
+            function showCognationScreen() {
+                let startHeader = document.getElementById('start-header')
+                let cognationScreen = document.getElementById('cognation-screen');
+                cognationScreen.style.display = 'inline';
+                startHeader.style.display = 'block';
+            }
+
+            function hideChooseCognationScreen(labelsValue) {
+                /* It's only hides radio buttons and shows preview */
+                let startHeader = document.getElementById('start-header')
+                let cognationScreen = document.getElementById('cognation-screen');
+                cognationScreen.style.display = 'none';
+                startHeader.style.display = 'none';
+
+                /* Show preview */
+                let cognationPreview = document.getElementById('cognation-preview');
+                for (let formula in formulas) {
+                    if (formula['value'] === Number(labelsValue)) {
+                        let previewHeader = cognationPreview.firstElementChild;
+                        previewHeader.setAttribute('value', formula['name'])
+                    }
+                }
+                cognationPreview.style.display = 'block';
+            }
+
+            function hideCognationPreviewScreen() {
+                let cognationPreviewScreen = document.getElementById('cognation-preview')
+                cognationPreviewScreen.style.display = 'none';
+            }
+
+            function showAddGenotypeScreen() {
+                let addGenotypeScreen = document.getElementById('add-genotype');
+                addGenotypeScreen.style.display = 'block';
+            }
+
+            function hideAddGenotypeScreen() {
+                let addGenotypeScreen = document.getElementById('add-genotype');
+                addGenotypeScreen.style.display = 'none';
+            }
+
+            function showSubmitButton() {
+                let submitButton = document.getElementById('submit-button');
+                submitButton.style.display = 'inline-block';
+            }
+
+            function hideSubmitButton() {
+                let submitButton = document.getElementById('submit-button');
+                submitButton.style.display = 'none';
+            }
+
+
+            function onBackClick(event) {
+                if (step === STEP_COGNATION_PREVIEW) {
+                    step = STEP_CHOOSE_COGNATION;
+                    /* hide cognation preview, show radio buttons */
+                    event = hideCognationPreviewScreen;
+                    event = showCognationScreen;
+                }
+                if (step === STEP_FILL_IN_DATA) {
+                    if (fillInPart === 0) {
+                        /* on the first fill in => show preview, hide fill in */
+                        step = STEP_CHOOSE_COGNATION;
+                        showCognationPreviewScreen;
+                        hideAddGenotypeScreen;
+                    }
+                    if (fillInPart !== 0) {
+                        /* on other fill ins => show previous fill in, hide current */
+                        fillInPart --;
+                    }
+                }
+            }
+
+            function onNextClick() {
+                if (step === STEP_COGNATION_PREVIEW) {
+                    step = STEP_FILL_IN_DATA;
+                    /* hide cognation preview, show fill in first */
+                    hideCognationPreviewScreen;
+                    showAddGenotypeScreen;
+                }
+                if (step === STEP_FILL_IN_DATA) {
+                    fillInPart ++;
+                    /* hide current fill in, show next */
+                }
+            }
+
+            function onSubmitClick(event) {
+
+            }
 
             /* Behaviour of radio buttons - on click on one of them show its description and hide the rest of buttons */
             for (let label of document.querySelectorAll('label.cognation-button')) {
-                label.onclick = HideFormulaButtons
-            }
-
-            function HideFormulaButtons(event) {
-                let descriptionGenotypes = event.target.nextElementSibling;
-                descriptionGenotypes.style.display = 'block';
-                let startHeader = document.getElementById('start-header')
-                startHeader.style.display = 'none';
-
-                for (let label of document.querySelectorAll('label.cognation-button')) {
-                    label.style.display = 'none';
-                }
+                step = STEP_COGNATION_PREVIEW;
+                let labelsValue = label.firstElementChild.getAttribute('value')
+                label.onclick = hideChooseCognationScreen(labelsValue)
             }
 
             /* On click on back button - hide description and show the rest of radio buttons */

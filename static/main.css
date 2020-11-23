@@ -117,15 +117,15 @@ input[type=radio] {
     margin-top: 3%;
 }
 
-.description {
+.cognation-preview {
     display: inline-block;
 }
 
-.description-header {
+.preview-header {
     margin: 0;
 }
 
-.description-image {
+.preview-image {
     width: 30%;
     white-space: normal;
     font-size: 0.8em;
@@ -146,7 +146,7 @@ input[type=radio] {
     margin-left: 5%;
 }
 
-.description-text {
+.preview-text {
     text-align: center;
     white-space: normal;
     display: block;
@@ -203,7 +203,7 @@ table {
     text-align: center;
 }
 
-.description-text, .freqused {
+.preview-text, .freqused {
     text-align: left;
 }
 

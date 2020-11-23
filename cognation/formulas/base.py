@@ -34,9 +34,8 @@ class UnknownAlleleException(Exception):
 
 # Abstract parent class
 class Formula(abc.ABC):
-    def __init__(self, participants_data, participants_number):
+    def __init__(self, participants_data):
         self.participants_data = participants_data
-        self.participants_number = participants_number
 
     # Checking out if the locus is gender-specific (so we don't need to add it to cpi calculation)
     @staticmethod
@@ -77,8 +76,8 @@ class Formula(abc.ABC):
 
         return locus, part_alleles, part_sets, intersections, dict_make_result
 
-    def calculate(self):
-        print(self.participants_data)
+    def calculate(self, participants_number):
+        print(participants_number)
 
         result = OrderedDict()
         lines = self.participants_data.splitlines()
