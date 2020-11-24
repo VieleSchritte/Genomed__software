@@ -77,7 +77,6 @@
             let currentFormula = '';
 
             let step = STEP_CHOOSE_COGNATION;
-            /* variable for comparing data.length and participants number (is data list full or not) */
             let fillInPart = 0;
             let data = [];
 
@@ -116,12 +115,12 @@
             }
 
             function HideNextButton() {
-                let nextButton = document.getElementById('next-button');
+                let nextButton = document.getElementById('next-button-genotype');
                 nextButton.style.display = 'none';
             }
 
             function ShowNextButton() {
-                let nextButton = document.getElementById('next-button');
+                let nextButton = document.getElementById('next-button-genotype');
                 nextButton.style.display = 'inline-block';
             }
 
@@ -188,32 +187,45 @@
             //previewBackButton.addEventListener('click', OnBackClick, {once:true});
             previewBackButton.onclick = OnBackClick;
 
+
+
             function OnNextClick() {
+                let addGenotype = document.getElementById('add-genotype');
+                let currentHeader = addGenotype.querySelector('h2');
+                let headersList = currentFormula['headers'];
+                let labelOnText = addGenotype.querySelector('label');
+                let textarea = labelOnText.nextElementSibling;
+
+                fillInPart++;
+                currentHeader.innerHTML = headersList[fillInPart - 1];
+                labelOnText.setAttribute('for', 'part' + String(fillInPart));
+                textarea.setAttribute('id', 'part' + String(fillInPart));
+                textarea.setAttribute('name', 'part' + String(fillInPart));
+                console.log(fillInPart);
+
                 if (step === STEP_COGNATION_PREVIEW) {
+                    console.log('on preview next click');
                     step = STEP_FILL_IN_DATA;
-                    fillInPart++;
-
-                    let addGenotype = document.getElementById('add-genotype');
-                    let currentHeader = addGenotype.querySelector('h2');
-                    let headersList = currentFormula['headers'];
-                    currentHeader.innerHTML = headersList[fillInPart - 1];
-                    let labelOnText = addGenotype.querySelector('label');
-                    labelOnText.setAttribute('for', 'part'+String(fillInPart));
-                    let textarea = labelOnText.nextElementSibling;
-                    textarea.setAttribute('id', 'part'+String(fillInPart));
-                    textarea.setAttribute('name', 'part'+String(fillInPart));
-
                     HideCognationPreview();
                     HideSubmitButton();
+                    ShowNextButton();
                     ShowAddGenotype();
                 }
-                if (step === STEP_FILL_IN_DATA) {
 
+                if (step === STEP_FILL_IN_DATA) {
+                    console.log('on add next click');
+                    HideNextButton();
+                    ShowSubmitButton();
+                    ShowAddGenotype();
                 }
             }
 
             let previewNextButton = document.getElementById('next-button-preview');
-            previewNextButton.addEventListener('click', OnNextClick, {once:true});
+            //previewNextButton.onclick = OnNextClick;
+            previewNextButton.addEventListener("click", OnNextClick, {once:true});
+            let nextButtonGenotype = document.getElementById('next-button-genotype');
+            nextButtonGenotype.addEventListener("click", OnNextClick, {once:true});
+            //nextButtonGenotype.onclick = OnNextClick;
 
         </script>
     </form>

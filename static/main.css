@@ -3,7 +3,7 @@
     src: url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 }
 
-p, h1, h2, input, button, a, table {
+p, h1, h2, input, button, a, table, textarea {
     font-family: 'Roboto', sans-serif;
 }
 
@@ -17,6 +17,18 @@ body {
     text-align: center;
 }
 
+textarea {
+    width: 100%;
+    font-size: 1.5rem;
+    padding: .375rem .75rem;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    overflow: auto;
+    resize: vertical;
+    margin: 0;
+    text-align: start;
+    background-color: gainsboro;
+}
 
 .container-content {
     background: lightgray;
@@ -49,7 +61,15 @@ label, button, a {
     cursor: pointer;
 }
 
-input[type=radio] {
+input[type=radio], input[type=button] {
+    display: none;
+}
+
+.choose-cognation {
+    display: block;
+}
+
+.cognation-preview, .add-genotype {
     display: none;
 }
 
@@ -60,18 +80,23 @@ input[type=radio] {
     vertical-align: middle;
     margin-right: auto;
     margin-left: auto;
+    justify-content: center;
 }
 
 *, ::after, ::before {
     box-sizing: border-box;
 }
 
-.cognation-button, .description-button {
+.submit {
+    display: none;
+}
+
+.cognation-button, .description-button, .genotype-button,  a {
     width: 24%;
     min-width: 9rem;
-    min-height: 7rem;
+    min-height: 8rem;
     white-space: normal;
-    font-size: 0.9rem;
+    font-size: 1rem;
     display: inline-block;
     font-weight: 200;
     text-align: -webkit-center;
@@ -81,11 +106,10 @@ input[type=radio] {
     padding: 1rem;
     line-height: 1.5;
     background-color: #333333;
-    color: whitesmoke;
+    color: #f5f5f5;
     border-radius: 1rem;
     opacity: .85;
     margin: 0.2rem;
-
 }
 
 .cognation-button:first-child {
@@ -118,7 +142,7 @@ input[type=radio] {
 }
 
 .cognation-preview {
-    display: inline-block;
+    display: none;
 }
 
 .preview-header {
@@ -153,19 +177,19 @@ input[type=radio] {
     font-size: 1.2rem;
 }
 
-.ok-back-buttons {
+.ok-back-buttons, .genotype-button-group {
     display: block;
     text-align: center;
 }
 
-.description-button {
+.description-button, .genotype-button {
     display: inline-block;
     min-height: 1rem;
     font-weight: 600;
     letter-spacing: 0.07rem;
 }
 
-.description-button:first-child {
+.description-button:first-child, .genotype-button:first-child {
     margin-right: 2%;
 }
 
@@ -173,14 +197,13 @@ input[type=radio] {
     width: 100%;
 }
 
-.add-genotype, .first-genotype {
-    display: none;
+.add-genotype {
     width: 100%;
 }
 
 .genotype-header {
     margin-top: 0;
-    margin-bottom: 5%;
+    margin-bottom: 1rem;
 }
 
 .genotype-button-group {
@@ -189,11 +212,11 @@ input[type=radio] {
     margin-bottom: 2%;
 }
 
-.genotype-back, .genotype-next, .genotype-submit {
+.genotype-button {
     display: inline-block;
 }
 
-.genotype-back {
+.genotype-button-group:first-child {
     margin-right: 2%;
 }
 
@@ -203,35 +226,14 @@ table {
     text-align: center;
 }
 
-.preview-text, .freqused {
-    text-align: left;
-}
-
 .meaning {
     text-align: right;
 }
 
-.a {
-    min-height: 2rem;
+a {
     text-decoration: none;
-    font-family: 'Roboto', sans-serif;
     font-weight: 800;
-    width: 24%;
-    min-width: 5rem;
-    white-space: normal;
-    font-size: 0.9rem;
-    display: inline-block;
-    text-align: -webkit-center;
-    vertical-align: middle;
-    user-select: none;
-    border: 1px solid transparent;
-    padding: 1rem;
-    line-height: 1.5;
-    background-color: #333333;
-    color: whitesmoke;
-    border-radius: 1rem;
-    opacity: .85;
-    margin: 0.2rem
+    min-height: 5rem;
 }
 
 .link-group {
