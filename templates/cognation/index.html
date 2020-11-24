@@ -35,10 +35,10 @@
                         <div class="text-buttons">
                             <p class="preview-text"></p>
                             <div class="ok-back-buttons">
-                                <label class="description-button description-back">
+                                <label id="back-button-preview" class="description-button">
                                     <input type="button" value="Назад">Назад
                                 </label>
-                                <label class="description-button description-ok">
+                                <label id="next-button-preview" class="description-button">
                                     <input type="button" value="OK">OK
                                 </label>
                             </div>
@@ -46,20 +46,18 @@
                     </div>
 
                     <div id="add-genotype" class="add-genotype">
-                        <h2 class="genotype-header">
-                            {{ formula.parts.1 }}
-                        </h2>
+                        <h2 class="genotype-header"></h2>
                         <label for="part{{ forloop.counter }}Id"></label>
                             <textarea name="part{{ forloop.counter }}" id="part{{ forloop.counter }}Id" cols="120" rows="24" class="form-control"></textarea>
                         {% csrf_token %}
                         <div class="genotype-button-group">
-                            <label class="genotype-button genotype-back">
+                            <label id="back-button-genotype" class="genotype-button">
                                 <input type="button" value="Назад">Назад
                             </label>
-                            <label id="next-button" class="genotype-button genotype-next">
+                            <label id="next-button-genotype" class="genotype-button">
                                 <input type="button" value="Далее">Далее
                             </label>
-                            <button id="submit-button" class="genotype-button genotype-submit">
+                            <button id="submit-button" class="genotype-button submit">
                                 Рассчитать
                             </button>
                         </div>
@@ -75,20 +73,26 @@
             const STEP_COGNATION_PREVIEW = 'cognation_preview';
             const STEP_FILL_IN_DATA = 'fill_in_data';
 
+            let value = 0;
+            let currentFormula = '';
+
             let step = STEP_CHOOSE_COGNATION;
             /* variable for comparing data.length and participants number (is data list full or not) */
             let fillInPart = 0;
             let data = [];
 
             function HideCognationScreen() {
-                console.log('call', 'HideCognationScreen')
                 let cognationScreen = document.getElementById('cognation-screen');
+                let startHeader = document.getElementById('start-header');
                 cognationScreen.style.display = 'none';
+                startHeader.style.display = 'none';
             }
 
             function ShowCognationScreen() {
                 let cognationScreen = document.getElementById('cognation-screen');
+                let startHeader = document.getElementById('start-header');
                 cognationScreen.style.display = 'block';
+                startHeader.style.display = 'block';
             }
 
             function HideCognationPreview() {
@@ -133,17 +137,16 @@
 
 
             function OnRadioClick(event) {
-                console.log(event.target)
-                let label = event.target
-                let input = label.querySelector('input')
-                let value = Number(input.getAttribute('value'));
+                step = STEP_COGNATION_PREVIEW;
+                let label = event.target;
+                let input = label.querySelector('input');
+                value = Number(input.getAttribute('value'));
                 let imageUrl = input.getAttribute('data-image-url');
-                console.log(value)
-                let currentFormula = formulas.find((f) => f['value'] === value)
+                currentFormula = formulas.find((f) => f['value'] === value);
 
                 let cognationPreview = document.getElementById('cognation-preview');
                 cognationPreview.querySelector('.preview-header').innerHTML = currentFormula['name'];
-                let imageForm = cognationPreview.querySelector('.preview-image')
+                let imageForm = cognationPreview.querySelector('.preview-image');
                 imageForm.setAttribute('src', imageUrl);
                 imageForm.setAttribute('alt', currentFormula['name']);
                 let previewText = cognationPreview.querySelector('.preview-text');
@@ -155,13 +158,16 @@
             /* behaviour of RadioButtons */
             window.onload = function setUpHanlders() {
                 for (let label of document.querySelectorAll('label.cognation-button')) {
-                    label.addEventListener("click",OnRadioClick,{once:true});
+                    //label.addEventListener("click",OnRadioClick,{once:true});
+                    label.onclick = OnRadioClick;
                 }
             }
 
             function OnBackClick() {
                 if (step === STEP_COGNATION_PREVIEW) {
                     step = STEP_CHOOSE_COGNATION;
+                    value = 0;
+                    currentFormula = '';
                     HideCognationPreview();
                     ShowCognationScreen();
                 }
@@ -178,16 +184,36 @@
                 }
             }
 
+            let previewBackButton = document.getElementById('back-button-preview');
+            //previewBackButton.addEventListener('click', OnBackClick, {once:true});
+            previewBackButton.onclick = OnBackClick;
+
             function OnNextClick() {
                 if (step === STEP_COGNATION_PREVIEW) {
                     step = STEP_FILL_IN_DATA;
+                    fillInPart++;
+
+                    let addGenotype = document.getElementById('add-genotype');
+                    let currentHeader = addGenotype.querySelector('h2');
+                    let headersList = currentFormula['headers'];
+                    currentHeader.innerHTML = headersList[fillInPart - 1];
+                    let labelOnText = addGenotype.querySelector('label');
+                    labelOnText.setAttribute('for', 'part'+String(fillInPart));
+                    let textarea = labelOnText.nextElementSibling;
+                    textarea.setAttribute('id', 'part'+String(fillInPart));
+                    textarea.setAttribute('name', 'part'+String(fillInPart));
+
                     HideCognationPreview();
+                    HideSubmitButton();
                     ShowAddGenotype();
                 }
                 if (step === STEP_FILL_IN_DATA) {
 
                 }
             }
+
+            let previewNextButton = document.getElementById('next-button-preview');
+            previewNextButton.addEventListener('click', OnNextClick, {once:true});
 
         </script>
     </form>
