@@ -77,21 +77,27 @@ class Formula(abc.ABC):
         return locus, part_alleles, part_sets, intersections, dict_make_result
 
     def calculate(self, participants_number):
-        print(participants_number)
-
         result = OrderedDict()
-        lines = self.participants_data.splitlines()
-        for line in lines:
-            line = line.strip(' \t\n\r')
-            if len(line) == 0:
-                continue
+        each_locus = self.participants_data[0].split('\r\n')
+        for locus in each_locus:
+            locus = locus.split('\t')
+        print()
+        print(each_locus)
+        print()
+        """for participant in self.participants_data:
 
-            try:
-                relation = self.calculate_relation(re.split(r'[\s\t]+', line))
-                result[relation['locus']] = relation
-            except (LineFormatException, AllelesException, UnknownAlleleException) as exception:
-                result[hash(line)] = {'exception': exception, 'line': line}
-        return result
+            for line in lines:
+                line = line.strip(' \t\n\r')
+                print('=================', line)
+                
+                if len(line) == 0:
+                   continue
+                try:
+                    relation = self.calculate_relation(re.split(r'[\s\t]+', line))
+                    result[relation['locus']] = relation
+                except (LineFormatException, AllelesException, UnknownAlleleException) as exception:
+                    result[hash(line)] = {'exception': exception, 'line': line}
+        return result"""
 
     # getting allele frequencies from DB
     def get_frequencies(self, locus, sat_set):
@@ -118,45 +124,22 @@ class Formula(abc.ABC):
             return float(value)
 
     @staticmethod
-    def split_sat(sat_string):
-        return re.split(r'/', sat_string)
-
-    @staticmethod
     def make_result(locus, lr, dict_alleles):
-        if len(dict_alleles.keys()) == 2:
+        result = {}
+        ordered_alleles = OrderedDict(sorted(dict_alleles.items()))
+        result["locus"] = locus
+        result["lr"] = lr
+        for key in ordered_alleles.keys():
+            result[key] = ordered_alleles[key]
+
+        """if len(dict_alleles.keys()) == 2:
             return {
                 "locus": locus,
                 "part1": dict_alleles['part1'],
                 "part2": dict_alleles['part2'],
                 "lr": lr
-            }
-        elif len(dict_alleles.keys()) == 3:
-            return {
-                "locus": locus,
-                "part1": dict_alleles['part1'],
-                "part2": dict_alleles['part2'],
-                "part3": dict_alleles['part3'],
-                "lr": lr
-            }
-        elif len(dict_alleles.keys()) == 4:
-            return {
-                "locus": locus,
-                "part1": dict_alleles['part1'],
-                "part2": dict_alleles['part2'],
-                "part3": dict_alleles['part3'],
-                "part4": dict_alleles['part4'],
-                "lr": lr
-            }
-        elif len(dict_alleles.keys()) == 5:
-            return {
-                "locus": locus,
-                "part1": dict_alleles['part1'],
-                "part2": dict_alleles['part2'],
-                "part3": dict_alleles['part3'],
-                "part4": dict_alleles['part4'],
-                "part5": dict_alleles['part5'],
-                "lr": lr
-            }
+            }"""
+
 
     def get_division_lr(self, locus, key_set, alleles_list, confirmation):
         c = Calculations()
@@ -170,7 +153,7 @@ class Formula(abc.ABC):
 
     # Abstract methods
     @abc.abstractmethod
-    def calculate_relation(self, row_values):
+    def calculate_relation(self, raw_values):
         """ Abstract method to calculate """
 
 

@@ -28,6 +28,7 @@ textarea {
     margin: 0;
     text-align: start;
     background-color: gainsboro;
+    display: none;
 }
 
 button {

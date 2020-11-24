@@ -47,8 +47,12 @@
 
                     <div id="add-genotype" class="add-genotype">
                         <h2 class="genotype-header"></h2>
-                        <label for="part{{ forloop.counter }}Id"></label>
-                            <textarea name="part{{ forloop.counter }}" id="part{{ forloop.counter }}Id" cols="120" rows="24" class="form-control"></textarea>
+                        <label></label>
+                        <textarea name="part1" id="part1" cols="120" rows="24" class="form-control"></textarea>
+                        <textarea name="part2" id="part2" cols="120" rows="24" class="form-control"></textarea>
+                        <textarea name="part3" id="part3" cols="120" rows="24" class="form-control"></textarea>
+                        <textarea name="part4" id="part4" cols="120" rows="24" class="form-control"></textarea>
+                        <textarea name="part5" id="part5" cols="120" rows="24" class="form-control"></textarea>
                         {% csrf_token %}
                         <div class="genotype-buttons">
                             <label id="back-button-genotype" class="genotype-button">
@@ -134,17 +138,26 @@
                 submitButton.style.display = 'inline-block';
             }
 
+            function HideTextArea(number) {
+                let id = 'part' + String(number);
+                let textarea = document.getElementById(id);
+                console.log('hide', number, textarea)
+                textarea.style.display = 'none';
+            }
+
+            function ShowTextArea(number) {
+                let id = 'part' + String(number);
+                let textarea = document.getElementById(id);
+                console.log('show', number, textarea)
+                textarea.style.display = 'block';
+            }
+
             function AddGenotypeProcessing() {
                 let addGenotype = document.getElementById('add-genotype');
                 let currentHeader = addGenotype.querySelector('h2');
                 let headersList = currentFormula['headers'];
-                let labelOnText = addGenotype.querySelector('label');
-                let textarea = labelOnText.nextElementSibling;
 
                 currentHeader.innerHTML = headersList[fillInPart - 1];
-                labelOnText.setAttribute('for', 'part' + String(fillInPart));
-                textarea.setAttribute('id', 'part' + String(fillInPart));
-                textarea.setAttribute('name', 'part' + String(fillInPart));
             }
 
             function OnRadioClick(event) {
@@ -193,16 +206,21 @@
 
                 if (step === STEP_FILL_IN_DATA) {
                     if (fillInPart === 1) {
+                        HideTextArea(1);
                         fillInPart--;
                         step = STEP_COGNATION_PREVIEW;
                         HideAddGenotype();
                         ShowCognationPreview();
                     } else if (fillInPart < participants_number && fillInPart > 1) {
+                        HideTextArea(fillInPart);
                         fillInPart--;
+                        ShowTextArea(fillInPart);
                         AddGenotypeProcessing();
                         ShowAddGenotype();
                     } else if (fillInPart === participants_number) {
+                        HideTextArea(fillInPart);
                         fillInPart--;
+                        ShowTextArea(fillInPart);
                         AddGenotypeProcessing();
                         ShowAddGenotype();
                         HideSubmitButton();
@@ -221,32 +239,36 @@
                     return
                 }
                 fillInPart++;
-                let participants_number = currentFormula['participants_number'];
-                AddGenotypeProcessing();
-
                 if (step === STEP_COGNATION_PREVIEW) {
                     step = STEP_FILL_IN_DATA;
+                    AddGenotypeProcessing();
+                    ShowTextArea(1);
                     HideCognationPreview();
                     HideSubmitButton();
                     ShowNextButton();
                     ShowAddGenotype();
-
-                } else if (step === STEP_FILL_IN_DATA) {
-                    if (fillInPart === participants_number) {
-                        ShowAddGenotype();
+                    return;
+                }
+                console.log(fillInPart, currentFormula)
+                if (step === STEP_FILL_IN_DATA) {
+                    ShowTextArea(fillInPart);
+                    if (fillInPart !== 1) {
+                        HideTextArea(fillInPart - 1);
+                    }
+                    AddGenotypeProcessing();
+                    if (fillInPart < currentFormula['headers'].length) {
+                        ShowNextButton();
+                    } else {
                         HideNextButton();
                         ShowSubmitButton();
-
-                    } else {
-                        ShowNextButton();
                     }
                 }
             }
 
             let previewNextButton = document.getElementById('next-button-preview');
-            previewNextButton.addEventListener("click", OnNextClick, {capture:true});
+            previewNextButton.addEventListener("click", OnNextClick);
             let nextButtonGenotype = document.getElementById('next-button-genotype');
-            nextButtonGenotype.addEventListener("click", OnNextClick, {capture:true});
+            nextButtonGenotype.addEventListener("click", OnNextClick);
 
         </script>
     </form>

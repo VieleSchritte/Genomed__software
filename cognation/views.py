@@ -229,18 +229,14 @@ def calculate(request):
 
     for formula_data in formulas:
         if formula_data['value'] == int(data_type):
-            names = formula_data['names']
-            participants_number = len(names)
+            headers = formula_data['headers']
+            participants_number = len(headers)
 
-            for i in range(len(names)):
-                each_participant_data = request.POST.get(names[i], '')
+            for i in range(len(headers)):
+                each_participant_data = request.POST.get('part'+str(i+1), '')
                 participants_data.append(each_participant_data)
+            break
 
-    print('================')
-    print(participants_data),
-    print('====', participants_number)
-    print(data_type)
-    print()
     formula = formula_builder(data_type, participants_data)
     result = formula.calculate(participants_number)
 
