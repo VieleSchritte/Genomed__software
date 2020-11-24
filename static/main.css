@@ -30,6 +30,10 @@ textarea {
     background-color: gainsboro;
 }
 
+button {
+    display: none;
+}
+
 .container-content {
     background: lightgray;
     opacity: 0.9;
@@ -87,11 +91,7 @@ input[type=radio], input[type=button] {
     box-sizing: border-box;
 }
 
-.submit {
-    display: none;
-}
-
-.cognation-button, .description-button, .genotype-button,  a {
+.cognation-button, .preview-button, .genotype-button,  a {
     width: 24%;
     min-width: 9rem;
     min-height: 8rem;
@@ -116,7 +116,7 @@ input[type=radio], input[type=button] {
     margin-left: 0.2rem;
 }
 
-.cognation-button:hover, .cognation-button:active, .description-button:hover, .description-button:active {
+.cognation-button:hover, .cognation-button:active, .preview-button:hover, .preview-button:active {
     opacity: 1;
 }
 
@@ -177,19 +177,23 @@ input[type=radio], input[type=button] {
     font-size: 1.2rem;
 }
 
-.ok-back-buttons, .genotype-button-group {
+.preview-buttons, .genotype-buttons {
     display: block;
     text-align: center;
 }
 
-.description-button, .genotype-button {
+.submit {
+    display: none;
+}
+
+.preview-button, .genotype-button {
     display: inline-block;
     min-height: 1rem;
     font-weight: 600;
     letter-spacing: 0.07rem;
 }
 
-.description-button:first-child, .genotype-button:first-child {
+.preview-button:first-child, .genotype-button:first-child {
     margin-right: 2%;
 }
 
@@ -206,17 +210,7 @@ input[type=radio], input[type=button] {
     margin-bottom: 1rem;
 }
 
-.genotype-button-group {
-    display: block;
-    margin-top: 2%;
-    margin-bottom: 2%;
-}
-
-.genotype-button {
-    display: inline-block;
-}
-
-.genotype-button-group:first-child {
+.genotype-buttons:first-child {
     margin-right: 2%;
 }
 

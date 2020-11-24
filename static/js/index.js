@@ -128,7 +128,7 @@ for (let okButton of document.querySelectorAll('label.description-ok')) {
 
 /* First child back - hides itself, shows description */
 for (let allGenotypes of document.querySelectorAll('div.all-genotypes')) {
-    let buttonGroup = allGenotypes.querySelector('div.first-genotype').querySelector('div.genotype-button-group');
+    let buttonGroup = allGenotypes.querySelector('div.first-genotype').querySelector('div.genotype-buttons');
     let firstBackButton = buttonGroup.querySelector('label.first-back');
     firstBackButton.onclick = function firstBackButtonBehaviour() {
         let firstGenotype = allGenotypes.firstElementChild;
