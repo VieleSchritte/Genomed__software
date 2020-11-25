@@ -238,7 +238,7 @@ def calculate(request):
             break
 
     formula = formula_builder(data_type, participants_data)
-    result = formula.calculate(participants_number)
+    result = formula.calculate()
 
     cpi = 1
     mutations = 0

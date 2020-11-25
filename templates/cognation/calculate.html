@@ -10,7 +10,7 @@
 
 {% block content %}
     {{ block.super }}
-    <table class="table text-dark" id="resultTable">
+    <table id="resultTable">
         <thead>
             <tr>
                 <th>Локус</th>
@@ -27,7 +27,7 @@
             {% for key in order %}
                 {% if key in result %}
                 {% with value=result|get_value:key %}
-                <tr{% if value.lr == 0 %} class="bg-secondary text-light"{% endif %}>
+                <tr{% if value.lr == 0 %} {% endif %}>
                     <td>{{ key }}</td>
 
                     {% block results_row %}
@@ -70,31 +70,48 @@
         </tbody>
         <tfoot>
             <tr>
-                <td class="preview-text" colspan="{{ participants|add:1 }}">Индекс отцовства (Combined Paternity Index)</td>
-                <td class="meaning">
-                    CPI=<span class="fair-result" data-result="{{ cpi|floatformat:0 }}">{% if mutations %}0{% else %}{{ cpi|floatformat:0 }}{% endif %}</span>
+                <td class="cpi-description" colspan="{{ participants|add:1 }}">Индекс отцовства (Combined Paternity Index)</td>
+                <td class="meaning">CPI=
+                    <span class="fair-result" data-result="{{ cpi|floatformat:0 }}">
+                    {% if mutations %}
+                        0
+                    {% else %}
+                        {{ cpi|floatformat:0 }}
+                    {% endif %}
+                    </span>
                 </td>
             </tr>
             <tr>
-                <td class="preview-text" colspan="{{ participants|add:1 }}">Вероятность отцовства</td>
-                <td class="meaning">P=<span class="fair-result" data-result="{{ prob }}">{% if mutations %}0{% else %}{{ prob }}{% endif %}</span></td>
+                <td class="p-description" colspan="{{ participants|add:1 }}">Вероятность отцовства</td>
+                <td class="meaning">P=
+                    <span class="fair-result" data-result="{{ prob }}">
+                    {% if mutations %}
+                        0
+                    {% else %}
+                        {{ prob }}
+                    {% endif %}
+                    </span>
+                </td>
             </tr>
-            <tr>
-                <td class="freqused" colspan="{{ participants|add:2 }}">Использовались референсные частоты аллелей для русских</td>
-            </tr>
+
             {% if mutations %}
             <tr>
                 <td colspan="{{ participants|add:2 }}">
-                    <button class="button-collection btn-primary btn-mutations">Рассчитать CPI без учета локусов в которых обнаружены мутации</button>
+                    <button>
+                        Рассчитать CPI без учета локусов в которых обнаружены мутации
+                    </button>
                 </td>
             </tr>
             {% endif %}
 
         </tfoot>
     </table>
+    <div class="for-russians">
+        Использовались референсные частоты аллелей для русских
+    </div>
     <div class="link-group">
-        <a href="{% url 'cognation:index' %}" class="btn btn-dark">К выбору родства</a>
-        <a href="#" class="btn btn-dark" id="saveResults">Сохранить результаты</a>
+        <a href="{% url 'cognation:index' %}"> К выбору родства</a>
+        <a href="#" id="saveResults">Сохранить результаты</a>
     </div>
 
 {% endblock content %}
@@ -145,10 +162,10 @@
 {% endblock footer %}
 
 {% block scripts %}
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
 <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 <script type="text/javascript">
-/*$(document).ready(function(){
+$(document).ready(function(){
     $('.btn-mutations').on('click', function (event) {
         $('.fair-result').each(function() {
             $(this).html($(this).data('result'));
@@ -209,6 +226,6 @@
         XLSX.writeFile(wb, 'Results.xlsx');
     });
 });
-*/
-</script> -->
+
+</script>
 {% endblock scripts %}

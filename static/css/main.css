@@ -3,7 +3,7 @@
     src: url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 }
 
-p, h1, h2, input, button, a, table, textarea {
+p, h1, h2, input, button, a, table, textarea, .for-russians {
     font-family: 'Roboto', sans-serif;
 }
 
