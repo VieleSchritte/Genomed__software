@@ -110,7 +110,8 @@ class Formula(abc.ABC):
 
     @staticmethod
     def normalize_sat(value):
-        if value == 'X':
+        # English and Russian variants
+        if value == 'X' or value == 'Х':
             return 0.0
         elif value == 'Y':
             return 1.0
