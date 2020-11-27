@@ -113,4 +113,3 @@ class GetData:
                         p = float(line[1])
 
         return ref_dict, cpi, p
-

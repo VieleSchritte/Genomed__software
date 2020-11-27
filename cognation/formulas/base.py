@@ -52,7 +52,15 @@ class Formula(abc.ABC):
             raise LineFormatException()
 
         locus = raw_values[0]
-        part_alleles = raw_values[1:]
+        if len(raw_values) == part_number + 2:
+            locus = raw_values[0] + ' ' + raw_values[1]
+
+        part_alleles = []
+        dict_make_result = {}
+        for i in range(1, part_number + 1):
+            part_alleles.append(self.split_sat(raw_values[-i]))
+            key = 'part' + str(i)
+            dict_make_result[key] = '/'.join(part_alleles[i - 1])
 
         part_sets = []
         for part in part_alleles:
@@ -60,21 +68,23 @@ class Formula(abc.ABC):
                 raise AllelesException(locus, part)
             part_sets.append(set(part))
 
-        freqs = self.get_frequencies(locus, part_alleles[0] + part_alleles[1])
+        if self.is_gender_specific(locus) is False:
+            freqs = self.get_frequencies(locus, part_alleles[0] + part_alleles[1])
 
         intersections = []
-        dict_make_result = {}
         for i in range(len(part_alleles)):
             for j in range(len(part_alleles)):
                 if j > i:
                     intersections.append(part_sets[i] & part_sets[j])
-            part_name = 'part' + str(i + 1)
-            dict_make_result[part_name] = part_alleles[i]
 
         return locus, part_alleles, part_sets, intersections, dict_make_result
 
     def calculate(self):
         result = OrderedDict()
+
+        print()
+        print(self.user_data)
+        print()
 
         processed_user_data = []
         for participant in self.user_data:
@@ -92,11 +102,14 @@ class Formula(abc.ABC):
                 locus = target[0]
                 if len(target) > 3:
                     locus += ' ' + target[1]
-                    alleles = target[2:]
+                    alleles = '/'.join(target[2:])
                 else:
-                    alleles = target[1:]
+                    alleles = '/'.join(target[1:])
                 pair.append([locus, alleles])
             overall_participants.append(pair[0] + pair[1][1:])
+        print()
+        print(overall_participants)
+        print()
 
         for line in overall_participants:
             if len(line) == 0:
@@ -106,7 +119,7 @@ class Formula(abc.ABC):
                 relation = self.calculate_relation(line)
                 result[relation['locus']] = relation
             except (LineFormatException, AllelesException, UnknownAlleleException) as exception:
-                result[hash(line)] = {'exception': exception, 'line': line}
+                result[hash(str(line))] = {'exception': exception, 'line': str(line)}
         return result
 
     # getting allele frequencies from DB
@@ -121,9 +134,6 @@ class Formula(abc.ABC):
 
         return result
 
-    def get_template(self):
-        return 'cognation/formula/' + self.__class__.__name__.lower()[:-7] + '.html'
-
     @staticmethod
     def normalize_sat(value):
         if value == 'X':
@@ -134,10 +144,14 @@ class Formula(abc.ABC):
             return float(value)
 
     @staticmethod
+    def split_sat(sat_string):
+        return re.split(r'/', sat_string)
+
+    def get_template(self):
+        return 'cognation/formula/' + self.__class__.__name__.lower()[:-7] + '.html'
+
+    @staticmethod
     def make_result(locus, lr, dict_alleles):
-        print('==============')
-        print(dict_alleles)
-        print()
         if len(dict_alleles.keys()) == 2:
             return {
                 "locus": locus,

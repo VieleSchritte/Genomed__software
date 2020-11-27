@@ -46,13 +46,32 @@
                     </div>
 
                     <div id="add-genotype" class="add-genotype">
-                        <h2 class="genotype-header"></h2>
-                        <label></label>
-                        <textarea name="part1" id="part1" cols="120" rows="24" class="form-control"></textarea>
-                        <textarea name="part2" id="part2" cols="120" rows="24" class="form-control"></textarea>
-                        <textarea name="part3" id="part3" cols="120" rows="24" class="form-control"></textarea>
-                        <textarea name="part4" id="part4" cols="120" rows="24" class="form-control"></textarea>
-                        <textarea name="part5" id="part5" cols="120" rows="24" class="form-control"></textarea>
+                        <div class="genotype" id="part1">
+                            <h2 class="genotype-header"></h2>
+                            <label for="part1text"></label>
+                            <textarea name="part1" id="part1text" cols="50" rows="24" class="form-control"></textarea>
+                        </div>
+                        <div class="genotype" id="part2">
+                            <h2 class="genotype-header"></h2>
+                            <label for="part2text"></label>
+                            <textarea name="part2" id="part2text" cols="50" rows="24" class="form-control"></textarea>
+                        </div>
+                        <div class="genotype" id="part3">
+                            <h2 class="genotype-header"></h2>
+                            <label for="part3text"></label>
+                            <textarea name="part3" id="part3text" cols="50" rows="24" class="form-control"></textarea>
+                        </div>
+                        <div class="genotype" id="part4">
+                            <h2 class="genotype-header"></h2>
+                            <label for="part4text"></label>
+                            <textarea name="part4" id="part4text" cols="50" rows="24" class="form-control"></textarea>
+                        </div>
+                        <div class="genotype" id="part5">
+                            <h2 class="genotype-header"></h2>
+                            <label for="part5text"></label>
+                            <textarea name="part5" id="part5text" cols="50" rows="24" class="form-control"></textarea>
+                        </div>
+
                         {% csrf_token %}
                         <div class="genotype-buttons">
                             <label id="back-button-genotype" class="genotype-button">
@@ -83,93 +102,81 @@
             let step = STEP_CHOOSE_COGNATION;
             let fillInPart = 0;
             let data = [];
+            let participantsNumber = 2;
 
-            function HideCognationScreen() {
-                let cognationScreen = document.getElementById('cognation-screen');
-                let startHeader = document.getElementById('start-header');
-                cognationScreen.style.display = 'none';
-                startHeader.style.display = 'none';
+            function HideItem(args) {
+                debugger
+                let idList = args[0];
+                for (let id of idList) {
+                    let item = document.getElementById(id);
+                    item.style.display = 'none';
+
+                } if (args.length > 1) {
+                    let numbers = args[1];
+                    for (let number of numbers) {
+                        let id = 'part' + String(number);
+                        let divContainsTextarea = document.getElementById(id);
+                        let genotypeHeader = divContainsTextarea.querySelector('.genotype-header');
+                        genotypeHeader.innerHTML = ' ';
+                        divContainsTextarea.style.display = 'none';
+                    }
+                }
             }
 
-            function ShowCognationScreen() {
-                let cognationScreen = document.getElementById('cognation-screen');
-                let startHeader = document.getElementById('start-header');
-                cognationScreen.style.display = 'block';
-                startHeader.style.display = 'block';
+            function ShowItem(args) {
+                debugger;
+                let idList = args[0];
+                for (let id of idList) {
+                    let item = document.getElementById(id);
+                    item.style.display = 'block';
+                    if (id === 'next-button-genotype' || id === 'submit-button') {
+                        item.style.display = 'inline-block';
+                    }
+                }
+                debugger;
+                if (args.length > 1) {
+                    let numbers = args[1];
+                    for (let number of numbers) {
+                        let id = 'part' + String(number);
+                        let divContainsTextarea = document.getElementById(id);
+                        let genotypeHeader = divContainsTextarea.querySelector('.genotype-header');
+
+                        divContainsTextarea.style.display = 'inline-block';
+                        genotypeHeader.innerHTML = args[2][number - 1];
+                    }
+                }
             }
 
-            function HideCognationPreview() {
-                let cognationPreview = document.getElementById('cognation-preview');
-                cognationPreview.style.display = 'none'
+            function GetFirstSecondGenotypes(participantsNumber) {
+                debugger;
+                if (participantsNumber % 2 === 0) {
+                    return {'first': [1, 2], 'second': [3, 4]};
+                } else {
+                    return {'first': [1, 2, 3], 'second': [4, 5]};
+                }
             }
 
-            function ShowCognationPreview() {
-                let cognationPreview = document.getElementById('cognation-preview');
-                cognationPreview.style.display = 'block';
-            }
-
-            function HideAddGenotype() {
-                let addGenotype = document.getElementById('add-genotype');
-                addGenotype.style.display = 'none';
-            }
-
-            function ShowAddGenotype() {
-                let addGenotype = document.getElementById('add-genotype');
-                addGenotype.style.display = 'block';
-            }
-
-            function HideNextButton() {
-                let nextButton = document.getElementById('next-button-genotype');
-                nextButton.style.display = 'none';
-            }
-
-            function ShowNextButton() {
-                let nextButton = document.getElementById('next-button-genotype');
-                nextButton.style.display = 'inline-block';
-            }
-
-            function HideSubmitButton() {
-                let submitButton = document.getElementById('submit-button');
-                submitButton.style.display = 'none';
-            }
-
-            function ShowSubmitButton() {
-                let submitButton = document.getElementById('submit-button');
-                submitButton.style.display = 'inline-block';
-            }
-
-            function HideTextArea(number) {
-                let id = 'part' + String(number);
-                let textarea = document.getElementById(id);
-                console.log('hide', number, textarea)
-                textarea.style.display = 'none';
-            }
-
-            function ShowTextArea(number) {
-                let id = 'part' + String(number);
-                let textarea = document.getElementById(id);
-                console.log('show', number, textarea)
-                textarea.style.display = 'block';
-            }
-
-            function AddGenotypeProcessing() {
-                let addGenotype = document.getElementById('add-genotype');
-                let currentHeader = addGenotype.querySelector('h2');
-                let headersList = currentFormula['headers'];
-
-                currentHeader.innerHTML = headersList[fillInPart - 1];
+            function ClearTextAreaValue() {
+                for (let textarea of document.querySelectorAll('textarea.form-control')) {
+                    textarea.value = "";
+                }
             }
 
             function OnRadioClick(event) {
                 if (this !== event.target) {
                     return
                 }
+
                 step = STEP_COGNATION_PREVIEW;
                 let label = event.target;
                 let input = label.querySelector('input');
                 value = Number(input.getAttribute('value'));
                 let imageUrl = input.getAttribute('data-image-url');
                 currentFormula = formulas.find((f) => f['value'] === value);
+
+                if (currentFormula['headers'].length > 2) {
+                    participantsNumber = currentFormula['headers'].length;
+                }
 
                 let cognationPreview = document.getElementById('cognation-preview');
                 cognationPreview.querySelector('.preview-header').innerHTML = currentFormula['name'];
@@ -178,53 +185,51 @@
                 imageForm.setAttribute('alt', currentFormula['name']);
                 let previewText = cognationPreview.querySelector('.preview-text');
                 previewText.innerHTML = currentFormula['desc'];
-                HideCognationScreen();
-                HideSubmitButton();
-                ShowCognationPreview();
+                HideItem([['cognation-screen', 'start-header']]);
+                ShowItem([['cognation-preview']]);
             }
 
             /* behaviour of RadioButtons */
             window.onload = function setUpHandlers() {
                 for (let label of document.querySelectorAll('label.cognation-button')) {
                     label.addEventListener("click", OnRadioClick);
+                    ClearTextAreaValue();
                 }
             }
 
             function OnBackClick(event) {
+                //debugger;
                 if (this !== event.target) {
-                    return
+                    return;
                 }
 
                 if (step === STEP_COGNATION_PREVIEW) {
                     step = STEP_CHOOSE_COGNATION;
+                    currentFormula = '';
+                    HideItem([['cognation-preview']]);
+                    ShowItem([['cognation-screen', 'start-header']]);
+                    ClearTextAreaValue();
                     value = 0;
                     currentFormula = '';
-                    HideCognationPreview();
-                    ShowCognationScreen();
+                    fillInPart = 0;
+                    participantsNumber = 2;
+                    return;
                 }
-                let participants_number = currentFormula['participants_number'];
 
                 if (step === STEP_FILL_IN_DATA) {
                     if (fillInPart === 1) {
-                        HideTextArea(1);
-                        fillInPart--;
                         step = STEP_COGNATION_PREVIEW;
-                        HideAddGenotype();
-                        ShowCognationPreview();
-                    } else if (fillInPart < participants_number && fillInPart > 1) {
-                        HideTextArea(fillInPart);
                         fillInPart--;
-                        ShowTextArea(fillInPart);
-                        AddGenotypeProcessing();
-                        ShowAddGenotype();
-                    } else if (fillInPart === participants_number) {
-                        HideTextArea(fillInPart);
+                        HideItem([['add-genotype'], GetFirstSecondGenotypes(participantsNumber)['first'],
+                                currentFormula['headers']]);
+                        ShowItem([['cognation-preview']]);
+                    }
+
+                    if (fillInPart === 2) {
                         fillInPart--;
-                        ShowTextArea(fillInPart);
-                        AddGenotypeProcessing();
-                        ShowAddGenotype();
-                        HideSubmitButton();
-                        ShowNextButton();
+                        HideItem([['submit-button'], GetFirstSecondGenotypes(participantsNumber)['second']]);
+                        ShowItem([['next-button-genotype'], GetFirstSecondGenotypes(participantsNumber)['first'],
+                                currentFormula['headers']])
                     }
                 }
             }
@@ -235,33 +240,33 @@
             backButtonGenotype.addEventListener('click', OnBackClick);
 
             function OnNextClick(event) {
+                //debugger;
                 if (this !== event.target) {
                     return
                 }
+
                 fillInPart++;
+
                 if (step === STEP_COGNATION_PREVIEW) {
                     step = STEP_FILL_IN_DATA;
-                    AddGenotypeProcessing();
-                    ShowTextArea(1);
-                    HideCognationPreview();
-                    HideSubmitButton();
-                    ShowNextButton();
-                    ShowAddGenotype();
-                    return;
-                }
-                console.log(fillInPart, currentFormula)
-                if (step === STEP_FILL_IN_DATA) {
-                    ShowTextArea(fillInPart);
-                    if (fillInPart !== 1) {
-                        HideTextArea(fillInPart - 1);
-                    }
-                    AddGenotypeProcessing();
-                    if (fillInPart < currentFormula['headers'].length) {
-                        ShowNextButton();
+                    if (participantsNumber < 4) {
+                        HideItem([['next-button-genotype', 'cognation-preview']]);
+                        ShowItem([['add-genotype', 'submit-button'], GetFirstSecondGenotypes(participantsNumber)['first'],
+                                 currentFormula['headers']]);
+                        return;
                     } else {
-                        HideNextButton();
-                        ShowSubmitButton();
+                        HideItem([['submit-button', 'cognation-preview']]);
+                        ShowItem([['add-genotype', 'next-button-genotype'], GetFirstSecondGenotypes(participantsNumber)['first'],
+                                 currentFormula['headers']]);
+                        return;
                     }
+                }
+
+                if (step === STEP_FILL_IN_DATA) {
+                    console.log('redirecting ro final')
+                    HideItem([['next-button-genotype'], GetFirstSecondGenotypes(participantsNumber)['first']]);
+                    ShowItem([['submit-button'], GetFirstSecondGenotypes(participantsNumber)['second'],
+                             currentFormula['headers']]);
                 }
             }
 
