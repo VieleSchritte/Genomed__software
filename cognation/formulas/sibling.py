@@ -5,13 +5,16 @@ from cognation.formulas.base import Formula, Calculations
 class SiblingFormula(Formula):
     def calculate_relation(self, raw_values):
         locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 3)
-        child_alleles, sibling_alleles, parent_alleles = alleles
-        child_set, sibling_set, parent_set = sets
-        sc_inter, cp_inter, sp_inter = intersections
+        parent_alleles, sibling_alleles, child_alleles = alleles
+        parent_set, sibling_set, child_set = sets
+        sp_inter, cp_inter, sc_inter = intersections
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
+
+        if locus == 'AMEL':
+            return self.make_result(locus, 1, dict_make_result)
 
         #  If there's no relation then return lr = 0 and start collecting mutations
         if len(sp_inter) == 0 or len(cp_inter) == 0:

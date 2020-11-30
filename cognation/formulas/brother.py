@@ -5,13 +5,16 @@ from .base import Formula, Calculations
 class BrotherFormula(Formula):
     def calculate_relation(self, raw_values):
         locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 2)
-        brother_alleles, insp_alleles = alleles
-        brother_set, insp_set = sets
+        insp_alleles, brother_alleles = alleles
+        insp_set, brother_set = sets
         intersection = intersections[0]
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
+
+        if locus == 'AMEL':
+            return self.make_result(locus, 1, dict_make_result)
 
         c = Calculations()
         # In cases aa aa or ab ab lr = 1

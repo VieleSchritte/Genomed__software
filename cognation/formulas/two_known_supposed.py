@@ -6,13 +6,15 @@ from .one_known_supposed import OneKnownSupposedFormula
 class TwoKnownSupposedFormula(Formula):
     def calculate_relation(self, raw_values):
         (locus, alleles, sets, intersections, dict_make_result) = self.getting_alleles_locus(raw_values, 4)
-        # known child1 child2 supposed => supposed child2 child1 known
-        supposed_alleles, child2_alleles, child1_alleles, known_alleles = alleles
-        supposed_set, child2_set, child1_set, known_set = sets
-        sch2_inter, sch1_inter, sk_inter, ch1ch2_inter, kch2_inter, kch1_inter = intersections
+        known_alleles, child1_alleles, child2_alleles, supposed_alleles = alleles
+        known_set, child1_set, child2_set, supposed_set = sets
+        ch1ch2_inter = intersections[3]
 
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
+
+        if locus == 'AMEL':
+            return self.make_result(locus, 1, dict_make_result)
 
         # If there are no intersections between children and parents, return lr = 0 and start counting mutations
         for i in range(1, 5):

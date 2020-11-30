@@ -7,15 +7,19 @@ from .two_couple import TwoCoupleFormula
 class ThreeCoupleFormula(Formula):
     def calculate_relation(self, raw_values):
         (locus, alleles, sets, intersections, dict_make_result) = self.getting_alleles_locus(raw_values, 5)
-        child3_alleles, child2_alleles, child1_alleles, mother_alleles, father_alleles = alleles
-        child3_set, child2_set, child1_set, mother_set, father_set = sets
-        mother_father_inter = intersections[-1]
+        father_alleles, mother_alleles, child1_alleles, child2_alleles, child3_alleles = alleles
+        father_set, mother_set, child1_set, child2_set, child3_set = sets
+        mother_father_inter = intersections[0]
 
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 
-        for i in range(2, 9):
-            if i == 4:
+        if locus == 'AMEL':
+            return self.make_result(locus, 1, dict_make_result)
+
+        for i in range(len(intersections)):
+            exceptions_list = [0, 7, 8, 9]
+            if i in exceptions_list:
                 continue
             if intersections[i] == 0:
                 return self.make_result(locus, 0, dict_make_result)

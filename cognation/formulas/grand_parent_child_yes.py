@@ -5,13 +5,16 @@ from cognation.formulas.base import Formula, Calculations
 class YesParentGrandChild(Formula):
     def calculate_relation(self, raw_values):
         locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 3)
-        child_alleles, parent_alleles, grandparent_alleles = alleles
-        child_set, parent_set, grandparent_set = sets
-        pch_inter, gch_inter, pg_inter = intersections
+        grandparent_alleles, parent_alleles, child_alleles = alleles
+        grandparent_set, parent_set, child_set = sets
+        pg_inter, gch_inter, pch_inter = intersections
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
+
+        if locus == 'AMEL':
+            return self.make_result(locus, 1, dict_make_result)
 
         c = Calculations()
         common_set = set(parent_alleles + grandparent_alleles + child_alleles)

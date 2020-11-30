@@ -7,13 +7,16 @@ from .parent import ParentFormula
 class ThreeChildrenFormula(Formula):
     def calculate_relation(self, raw_values):
         locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 4)
-        child3_alleles, child2_alleles, child1_alleles, parent_alleles, = alleles
-        child3_set, child2_set, child1_set, parent_set = sets
-        ch2ch3_inter, ch1ch3_inter, ch3p_inter, ch1ch2_inter = intersections[0:4]
+        parent_alleles, child1_alleles, child2_alleles, child3_alleles = alleles
+        parent_set, child1_set, child2_set, child3_set,  = sets
+        ch3p_inter, ch1ch2_inter, ch1ch3_inter, ch2ch3_inter = intersections[2:]
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
+
+        if locus == 'AMEL':
+            return self.make_result(locus, 1, dict_make_result)
 
         common_set = set(child1_alleles + child2_alleles + child3_alleles + parent_alleles)
         freq_dict = self.get_frequencies(locus, list(common_set))

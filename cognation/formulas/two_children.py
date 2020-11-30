@@ -7,7 +7,7 @@ class TwoChildrenFormula(Formula):
     def calculate_relation(self, raw_values):
         (locus, part_alleles, part_sets, intersections, dict_make_result) = self.getting_alleles_locus(raw_values, 3)
         parent_alleles, child1_alleles, child2_alleles = part_alleles
-        parent_set, child1_set, child2_set = part_sets
+        child1_set, child2_set = part_sets[1:]
         ch1p_inter, ch2p_inter, ch1ch2_inter = intersections
 
         if self.is_gender_specific(locus):

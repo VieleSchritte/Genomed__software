@@ -12,6 +12,9 @@ class StepbrotherFormula(Formula):
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 
+        if locus == 'AMEL':
+            return self.make_result(locus, 1, dict_make_result)
+
         freq_dict = self.get_frequencies(locus, intersection)
 
         lr = 0.5
