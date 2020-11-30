@@ -94,6 +94,10 @@ class Formula(abc.ABC):
                 processed_participant.append(re.split(r'[\s\t]+', line))
             processed_user_data.append(processed_participant)
 
+        print('======= processed user data')
+        print(processed_user_data)
+        print()
+
         overall_participants = []
         for i in range(len(processed_user_data[0])):
             pair = []
@@ -106,10 +110,10 @@ class Formula(abc.ABC):
                 else:
                     alleles = '/'.join(target[1:])
                 pair.append([locus, alleles])
-            overall_participants.append(pair[0] + pair[1][1:])
-        print()
-        print(overall_participants)
-        print()
+            base = pair[0]
+            for k in range(1, len(pair)):
+                base.append(pair[k][1])
+            overall_participants.append(base)
 
         for line in overall_participants:
             if len(line) == 0:
