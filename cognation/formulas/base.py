@@ -52,13 +52,10 @@ class Formula(abc.ABC):
             raise LineFormatException()
 
         locus = raw_values[0]
-        if len(raw_values) == part_number + 2:
-            locus = raw_values[0] + ' ' + raw_values[1]
-
         part_alleles = []
         dict_make_result = {}
         for i in range(1, part_number + 1):
-            part_alleles.append(self.split_sat(raw_values[-i]))
+            part_alleles.append(self.split_sat(raw_values[i]))
             key = 'part' + str(i)
             dict_make_result[key] = '/'.join(part_alleles[i - 1])
 
@@ -82,10 +79,6 @@ class Formula(abc.ABC):
     def calculate(self):
         result = OrderedDict()
 
-        print()
-        print(self.user_data)
-        print()
-
         processed_user_data = []
         for participant in self.user_data:
             participant_lines = participant.splitlines()
@@ -93,10 +86,6 @@ class Formula(abc.ABC):
             for line in participant_lines:
                 processed_participant.append(re.split(r'[\s\t]+', line))
             processed_user_data.append(processed_participant)
-
-        print('======= processed user data')
-        print(processed_user_data)
-        print()
 
         overall_participants = []
         for i in range(len(processed_user_data[0])):

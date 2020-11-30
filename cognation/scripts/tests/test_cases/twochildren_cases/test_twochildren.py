@@ -36,7 +36,6 @@ class TestTwoChildrenFormula(TestCase):
         for i in range(len(self.reference_paths)):
             ref_path = self.reference_paths[i]
             test_path = self.test_paths[i]
-            print(test_path)
 
             ref_tuple = self.overall_ref_dict[ref_path]
             test_tuple = self.overall_test_dict[test_path]
