@@ -34,11 +34,6 @@ def calculate(request):
                 cpi *= result[key]["lr"]
             else:
                 mutations += 1
-    print('===========CPI = ', cpi)
-    print('===========P = ', (cpi / (1. + cpi)) * 100.)
-    print()
-    print('===========CPI Hardy = ', 1 / cpi)
-    print('===========1 - P Hardy = ', (1 - cpi)*100)
 
     if mutations > 2:
         cpi = 0

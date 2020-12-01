@@ -13,6 +13,9 @@ class SiblingFormula(Formula):
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 
+        if locus == 'AMEL':
+            return self.make_result(locus, 1, dict_make_result)
+
         #  If there's no relation then return lr = 0 and start collecting mutations
         if len(sp_inter) == 0 or len(cp_inter) == 0:
             lr = 0

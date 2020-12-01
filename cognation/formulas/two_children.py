@@ -13,6 +13,9 @@ class TwoChildrenFormula(Formula):
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 
+        if locus == 'AMEL':
+            return self.make_result(locus, 1, dict_make_result)
+
         # If children's genotypes are same, use ParentFormula
         if child1_set == child2_set:
             raw_values = [locus, '/'.join(parent_alleles), '/'.join(child1_alleles)]

@@ -12,6 +12,10 @@ class ParentFormula(Formula):
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
         lr = 0
+
+        if locus == 'AMEL':
+            return self.make_result(locus, 1, dict_make_result)
+
         freq_dict = self.get_frequencies(locus, intersection)
         # i, j     i, j
         if len(intersection) == 2:

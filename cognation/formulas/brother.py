@@ -13,6 +13,9 @@ class BrotherFormula(Formula):
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 
+        if locus == 'AMEL':
+            return self.make_result(locus, 1, dict_make_result)
+
         c = Calculations()
         # In cases aa aa or ab ab lr = 1
         if len(intersection) == 2 or len(intersection) == len(brother_set) == len(insp_set) == 1:

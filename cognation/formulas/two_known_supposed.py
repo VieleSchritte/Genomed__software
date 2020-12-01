@@ -14,6 +14,9 @@ class TwoKnownSupposedFormula(Formula):
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 
+        if locus == 'AMEL':
+            return self.make_result(locus, 1, dict_make_result)
+
         # If there are no intersections between children and parents, return lr = 0 and start counting mutations
         for i in range(1, 5):
             if i == 2 or i == 3:

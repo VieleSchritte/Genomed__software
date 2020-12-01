@@ -13,6 +13,9 @@ class TwoCoupleFormula(Formula):
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 
+        if locus == 'AMEL':
+            return self.make_result(locus, 1, dict_make_result)
+
         common_set = set(child1_alleles + child2_alleles + mother_alleles + father_alleles)
         freq_dict = self.get_frequencies(locus, list(common_set))
         lr = 0

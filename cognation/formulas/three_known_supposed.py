@@ -14,6 +14,9 @@ class ThreeKnownSupposed(Formula):
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 
+        if locus == 'AMEL':
+            return self.make_result(locus, 1, dict_make_result)
+
         # If there are no intersections between children and parents, return lr = 0
         for i in range(0, 3):
             if len(intersections[i]) == 0:

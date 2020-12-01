@@ -14,6 +14,9 @@ class TwoBrothersFormula(Formula):
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
 
+        if locus == 'AMEL':
+            return self.make_result(locus, 1, dict_make_result)
+
         c = Calculations()
         common_set = set(inspected_alleles + brother1_alleles + brother2_alleles)
         freq_dict = self.get_frequencies(locus, list(common_set))
