@@ -8,8 +8,6 @@ class ThreeChildrenFormula(Formula):
     def calculate_relation(self, raw_values):
         locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 4)
         parent_alleles, child1_alleles, child2_alleles, child3_alleles = alleles
-        parent_set, child1_set, child2_set, child3_set,  = sets
-        ch3p_inter, ch1ch2_inter, ch1ch3_inter, ch2ch3_inter = intersections[2:]
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
@@ -24,10 +22,12 @@ class ThreeChildrenFormula(Formula):
         lr = 0
 
         # If there are no intersections between children and parent, return lr = 0
-        if len(intersections[2]) == 0:
-            for i in range(4, 6):
-                if len(intersections[i]) == 0:
-                    return self.make_result(locus, lr, dict_make_result)
+        for i in range(0, 3):
+            if intersections[i] == 0:
+                return self.make_result(locus, lr, dict_make_result)
+
+        print(locus)
+        print('freqs: ', freq_dict)
 
         unique_genotype, repeat_genotype = c.get_repeat_unique(child1_alleles, child2_alleles, child3_alleles)
         # There are repeatable children genotypes
@@ -48,59 +48,53 @@ class ThreeChildrenFormula(Formula):
                 return self.make_result(locus, lr, dict_make_result)
 
         # special cases (aa ab ac an) and (ab ac ad an)
-        if ch1ch2_inter == ch2ch3_inter == ch3p_inter:
-            freq = freq_dict[list(ch1ch2_inter)[0]]
-            lr = c.F(freq)
-            return self.make_result(locus, lr, dict_make_result)
+        alleles_list = child1_alleles + child2_alleles + child3_alleles
+        children_genotypes = alleles[1:]
 
-        #  Homozygous 1st child
-        if len(child1_set) == 1:
-            # aa ab bc ab/ac
-            if len(ch1ch2_inter) != 0 and len(child2_set) == len(child3_set) == len(parent_set) == 2:
-                freq1 = freq_dict[child1_alleles[0]]
-                freq2, freq3 = freq_dict[child3_alleles[0]], freq_dict[child3_alleles[1]]
-                lr = 2 * freq1 * (freq2 + freq3)
+        for allele in alleles_list:
+            homo_counter = 0
+            repeats_number = alleles_list.count(allele)
+            for genotype in children_genotypes:
+                homo_counter = genotype.count(allele)
+                if homo_counter == 2:
+                    break
+
+            if repeats_number == 3 and homo_counter == 1 or repeats_number == 4 and homo_counter == 2:
+                print('special case')
+                freq = freq_dict[allele]
+                lr = c.F(freq)
                 return self.make_result(locus, lr, dict_make_result)
 
-            # default is lr = 2 * P(parent_alleles[0]) * P(parent_alleles[1])
-            freq1, freq2 = freq_dict[parent_alleles[0]], freq_dict[parent_alleles[1]]
-            lr = 2 * freq1 * freq2
-            return self.make_result(locus, lr, dict_make_result)
+        children_alleles = child1_alleles + child2_alleles + child3_alleles
+        children_set = set(children_alleles)
 
-        # Heterozygous 1st child
-        if len(child1_set) == 2:
-            # ab ac bc ab/ac/bc
-            if len(common_set) == 3:
-                freq1, freq2 = freq_dict[child1_alleles[0]], freq_dict[child1_alleles[1]]
-                freq3 = freq_dict[list(child2_set - child1_set)[0]]
-                lr = 2 * (freq1 * freq2 + freq1 * freq3 + freq2 * freq3)
-                return self.make_result(locus, lr, dict_make_result)
+        print('default case through function')
+        lr = self.lr_from_possible_genotypes(children_set, children_genotypes, freq_dict)
+        print(lr)
+        print()
+        return self.make_result(locus, lr, dict_make_result)
 
-            if len(ch1ch2_inter) == 1:
-                # ab ac bd ad/bc
-                if len(common_set) == 4 and len(ch2ch3_inter) == 0:
-                    freq1, freq2 = freq_dict[list(ch1ch2_inter)[0]], freq_dict[list(ch1ch3_inter)[0]]
-                    freq3, freq4 = freq_dict[list(child2_set - child1_set)[0]], freq_dict[list(child3_set - child1_set)[0]]
-                    lr = 2 * (freq1 * freq4 + freq2 * freq3)
-                    return self.make_result(locus, lr, dict_make_result)
-
-                # ab ac cd ac/ad/bc
-                if len(common_set) == 4 and len(ch1ch2_inter) == len(ch2ch3_inter) == 1:
-                    freq1, freq2 = freq_dict[list(ch1ch2_inter)[0]], freq_dict[list(child1_set - child2_set)[0]]
-                    freq3, freq4 = freq_dict[list(ch2ch3_inter)[0]], freq_dict[list(child3_set - child2_set)[0]]
-                    lr = 2 * (freq1 * freq3 + freq1 * freq4 + freq2 * freq3)
-                    return self.make_result(locus, lr, dict_make_result)
-
-                # ab ac de ad/ae
-                if len(common_set) == 5 and len(ch2ch3_inter) == 0:
-                    freq1 = freq_dict[list(ch1ch2_inter)[0]]
-                    freq2, freq3 = freq_dict[child3_alleles[0]], freq_dict[child3_alleles[1]]
-                    lr = 2 * freq1 * (freq2 + freq3)
-                    return self.make_result(locus, lr, dict_make_result)
-
-            # ab cd cn (n != a, b, d), ac/bc
-            if len(ch1ch2_inter) == 0:
-                freq1, freq2 = freq_dict[child1_alleles[0]], freq_dict[child1_alleles[1]]
-                freq3 = freq_dict[list(ch2ch3_inter)[0]]
-                lr = 2 * freq3 * (freq1 + freq2)
-                return self.make_result(locus, lr, dict_make_result)
+    @staticmethod
+    def lr_from_possible_genotypes(children_set, children_genotypes, freq_dict):
+        all_children_alleles = list(children_set)
+        possible_parents = []
+        for i in range(len(all_children_alleles)):
+            for j in range(len(all_children_alleles)):
+                if j > i:
+                    combination = [all_children_alleles[i], all_children_alleles[j]]
+                    counter = 0
+                    for allele in combination:
+                        print('combination: ', combination)
+                        for genotype in children_genotypes:
+                            print('allele, genotype: ', allele, genotype)
+                            print('allele not in genotype is ', allele not in genotype)
+                            if allele not in genotype:
+                                counter += 1
+                        if counter < 2:
+                            possible_parents.append(combination)
+        print('possible parents: ', possible_parents)
+        comb_sum = 0
+        for combination in possible_parents:
+            comb_sum += freq_dict[combination[0]] * freq_dict[combination[1]]
+        lr = 2 * comb_sum
+        return lr
