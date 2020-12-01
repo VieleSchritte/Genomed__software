@@ -18,7 +18,6 @@ def calculate(request):
     data = request.POST.get('data', '')
 
     formula = formula_builder(data_type, data)
-    print('==========================', formula)
     result = formula.calculate()
 
     cpi = 1
@@ -31,7 +30,7 @@ def calculate(request):
             if result[key]["lr"] == '-':
                 continue
             elif result[key]["lr"] > 0:
-                cpi *= result[key]["lr"]
+                cpi *= round(result[key]["lr"], 2)
             else:
                 mutations += 1
 
