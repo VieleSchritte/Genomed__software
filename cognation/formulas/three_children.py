@@ -83,16 +83,16 @@ class ThreeChildrenFormula(Formula):
                 if j > i:
                     combination = [all_children_alleles[i], all_children_alleles[j]]
                     counter = 0
-                    for allele in combination:
-                        print('combination: ', combination)
-                        for genotype in children_genotypes:
-                            print('allele, genotype: ', allele, genotype)
-                            print('allele not in genotype is ', allele not in genotype)
-                            if allele not in genotype:
-                                counter += 1
-                        if counter < 2:
-                            possible_parents.append(combination)
+                    for genotype in children_genotypes:
+                        unique_allele_combination = set(combination) - set(genotype)
+                        if unique_allele_combination == set(combination):
+                            counter += 1
+                    print(combination, counter)
+                    if counter != 2:
+                        possible_parents.append(combination)
+
         print('possible parents: ', possible_parents)
+        print('children genotypes: ', children_genotypes)
         comb_sum = 0
         for combination in possible_parents:
             comb_sum += freq_dict[combination[0]] * freq_dict[combination[1]]
