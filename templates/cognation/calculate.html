@@ -104,7 +104,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addAlleleFormTitle">Add allele</h5>
-                    <button type="button" class="close" data-dismiss="modal"save aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -147,7 +147,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
     
-    $('.btn-mutations').on('click', function (event) {
+    $('.btn-mutations').on('click', function () {
         $('.fair-result').each(function() {
             $(this).html($(this).data('result'));
         });
@@ -197,10 +197,12 @@ $(document).ready(function(){
     });
 
     $('#addAlleleModal .btn-primary').on('click', function () {
+        console.log('clicked addAlleleModal');
         $('#addAlleleForm').submit();
     });
 
     $('#saveResults').on('click', function(event) {
+        console.log('clicked saveResults');
         event.preventDefault();
         let tbl = document.getElementById('resultTable');
         let wb = XLSX.utils.table_to_book(tbl, {raw: true});
