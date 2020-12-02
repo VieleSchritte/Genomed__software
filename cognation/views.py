@@ -248,7 +248,7 @@ def calculate(request):
             if result[key]["lr"] == '-':
                 continue
             elif result[key]["lr"] > 0:
-                cpi *= result[key]["lr"]
+                cpi *= round(result[key]["lr"], 2)
             else:
                 mutations += 1
 

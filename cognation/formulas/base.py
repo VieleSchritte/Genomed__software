@@ -51,13 +51,21 @@ class Formula(abc.ABC):
             # Skip line with warning
             raise LineFormatException()
 
-        locus = raw_values[0]
         part_alleles = []
         dict_make_result = {}
-        for i in range(1, part_number + 1):
-            part_alleles.append(self.split_sat(raw_values[i]))
-            key = 'part' + str(i)
-            dict_make_result[key] = '/'.join(part_alleles[i - 1])
+        locus = raw_values[0]
+
+        if len(raw_values) > part_number + 1:
+            locus += ' ' + raw_values[1]
+            for i in range(2, part_number + 2):
+                part_alleles.append(self.split_sat(raw_values[i]))
+                key = 'part' + str(i-1)
+                dict_make_result[key] = '/'.join(part_alleles[i - 2])
+        else:
+            for i in range(1, part_number + 1):
+                part_alleles.append(self.split_sat(raw_values[i]))
+                key = 'part' + str(i)
+                dict_make_result[key] = '/'.join(part_alleles[i - 1])
 
         part_sets = []
         for part in part_alleles:
@@ -66,7 +74,7 @@ class Formula(abc.ABC):
             part_sets.append(set(part))
 
         if self.is_gender_specific(locus) is False:
-            freqs = self.get_frequencies(locus, part_alleles[0] + part_alleles[1])
+            self.get_frequencies(locus, part_alleles[0] + part_alleles[1])
 
         intersections = []
         for i in range(len(part_alleles)):

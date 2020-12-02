@@ -5,8 +5,8 @@ from cognation.scripts.tests import GetData
 import logging
 
 logger = logging.getLogger('django.db.backends')
-logger.setLevel(logging.DEBUG)
-logger.addHandler(logging.StreamHandler())
+#logger.setLevel(logging.DEBUG)
+#logger.addHandler(logging.StreamHandler())
 
 
 class TestParentFormula(TestCase):
