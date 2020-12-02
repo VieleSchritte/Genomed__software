@@ -55,7 +55,8 @@
                     <td>
                         {{ value.exception }}<br />
                         {% if value.exception.locus %}
-                            <button class="button-add-allele"
+                            <button id="add-allele-button"
+                                    class="button-add-allele"
                                     data-locus="{{ value.exception.locus }}"
                                     data-sat="{{ value.exception.sat }}"
                                     data-toggle="modal"
@@ -166,14 +167,14 @@
 <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-    $('.btn-mutations').on('click', function (event) {
+    $('.button-mutations').on('click', function (event) {
         $('.fair-result').each(function() {
             $(this).html($(this).data('result'));
         });
-        $('.btn-mutations').hide();
+        $('.button-mutations').hide();
     });
 
-    $('#addAlleleModal').on('show.bs.modal', function (event) {
+    $('#add-allele-button').on('click', function (event) {
         const button = $(event.relatedTarget);
         const locus = button.data('locus');
         const sat = button.data('sat');
@@ -215,7 +216,7 @@ $(document).ready(function(){
         }
     });
 
-    $('#addAlleleModal .btn-primary').on('click', function () {
+    $('#addAlleleModal .button-add-allele').on('click', function () {
         $('#addAlleleForm').submit();
     });
 
