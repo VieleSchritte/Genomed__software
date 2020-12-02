@@ -12,8 +12,12 @@ logger.addHandler(logging.StreamHandler())
 class TestFormula(TestCase):
     def setUp(self):
 
-        self.reference_paths = ['grandparent1/reference_data_grandparent1.txt', 'grandparent2/reference_data_grandparent2.txt']
-        self.test_paths = ['grandparent1/test_data_grandparent1.txt', 'grandparent2/test_data_grandparent2.txt']
+        self.reference_paths = ['grandparent1/reference_data_grandparent1.txt',
+                                'grandparent2/reference_data_grandparent2.txt'
+                                ]
+        self.test_paths = ['grandparent1/test_data_grandparent1.txt',
+                           'grandparent2/test_data_grandparent2.txt'
+                           ]
         short_path = 'cognation/scripts/tests/test_cases/grandparent_cases/'
 
         get_ref = GetData()
