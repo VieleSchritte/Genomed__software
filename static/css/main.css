@@ -433,3 +433,14 @@ button, select {
 button, input {
     overflow: visible;
 }
+
+.btn-add-allele {
+    display: inline-block;
+    border-color: white;
+    border: 1px solid transparent;
+    border-radius: 6px;
+}
+
+.bg-warning {
+    background-color: yellowgreen;
+}
