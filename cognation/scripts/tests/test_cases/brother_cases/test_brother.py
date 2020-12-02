@@ -12,8 +12,14 @@ logger.addHandler(logging.StreamHandler())
 class TestBrotherFormula(TestCase):
     def setUp(self):
 
-        self.reference_paths = ['sister1/sister1_ref.txt', 'brother1/brother1_ref.txt']
-        self.test_paths = ['sister1/sister1_test.txt', 'brother1/brother1_test.txt']
+        self.reference_paths = [
+                                'sister1/sister1_ref.txt',
+                                'brother1/brother1_ref.txt'
+                                ]
+        self.test_paths = [
+                            'sister1/sister1_test.txt',
+                           'brother1/brother1_test.txt'
+                           ]
         short_path = 'cognation/scripts/tests/test_cases/brother_cases/'
 
         get_ref = GetData()
