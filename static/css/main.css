@@ -444,3 +444,7 @@ button, input {
 .bg-warning {
     background-color: yellowgreen;
 }
+
+.bg.secondary {
+    background-color: #6c757d!important;
+}

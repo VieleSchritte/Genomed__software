@@ -227,5 +227,15 @@ $(document).ready(function(){
     });
 });
 
+for (let lrCell of document.getElementsByClassName('lr-cell')) {
+    if (lrCell.innerHTML == 0) {
+        console.log(lrCell.parentElement)
+        lrCell.parentElement.style.backgroundColor = '#6c757d'
+    }
+
+}
+
+
+
 </script>
 {% endblock scripts %}
