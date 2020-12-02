@@ -55,7 +55,7 @@
                     <td>
                         {{ value.exception }}<br />
                         {% if value.exception.locus %}
-                            <button class="button-collection btn-light btn-add-allele"
+                            <button class="button-add-allele"
                                     data-locus="{{ value.exception.locus }}"
                                     data-sat="{{ value.exception.sat }}"
                                     data-toggle="modal"
@@ -98,7 +98,7 @@
             <tr>
                 <td colspan="{{ participants|add:2 }}">
                     <button>
-                        Рассчитать CPI без учета локусов в которых обнаружены мутации
+                        Рассчитать CPI без учета локусов, в которых обнаружены мутации
                     </button>
                 </td>
             </tr>

@@ -434,11 +434,11 @@ button, input {
     overflow: visible;
 }
 
-.btn-add-allele {
+.button-add-allele {
     display: inline-block;
-    border-color: white;
-    border: 1px solid transparent;
-    border-radius: 6px;
+    border-color: transparent;
+    border-radius: 5px;
+    margin-top: 0.6rem;
 }
 
 .bg-warning {
