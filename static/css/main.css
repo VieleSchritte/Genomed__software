@@ -448,3 +448,13 @@ button, input {
 .bg.secondary {
     background-color: #6c757d!important;
 }
+
+.button-mutations {
+    border: transparent;
+    display: block;
+    border-radius: 5px;
+    background-color: darkcyan;
+    padding: 0.5rem;
+    margin-left: auto;
+    margin-right: auto;
+}
