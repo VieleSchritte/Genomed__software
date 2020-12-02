@@ -11,132 +11,263 @@
 {% block content %}
     {{ block.super }}
     <form action="{% url 'cognation:calculate' %}" method="post" id="cognationForm" class="text-dark">
-        <div id="hide">
-            <div>
-                <h1>Порядок ввода:</h1>
-                <ol>
-                    <li>Родитель / бабушка / дедушка / дядя...</li>
-                    <li>Проверяемое лицо</li>
-                </ol>
+        <div class="wrapper">
+            {% load static %}
+            <div id="select-formula">
+                <div class="but-bunch" data-toggle="buttons">
+                    <h1 id="start-header">Выберите тип родства:</h1>
+                    <div id="cognation-screen" class="choose-cognation">
+                        {% for formula in formulas %}
+                        <label class="cognation-button" title="{{ formula.name }}">
+                            <input
+                                    type="radio"
+                                    class="target"
+                                    value="{{ formula.value }}"
+                                    name="type"
+                                    data-image-url="{% static formula.image %}"/> {{ formula.name }}
+                        </label>
+                        {% endfor %}
+                    </div>
+
+                    <div id="cognation-preview" class="cognation-preview">
+                        <h2 class="preview-header"></h2>
+                        <img class="preview-image" src="" alt="">
+                        <div class="text-buttons">
+                            <p class="preview-text"></p>
+                            <div class="preview-buttons">
+                                <label id="back-button-preview" class="preview-button">
+                                    <input type="button" value="Назад">Назад
+                                </label>
+                                <label id="next-button-preview" class="preview-button">
+                                    <input type="button" value="OK">OK
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="add-genotype" class="add-genotype">
+                        <div class="genotype" id="part1">
+                            <h2 class="genotype-header"></h2>
+                            <label for="part1text"></label>
+                            <textarea name="part1" id="part1text" cols="50" rows="24" class="form-control"></textarea>
+                        </div>
+                        <div class="genotype" id="part2">
+                            <h2 class="genotype-header"></h2>
+                            <label for="part2text"></label>
+                            <textarea name="part2" id="part2text" cols="50" rows="24" class="form-control"></textarea>
+                        </div>
+                        <div class="genotype" id="part3">
+                            <h2 class="genotype-header"></h2>
+                            <label for="part3text"></label>
+                            <textarea name="part3" id="part3text" cols="50" rows="24" class="form-control"></textarea>
+                        </div>
+                        <div class="genotype" id="part4">
+                            <h2 class="genotype-header"></h2>
+                            <label for="part4text"></label>
+                            <textarea name="part4" id="part4text" cols="50" rows="24" class="form-control"></textarea>
+                        </div>
+                        <div class="genotype" id="part5">
+                            <h2 class="genotype-header"></h2>
+                            <label for="part5text"></label>
+                            <textarea name="part5" id="part5text" cols="50" rows="24" class="form-control"></textarea>
+                        </div>
+
+                        {% csrf_token %}
+                        <div class="genotype-buttons">
+                            <label id="back-button-genotype" class="genotype-button">
+                                <input type="button" value="Назад">Назад
+                            </label>
+                            <label id="next-button-genotype" class="genotype-button">
+                                <input type="button" value="Далее">Далее
+                            </label>
+                            <button id="submit-button" class="genotype-button submit">
+                                Рассчитать
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-            <div style="margin:10px 0;">
-                <label for="dataId"></label>
-                <textarea style="background:gainsboro;" id="dataId" name="data" cols="120" rows="24"
-                          class="form-control"></textarea>
-            </div>
-            <input type="button" id="next" class="btn btn-dark" title="Next" value="Далее"/>
         </div>
-
-        <div hidden id="show">
-            <div>
-                <h1>Выберите тип родства:</h1>
-            </div>
-
-            <div class="btn-group btn-group-toggle flex-wrap but-bunch" data-toggle="buttons">
-
-                <label class="btn btn-secondary cogn-button" id="Parent" data-toggle="tooltip" data-placement="top" title="Ребенок и предполагаемый родитель">
-                    <input type="radio" name="type" value="1"/> Отцовство/материнство для двух участников
-                </label>
-
-                <label class="btn btn-secondary cogn-button" id="TwoChildren" data-toggle="tooltip" data-placement="top" title="Родство между детьми достоверно известно">
-                    <input type="radio" name="type" value="2"/> Двое детей, предполагаемый родитель
-                </label>
-
-                <label class="btn btn-secondary cogn-button" id="Sibling" data-toggle="tooltip" data-placement="top" title="Родство между предполагаемым родителем и предполагаемым братом/сестрой достоверно известно">
-                    <input type="radio" name="type" value="3"/> Проверяемое лицо, предполагаемые родитель и брат/сестра
-                </label>
-
-                <label class="btn btn-secondary cogn-button" id="ThreeChildren" data-toggle="tooltip" data-placement="top" title="Родство между детьми достоверно известно. Родство между детьми и известным родителем - тоже">
-                    <input type="radio" name="type" value="4"/> Трое детей и предполагаемый родитель
-                </label>
-
-                <label class="btn btn-secondary cogn-button" id="TwoKnownSupposed" data-toggle="tooltip" data-placement="top" title="Родство между детьми достоверно известно. Родство между детьми и известным родителем - тоже">
-                    <input type="radio" name="type" value="5"/> Двое детей, известный и предполагаемый родители
-                </label>
-
-                <label class="btn btn-secondary cogn-button" id="ThreeKnownSupposed" data-toggle="tooltip" data-placement="top" title="Родство между детьми достоверно известно. Родство между детьми и известным родителем - тоже">
-                    <input type="radio" name="type" value="6"/> Трое детей, известный и предполагаемый родители
-                </label>
-
-                <label class="btn btn-secondary cogn-button" id="Couple" data-toggle="tooltip" data-placement="top" title="Известно, что предполагаемые родители - именно супружеская пара, а не отдельные лица, с которыми проверяется родство">
-                    <input type="radio" name="type" value="7"/> Проверяемое лицо и супружеская пара
-                </label>
-
-                <label class="btn btn-secondary cogn-button" id="OneKnownSupposed" data-toggle="tooltip" data-placement="top" title="Родство между проверяемым лицом и известным родителем достоверно известно">
-                    <input type="radio" name="type" value="8"/> Проверяемое лицо, известный и предполагаемый родители
-                </label>
-
-                <label class="btn btn-secondary cogn-button" id="TwoCouple" data-toggle="tooltip" data-placement="top" title="Родство между детьми достоверно известно. Также известно, что предполагаемые родители - именно супружеская пара, а не отдельные лица, с которыми проверяется родство">
-                    <input type="radio" name="type" value="9"/> Двое детей и супружеская пара
-                </label>
-
-                <label class="btn btn-secondary cogn-button" id="TwoCouple" data-toggle="tooltip" data-placement="top" title="Родство между детьми достоверно известно. Также известно, что предполагаемые родители - именно супружеская пара, а не отдельные лица, с которыми проверяется родство">
-                    <input type="radio" name="type" value="11"/> Проверяемое лицо и предполагаемый Сводный/единокровный брат/сестра
-                </label>
-
-                <label class="btn btn-secondary cogn-button" id="Brother" data-toggle="tooltip" data-placement="top" title="Предполагается, что у участников есть два общих родителя, биоматериал которых недоступен">
-                    <input type="radio" name="type" value="12"/> Проверяемое лицо и предполагаемый брат/сестра
-                </label>
-
-                <label class="btn btn-secondary cogn-button" id="TwoBrothers" data-toggle="tooltip" data-placement="top" title="Родство между братьями/сестрами достоверно известно. Есть общие родители, биоматериал которых недоступен">
-                    <input type="radio" name="type" value="13"/> Проверяемое лицо и двое предполагаемых братьев/сестер
-                </label>
-
-                <label class="btn btn-secondary cogn-button" id="Cousin" data-toggle="tooltip" data-placement="top" title="Предполагается, что родители участников - родные братья/сестры, их биоматериал недоступен">
-                    <input type="radio" name="type" value="14"/> Проверяемое лицо и предполагаемый двоюродный брат/сестра
-                </label>
-
-                <label class="btn btn-secondary cogn-button" id="Uncle" data-toggle="tooltip" data-placement="top" title="Предполагается, что один из родителей является родным братом/сестрой предполагаемому дяде/тете. Биоматериал родитеелй недоступен">
-                    <input type="radio" name="type" value="15"/> Проверяемое лицо и предполагаемый дядя/тетя
-                </label>
-
-                <label class="btn btn-secondary cogn-button" id="Grandparent" data-toggle="tooltip" data-placement="top" title="Биоматериал родителей проверяемого лица недоступен">
-                    <input type="radio" name="type" value="17"/> Проверяемое лицо и предполагаемая бабушка/дедушка
-                </label>
-
-                <label class="btn btn-secondary cogn-button" id="ParentChildGrand" data-toggle="tooltip" data-placement="top" title="Предполагаемый родитель - потомок бабушки/дедушки">
-                    <input type="radio" name="type" value="19"/> Проверяемое лицо, предполагаемый родитель и предполагаемая бабушка/дедушка
-                </label>
-
-            </div>
-
-            {% csrf_token %}
-            <div class="final-group mt-2">
-                <input type="button" id="back" class="btn btn-dark" title="Next" value="Назад"/>
-                <input type="submit" class="btn btn-dark" title="Submit" value="ОК"/>
-            </div>
-
-        </div>
-
         <script>
-            FormulaTable = {"ParentFormula": 2, 'TwoChildrenFormula': 3, 'SiblingFormula': 3, 'ThreeChildrenFormula': 4,
-                    'TwoKnownSupposedFormula': 4, 'ThreeKnownSupposed': 5, 'CoupleFormula': 3,
-                    'OneKnownSupposedFormula': 3, 'TwoCoupleFormula': 4, 'StepbrotherFormula': 2,
-                    'BrotherFormula': 2, 'TwoBrothersFormula': 3, 'CousinFormula': 2, 'UncleFormula': 2,
-                    'GrandParentFormula': 2, 'YesParentGrandChild': 3}
+            let formulas = {{ formulas_dump|safe }};
 
-            document.getElementById('next').onclick = function() {
-                document.getElementById('hide').hidden = true;
-                document.getElementById('show').hidden = false;
+            const STEP_CHOOSE_COGNATION = 'choose_cognation';
+            const STEP_COGNATION_PREVIEW = 'cognation_preview';
+            const STEP_FILL_IN_DATA = 'fill_in_data';
+
+            let value = 0;
+            let currentFormula = '';
+
+            let step = STEP_CHOOSE_COGNATION;
+            let fillInPart = 0;
+            let data = [];
+            let participantsNumber = 2;
+
+            function HideItem(args) {
+                let idList = args[0];
+                for (let id of idList) {
+                    let item = document.getElementById(id);
+                    item.style.display = 'none';
+
+                } if (args.length > 1) {
+                    let numbers = args[1];
+                    for (let number of numbers) {
+                        let id = 'part' + String(number);
+                        let divContainsTextarea = document.getElementById(id);
+                        let genotypeHeader = divContainsTextarea.querySelector('.genotype-header');
+                        genotypeHeader.innerHTML = ' ';
+                        divContainsTextarea.style.display = 'none';
+                    }
+                }
             }
 
-            document.getElementById('back').onclick = function() {
-                document.getElementById('hide').hidden = false;
-                document.getElementById('show').hidden = true;
+            function ShowItem(args) {
+                let idList = args[0];
+                for (let id of idList) {
+                    let item = document.getElementById(id);
+                    item.style.display = 'block';
+                    if (id === 'next-button-genotype' || id === 'submit-button') {
+                        item.style.display = 'inline-block';
+                    }
+                }
+
+                if (args.length > 1) {
+                    let numbers = args[1];
+                    for (let number of numbers) {
+                        let id = 'part' + String(number);
+                        let divContainsTextarea = document.getElementById(id);
+                        let genotypeHeader = divContainsTextarea.querySelector('.genotype-header');
+
+                        divContainsTextarea.style.display = 'inline-block';
+                        genotypeHeader.innerHTML = args[2][number - 1];
+                    }
+                }
             }
 
-            function CreateParticipantObject(id, name) {
-                this._id = id;
-                this._name = name;
-                document.createElement('div');
+            function GetFirstSecondGenotypes(participantsNumber) {
+                if (participantsNumber % 2 === 0) {
+                    return {'first': [1, 2], 'second': [3, 4]};
+                } else {
+                    return {'first': [1, 2, 3], 'second': [4, 5]};
+                }
             }
 
-            /* Example of creating new objects */
-            document.getElementById('Parent').onclick = function() {
-                let ParentObject = new CreateParticipantObject('ParentData', 'data');
-                let ChildObject = new CreateParticipantObject('ChildData', 'data');
+            function ClearTextAreaValue() {
+                for (let textarea of document.querySelectorAll('textarea.form-control')) {
+                    textarea.value = "";
+                }
             }
 
+            function OnRadioClick(event) {
+                if (this !== event.target) {
+                    return
+                }
+
+                step = STEP_COGNATION_PREVIEW;
+                let label = event.target;
+                let input = label.querySelector('input');
+                value = Number(input.getAttribute('value'));
+                let imageUrl = input.getAttribute('data-image-url');
+                currentFormula = formulas.find((f) => f['value'] === value);
+
+                if (currentFormula['headers'].length > 2) {
+                    participantsNumber = currentFormula['headers'].length;
+                }
+
+                let cognationPreview = document.getElementById('cognation-preview');
+                cognationPreview.querySelector('.preview-header').innerHTML = currentFormula['name'];
+                let imageForm = cognationPreview.querySelector('.preview-image');
+                imageForm.setAttribute('src', imageUrl);
+                imageForm.setAttribute('alt', currentFormula['name']);
+                let previewText = cognationPreview.querySelector('.preview-text');
+                previewText.innerHTML = currentFormula['desc'];
+                HideItem([['cognation-screen', 'start-header']]);
+                ShowItem([['cognation-preview']]);
+            }
+
+            /* behaviour of RadioButtons */
+            window.onload = function setUpHandlers() {
+                for (let label of document.querySelectorAll('label.cognation-button')) {
+                    label.addEventListener("click", OnRadioClick);
+                    ClearTextAreaValue();
+                }
+            }
+
+            function OnBackClick(event) {
+                if (this !== event.target) {
+                    return;
+                }
+
+                if (step === STEP_COGNATION_PREVIEW) {
+                    step = STEP_CHOOSE_COGNATION;
+                    currentFormula = '';
+                    HideItem([['cognation-preview']]);
+                    ShowItem([['cognation-screen', 'start-header']]);
+                    ClearTextAreaValue();
+                    value = 0;
+                    currentFormula = '';
+                    fillInPart = 0;
+                    participantsNumber = 2;
+                    return;
+                }
+
+                if (step === STEP_FILL_IN_DATA) {
+                    if (fillInPart === 1) {
+                        step = STEP_COGNATION_PREVIEW;
+                        fillInPart--;
+                        HideItem([['add-genotype'], GetFirstSecondGenotypes(participantsNumber)['first'],
+                                currentFormula['headers']]);
+                        ShowItem([['cognation-preview']]);
+                    }
+
+                    if (fillInPart === 2) {
+                        fillInPart--;
+                        HideItem([['submit-button'], GetFirstSecondGenotypes(participantsNumber)['second']]);
+                        ShowItem([['next-button-genotype'], GetFirstSecondGenotypes(participantsNumber)['first'],
+                                currentFormula['headers']])
+                    }
+                }
+            }
+
+            let previewBackButton = document.getElementById('back-button-preview');
+            previewBackButton.addEventListener('click', OnBackClick);
+            let backButtonGenotype = document.getElementById('back-button-genotype');
+            backButtonGenotype.addEventListener('click', OnBackClick);
+
+            function OnNextClick(event) {
+                if (this !== event.target) {
+                    return
+                }
+
+                fillInPart++;
+
+                if (step === STEP_COGNATION_PREVIEW) {
+                    step = STEP_FILL_IN_DATA;
+                    if (participantsNumber < 4) {
+                        HideItem([['next-button-genotype', 'cognation-preview']]);
+                        ShowItem([['add-genotype', 'submit-button'], GetFirstSecondGenotypes(participantsNumber)['first'],
+                                 currentFormula['headers']]);
+                        return;
+                    } else {
+                        HideItem([['submit-button', 'cognation-preview']]);
+                        ShowItem([['add-genotype', 'next-button-genotype'], GetFirstSecondGenotypes(participantsNumber)['first'],
+                                 currentFormula['headers']]);
+                        return;
+                    }
+                }
+
+                if (step === STEP_FILL_IN_DATA) {
+                    HideItem([['next-button-genotype'], GetFirstSecondGenotypes(participantsNumber)['first']]);
+                    ShowItem([['submit-button'], GetFirstSecondGenotypes(participantsNumber)['second'],
+                             currentFormula['headers']]);
+                }
+            }
+
+            let previewNextButton = document.getElementById('next-button-preview');
+            previewNextButton.addEventListener("click", OnNextClick);
+            let nextButtonGenotype = document.getElementById('next-button-genotype');
+            nextButtonGenotype.addEventListener("click", OnNextClick);
 
         </script>
     </form>

@@ -7,8 +7,8 @@ from .two_known_supposed import TwoKnownSupposedFormula
 class ThreeKnownSupposed(Formula):
     def calculate_relation(self, raw_values):
         locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 5)
-        supposed_alleles, child3_alleles, child2_alleles, child1_alleles, known_alleles = alleles
-        supposed_set, child3_set, child2_set, child1_set, known_set = sets
+        known_alleles, child1_alleles, child2_alleles, child3_alleles, supposed_alleles = alleles
+        known_set, child1_set, child2_set, child3_set, supposed_set = sets
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
@@ -17,8 +17,10 @@ class ThreeKnownSupposed(Formula):
         if locus == 'AMEL':
             return self.make_result(locus, 1, dict_make_result)
 
-        # If there are no intersections between children and parents, return lr = 0
-        for i in range(0, 3):
+        for i in range(len(intersections)):
+            exceptions_list = [2, 4, 5]
+            if i in exceptions_list:
+                continue
             if len(intersections[i]) == 0:
                 return self.make_result(locus, 0, dict_make_result)
 

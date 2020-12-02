@@ -1,32 +1,522 @@
-.cogn-button {
-    margin: 1%;
-    width: 32%;
-    white-space: normal;
+@font-face {
+    font-family: 'Roboto', sans-serif;
+    src: url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 }
 
-.final-group {
-    margin-top: 2%;
+p, h1, h2, h5, input, button, a, table, textarea, .for-russians, em {
+    font-family: 'Roboto', sans-serif;
 }
 
-/* Final table in calculate.html */
+html {
+    -webkit-tap-highlight-color: transparent;
+}
 
-table {
+body {
+    background-color: rgba(17,42,45,0.93);
+    line-height: 1.5;
     text-align: center;
 }
 
-.descr, .freqused {
-    text-align: left;
+textarea {
+    width: 100%;
+    font-size: 1.2rem;
+    padding: .375rem .75rem .375rem 1.8rem;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    overflow: auto;
+    resize: vertical;
+    text-align: start;
+    background-color: gainsboro;
+    display: inline-block;
+    margin: auto;
 }
 
-.meaning {
-    text-align: right;
+.genotype {
+    display: none;
+}
+
+.genotype:nth-child(even) {
+    margin-right: 2rem;
+    margin-left: 2rem;
+}
+
+button {
+    display: none;
 }
 
 .container-content {
     background: lightgray;
     opacity: 0.9;
     margin-top: 100px;
-    padding: 40px;
+    padding: 20px;
     border-radius: 40px;
+    margin-right: 5rem;
+    margin-left: 5rem;
 }
 
+form {
+    color: #343a40!important;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-top: 0;
+}
+
+p {
+    text-align: center;
+}
+
+label {
+    font-family: 'Roboto', sans-serif;
+}
+
+label, button, a {
+    cursor: pointer;
+}
+
+input[type=radio], input[type=button] {
+    display: none;
+}
+
+.choose-cognation {
+    display: block;
+}
+
+.cognation-preview, .add-genotype {
+    display: none;
+}
+
+.but-bunch {
+    flex-wrap: wrap!important;
+    position: relative;
+    display: inline-flex;
+    vertical-align: middle;
+    margin-right: auto;
+    margin-left: auto;
+    justify-content: center;
+}
+
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+.cognation-button, .preview-button, .genotype-button,  a {
+    width: 24%;
+    min-width: 9rem;
+    min-height: 8rem;
+    white-space: normal;
+    font-size: 1rem;
+    display: inline-block;
+    font-weight: 200;
+    text-align: -webkit-center;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 1rem;
+    line-height: 1.5;
+    background-color: #333333;
+    color: #f5f5f5;
+    border-radius: 1rem;
+    opacity: .85;
+    margin: 0.2rem;
+}
+
+.cognation-button:first-child {
+    margin-left: 0.2rem;
+}
+
+.cognation-button:hover, .cognation-button:active, .preview-button:hover, .preview-button:active {
+    opacity: 1;
+}
+
+.but-bunch-toggle>.cognation-button, .but-bunch-toggle>.but-bunch>.cognation-button {
+    margin-bottom: 0;
+}
+
+.but-bunch-vertical>.cognation-button, .but-bunch>.cognation-button {
+    position: relative;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 1 auto;
+    flex: 0 1 auto;
+}
+
+.description-genotypes {
+    display: none;
+    width: 100%;
+    margin-top: 3%;
+}
+
+.cognation-preview {
+    display: none;
+}
+
+.preview-header {
+    margin: 0;
+}
+
+.preview-image {
+    width: 30%;
+    white-space: normal;
+    font-size: 0.8em;
+    display: inline-block;
+    vertical-align: sub;
+    border-color: rgba(17,42,45,0.93);
+    border-radius: 15px;
+    margin-top: 2.1rem;
+    margin-left: 1rem;
+}
+
+.text-buttons {
+    display: inline-block;
+    width: 60%;
+    vertical-align: top;
+    margin-right: 2%;
+    margin-top: 2%;
+    margin-left: 5%;
+}
+
+.preview-text {
+    text-align: center;
+    white-space: normal;
+    display: block;
+    font-size: 1.2rem;
+}
+
+.preview-buttons, .genotype-buttons {
+    display: block;
+    text-align: center;
+}
+
+.genotype-buttons {
+    margin-top: 2rem;
+}
+
+.submit {
+    display: none;
+}
+
+.preview-button, .genotype-button {
+    display: inline-block;
+    min-height: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.07rem;
+}
+
+.preview-button:first-child, .genotype-button:first-child {
+    margin-right: 2%;
+}
+
+.all-genotypes {
+    width: 100%;
+}
+
+.add-genotype {
+    width: 100%;
+}
+
+.genotype-header {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    white-space: normal;
+}
+
+.genotype-buttons:first-child {
+    margin-right: 2%;
+}
+
+/* Final table in calculate.html */
+
+table {
+    text-align: center;
+    margin: 2rem auto auto;
+    width: 100%;
+    max-width: 100%;
+    background-color: transparent;
+    border-collapse: collapse;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+}
+
+td, th {
+    padding: .75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+th {
+    display: table-cell;
+    vertical-align: inherit;
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.15rem;
+}
+
+.cpi-description, .p-description {
+    text-align: left;
+    font-size: 1.2rem;
+}
+
+.meaning {
+    text-align: right;
+    font-size: 1.2rem;
+}
+
+a {
+    text-decoration: none;
+    font-weight: 800;
+    min-height: 5rem;
+}
+
+.link-group {
+    margin-top: 2rem;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+
+.modal-content {
+    position: relative;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, .2);
+    border-radius: .3rem;
+    outline: 0;
+}
+
+.modal-dialog {
+    position: relative;
+    width: auto;
+    margin: .5rem;
+    pointer-events: none;
+}
+
+.modal-header {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    border-top-left-radius: .3rem;
+    border-top-right-radius: .3rem;
+}
+
+.modal-body {
+    position: relative;
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    padding: 1rem;
+}
+
+.modal-footer {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    padding: 1rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.modal-title {
+    margin-bottom: 0;
+    margin-top: 0;
+    line-height: 1.5;
+    font-size: 1.2rem;
+}
+
+.close:not(:disabled):not(.disabled) {
+    cursor: pointer;
+}
+
+.modal-header .close {
+    padding: 1rem;
+    margin: -1rem -1rem -1rem auto;
+}
+
+button.close {
+    padding: 0;
+    background-color: transparent;
+    border: 0;
+    display: block;
+}
+
+.close {
+    float: right;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    opacity: .5;
+}
+
+button, select {
+    text-transform: none;
+}
+
+button, input {
+    overflow: visible;
+}
+
+button, input, optgroup, select, textarea {
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group:nth-child(2) {
+    margin-right: 1rem;
+}
+
+.col-form-label {
+    padding-top: calc(.375rem + 1px);
+    padding-bottom: calc(.375rem + 1px);
+    margin-bottom: 0;
+    font-size: inherit;
+    line-height: 1.5;
+}
+
+.form-control:disabled, .form-control[readonly] {
+    opacity: 1;
+    background-color: lightgrey;
+    border: transparent;
+    border-radius: 4px;
+}
+
+.modal-footer>:not(:last-child) {
+    margin-right: .25rem;
+}
+
+.invisible {
+    visibility: hidden!important;
+}
+
+.text-danger {
+    color: #dc3545!important;
+}
+
+button, select {
+    text-transform: none;
+}
+
+button, input {
+    overflow: visible;
+}
+
+.button-add-allele {
+    display: inline-block;
+    border-color: transparent;
+    border-radius: 5px;
+    margin-top: 0.6rem;
+}
+
+.bg-warning {
+    background-color: yellowgreen;
+}
+
+.bg.secondary {
+    background-color: #6c757d!important;
+}
+
+.button-mutations {
+    border: transparent;
+    display: block;
+    border-radius: 5px;
+    background-color: darkcyan;
+    padding: 0.5rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.modal-button {
+    border: transparent;
+    padding: 0.19rem;
+    width: 4rem;
+    border-radius: 7px;
+    display: inline;
+}
+
+.save {
+    background-color: cadetblue;
+}
+
+.close-but {
+    background-color: darkgray;
+}
+
+.wrapper {
+    display: inline-block;
+}
+
+.single-label {
+    display: block;
+}
+
+.add-allele-label {
+    margin-right: 1rem;
+}
+
+.overlay-wrapper {
+    position: relative;
+}
+
+#overlay {
+    z-index: 1000;
+    background-color: black;
+    opacity: 0.5;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+.freq-input-wrapper {
+    display: inline-block;
+    width: 70%;
+}
+
+#addAlleleFreq {
+    width: 100%;
+}
+
+#addAlleleSat {
+    width: 70%;
+    margin-left: 0.6rem;
+}
+
+em {
+    display: block;
+    font-size: 0.85rem;
+}

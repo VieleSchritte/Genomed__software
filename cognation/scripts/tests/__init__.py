@@ -58,9 +58,11 @@ class GetData:
         with open(short_path + doc_name, 'r') as test_data:
             for line in test_data:
                 line = line.strip()
+
                 case_formula = self.formula_usage(number)
                 formula_dict = case_formula.calculate_relation(re.split(r'[\s\t]+', line))
                 locus = formula_dict['locus']
+
                 lr = formula_dict['lr']
 
                 if lr != '-':
@@ -113,4 +115,3 @@ class GetData:
                         p = float(line[1])
 
         return ref_dict, cpi, p
-

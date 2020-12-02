@@ -6,9 +6,9 @@ from .couple import CoupleFormula
 class TwoCoupleFormula(Formula):
     def calculate_relation(self, raw_values):
         (locus, alleles, sets, intersections, dict_make_result) = self.getting_alleles_locus(raw_values, 4)
-        child2_alleles, child1_alleles, mother_alleles, father_alleles = alleles
-        child2_set, child1_set, mother_set, father_set = sets
-        ch1ch2_inter, ch2m_inter, ch2f_inter, ch1m_inter, ch1f_inter = intersections[0:5]
+        father_alleles, child1_alleles, child2_alleles, mother_alleles = alleles
+        child1_set, child2_set = sets[1, 2]
+        ch1f_inter, ch2f_inter, fm_set, ch1ch2_inter, ch1m_inter, ch2m_inter = intersections
 
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
@@ -22,6 +22,9 @@ class TwoCoupleFormula(Formula):
 
         # If there are no intersections between children and couple, return lr = 0 and start counting mutations
         for i in range(1, 5):
+            exceptions_list = [2, 3]
+            if i in exceptions_list:
+                continue
             if intersections[i] == 0:
                 return self.make_result(locus, lr, dict_make_result)
 

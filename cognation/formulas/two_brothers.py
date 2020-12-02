@@ -6,9 +6,9 @@ from .brother import BrotherFormula
 class TwoBrothersFormula(Formula):
     def calculate_relation(self, raw_values):
         locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 3)
-        brother2_alleles, brother1_alleles, inspected_alleles = alleles
-        brother2_set, brother1_set, inspected_set = sets
-        br2br1_inter, br2insp_inter, br1insp_inter = intersections
+        inspected_alleles, brother1_alleles, brother2_alleles = alleles
+        inspected_set, brother1_set, brother2_set = sets
+        br1insp_inter, br2insp_inter, br2br1_inter = intersections
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):

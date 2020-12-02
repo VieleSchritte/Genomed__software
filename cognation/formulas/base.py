@@ -35,7 +35,7 @@ class UnknownAlleleException(Exception):
 # Abstract parent class
 class Formula(abc.ABC):
     def __init__(self, user_data):
-        self.user_data = str(user_data)
+        self.user_data = user_data
 
     # Checking out if the locus is gender-specific (so we don't need to add it to cpi calculation)
     @staticmethod
@@ -51,16 +51,21 @@ class Formula(abc.ABC):
             # Skip line with warning
             raise LineFormatException()
 
-        locus = raw_values[0]
-        if len(raw_values) == part_number + 2:
-            locus = raw_values[0] + ' ' + raw_values[1]
-
         part_alleles = []
         dict_make_result = {}
-        for i in range(1, part_number + 1):
-            part_alleles.append(self.split_sat(raw_values[-i]))
-            key = 'part' + str(i)
-            dict_make_result[key] = '/'.join(part_alleles[i - 1])
+        locus = raw_values[0]
+
+        if len(raw_values) > part_number + 1:
+            locus += ' ' + raw_values[1]
+            for i in range(2, part_number + 2):
+                part_alleles.append(self.split_sat(raw_values[i]))
+                key = 'part' + str(i-1)
+                dict_make_result[key] = '/'.join(part_alleles[i - 2])
+        else:
+            for i in range(1, part_number + 1):
+                part_alleles.append(self.split_sat(raw_values[i]))
+                key = 'part' + str(i)
+                dict_make_result[key] = '/'.join(part_alleles[i - 1])
 
         part_sets = []
         for part in part_alleles:
@@ -81,17 +86,41 @@ class Formula(abc.ABC):
 
     def calculate(self):
         result = OrderedDict()
-        lines = self.user_data.splitlines()
-        for line in lines:
-            line = line.strip(' \t\n\r')
+
+        processed_user_data = []
+        for participant in self.user_data:
+            participant_lines = participant.splitlines()
+            processed_participant = []
+            for line in participant_lines:
+                processed_participant.append(re.split(r'[\s\t]+', line))
+            processed_user_data.append(processed_participant)
+
+        overall_participants = []
+        for i in range(len(processed_user_data[0])):
+            pair = []
+            for j in range(len(processed_user_data)):
+                target = processed_user_data[j][i]
+                locus = target[0]
+                if len(target) > 3:
+                    locus += ' ' + target[1]
+                    alleles = '/'.join(target[2:])
+                else:
+                    alleles = '/'.join(target[1:])
+                pair.append([locus, alleles])
+            base = pair[0]
+            for k in range(1, len(pair)):
+                base.append(pair[k][1])
+            overall_participants.append(base)
+
+        for line in overall_participants:
             if len(line) == 0:
                 continue
 
             try:
-                relation = self.calculate_relation(re.split(r'[\s\t]+', line))
+                relation = self.calculate_relation(line)
                 result[relation['locus']] = relation
             except (LineFormatException, AllelesException, UnknownAlleleException) as exception:
-                result[hash(line)] = {'exception': exception, 'line': line}
+                result[hash(str(line))] = {'exception': exception, 'line': str(line)}
         return result
 
     # getting allele frequencies from DB
@@ -106,9 +135,6 @@ class Formula(abc.ABC):
 
         return result
 
-    def get_template(self):
-        return 'cognation/formula/' + self.__class__.__name__.lower()[:-7] + '.html'
-
     @staticmethod
     def normalize_sat(value):
         # English and Russian variants
@@ -122,6 +148,9 @@ class Formula(abc.ABC):
     @staticmethod
     def split_sat(sat_string):
         return re.split(r'/', sat_string)
+
+    def get_template(self):
+        return 'cognation/formula/' + self.__class__.__name__.lower()[:-7] + '.html'
 
     @staticmethod
     def make_result(locus, lr, dict_alleles):

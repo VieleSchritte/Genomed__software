@@ -5,17 +5,17 @@ from .base import Formula
 class ParentFormula(Formula):
     def calculate_relation(self, raw_values):
         locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 2)
-        child_set, parent_set = sets
+        parent_set, child_set = sets
         intersection = intersections[0]
 
         # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
             return self.make_result(locus, '-', dict_make_result)
-        lr = 0
 
         if locus == 'AMEL':
             return self.make_result(locus, 1, dict_make_result)
 
+        lr = 0
         freq_dict = self.get_frequencies(locus, intersection)
         # i, j     i, j
         if len(intersection) == 2:
