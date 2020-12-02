@@ -145,14 +145,17 @@
                         </div>
                         <div class="form-group">
                             <label class="add-allele-label" for="addAlleleFreq">Freq:</label>
-                            <input type="text" class="form-control" id="addAlleleFreq" name="freq" />
+                            <div class="freq-input-wrapper">
+                                <input type="number" min="0" max="1" class="form-control" id="addAlleleFreq" name="freq" />
+                            </div>
+
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <div class="text-danger invisible" id="addAlleleError">Save error <span class="error-text"></span></div>
                     <button type="button" id="close-modal-button" class="modal-button close-but" data-dismiss="modal">Close</button>
-                    <button type="button" class="modal-button save">Save</button>
+                    <button type="button" id="save-modal-button" class="modal-button save">Save</button>
                 </div>
             </div>
         </div>
@@ -171,18 +174,6 @@ $(document).ready(function(){
         });
         $('.button-mutations').hide();
     });
-
-    /*$('#add-allele-button').on('click', function (event) {
-
-        const button = $(event.relatedTarget);
-        const locus = button.data('locus');
-        const sat = button.data('sat');
-
-        const modal = $(this);
-        modal.find('.modal-body input[name*="locus"]').val(locus);
-        modal.find('.modal-body input[name*="sat"]').val(sat);
-        modal.find('.modal-body input[name*="freq"]').val('');
-    });*/
 
     $("#addAlleleForm").validate({
         debug: true,
@@ -206,7 +197,11 @@ $(document).ready(function(){
             })
             .done(function(data) {
                 console.log('Success ' + data);
-                $('#addAlleleModal').modal('hide');
+                let modal = document.getElementById('addAlleleModal');
+                let overlay = document.getElementById('overlay');
+                modal.style.display = 'none';
+                overlay.style.display = 'none';
+
             })
             .fail(function(jqXHR, textStatus, textError) {
                 $('#addAlleleError .error-text').html(textError);
@@ -227,35 +222,31 @@ $(document).ready(function(){
     });
 });
 
-for (let lrCell of document.getElementsByClassName('lr-cell')) {
-    if (lrCell.innerHTML == 0) {
-        console.log(lrCell.parentElement)
-        lrCell.parentElement.style.backgroundColor = '#6c757d'
-    }
-
-}
-
 let modal = document.getElementById('addAlleleModal');
-let addButton = document.getElementById('add-allele-button');
 let closeButton = document.getElementById('closing-thing');
 let closeModalButton = document.getElementById('close-modal-button');
 let overlay = document.getElementById('overlay');
+let saveModalButton = document.getElementById('save-modal-button');
 
-addButton.onclick = function() {
-    modal.style.display = 'block';
-    overlay.style.display = 'block';
+let addAlleleLocus = document.getElementById('addAlleleLocus');
+let addAlleleSat = document. getElementById('addAlleleSat');
+let addAlleleFreq = document.getElementById('addAlleleFreq');
 
+for (let addButton of document.getElementsByClassName('button-add-allele')) {
+    let locus = addButton.getAttribute('data-locus')
+    let sat = addButton.getAttribute('data-sat')
+    console.log(locus, sat)
+    addButton.onclick = function() {
+        modal.style.display = 'block';
+        overlay.style.display = 'block';
+        addAlleleLocus.value = locus;
+        addAlleleSat.value = sat;
+    }
 }
 
 closeButton.onclick = function() {
     modal.style.display = 'none';
     overlay.style.display = 'none';
-}
-
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
 }
 
 closeModalButton.onclick = function() {

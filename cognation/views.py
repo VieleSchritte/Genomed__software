@@ -271,7 +271,6 @@ def calculate(request):
             'data': participants_data,
         }
     }
-    print(ctx)
 
     return render(request, formula.get_template(), ctx)
 
