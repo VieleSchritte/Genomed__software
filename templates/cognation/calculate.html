@@ -114,6 +114,9 @@
         <a href="{% url 'cognation:index' %}"> К выбору родства</a>
         <a href="#" id="saveResults">Сохранить результаты</a>
     </div>
+    <div class="overlay-wrapper">
+        <div id="overlay"></div>
+    </div>
 
 {% endblock content %}
 
@@ -126,55 +129,51 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="addAlleleFormTitle">Add allele</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span id="closing-thing" aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <form method="post" action="{% url 'cognation:save_allele' %}" id="addAlleleForm">
                         {% csrf_token %}
-                        <div class="form-group row">
-                            <label for="addAlleleLocus" class="col-sm-2 col-form-label">Locus:</label>
-                            <div class="col-sm-10">
-                                <input type="text" readonly class="form-control" id="addAlleleLocus" name="locus" />
-                            </div>
+                        <div class="form-group">
+                            <label class="add-allele-label" for="addAlleleLocus">Locus:</label>
+                            <input type="text" readonly class="form-control" id="addAlleleLocus" name="locus" />
                         </div>
-                        <div class="form-group row">
-                            <label for="addAlleleSat" class="col-sm-2 col-form-label">Sat:</label>
-                            <div class="col-sm-10">
-                                <input type="text" readonly class="form-control" id="addAlleleSat" name="sat" />
-                            </div>
+                        <div class="form-group">
+                            <label class="add-allele-label" for="addAlleleSat">Sat:</label>
+                            <input type="text" readonly class="form-control" id="addAlleleSat" name="sat" />
                         </div>
-                        <div class="form-group row">
-                            <label for="addAlleleFreq" class="col-sm-2 col-form-label">Freq:</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="addAlleleFreq" name="freq" />
-                            </div>
+                        <div class="form-group">
+                            <label class="add-allele-label" for="addAlleleFreq">Freq:</label>
+                            <input type="text" class="form-control" id="addAlleleFreq" name="freq" />
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <div class="text-danger invisible" id="addAlleleError">Save error <span class="error-text"></span></div>
-                    <button type="button" class="button-collection btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="button-collection btn-primary">Save</button>
+                    <button type="button" id="close-modal-button" class="modal-button close-but" data-dismiss="modal">Close</button>
+                    <button type="button" class="modal-button save">Save</button>
                 </div>
             </div>
         </div>
     </div>
 {% endblock footer %}
 
+
 {% block scripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
 <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-    $('.button-mutations').on('click', function (event) {
+    $('.button-mutations').on('click', function () {
         $('.fair-result').each(function() {
             $(this).html($(this).data('result'));
         });
         $('.button-mutations').hide();
     });
 
-    $('#add-allele-button').on('click', function (event) {
+    /*$('#add-allele-button').on('click', function (event) {
+
         const button = $(event.relatedTarget);
         const locus = button.data('locus');
         const sat = button.data('sat');
@@ -183,7 +182,7 @@ $(document).ready(function(){
         modal.find('.modal-body input[name*="locus"]').val(locus);
         modal.find('.modal-body input[name*="sat"]').val(sat);
         modal.find('.modal-body input[name*="freq"]').val('');
-    });
+    });*/
 
     $("#addAlleleForm").validate({
         debug: true,
@@ -216,7 +215,7 @@ $(document).ready(function(){
         }
     });
 
-    $('#addAlleleModal .button-add-allele').on('click', function () {
+    $('#addAlleleModal .save').on('click', function () {
         $('#addAlleleForm').submit();
     });
 
@@ -236,7 +235,33 @@ for (let lrCell of document.getElementsByClassName('lr-cell')) {
 
 }
 
+let modal = document.getElementById('addAlleleModal');
+let addButton = document.getElementById('add-allele-button');
+let closeButton = document.getElementById('closing-thing');
+let closeModalButton = document.getElementById('close-modal-button');
+let overlay = document.getElementById('overlay');
 
+addButton.onclick = function() {
+    modal.style.display = 'block';
+    overlay.style.display = 'block';
+
+}
+
+closeButton.onclick = function() {
+    modal.style.display = 'none';
+    overlay.style.display = 'none';
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+closeModalButton.onclick = function() {
+    modal.style.display = 'none';
+    overlay.style.display = 'none';
+}
 
 </script>
 {% endblock scripts %}

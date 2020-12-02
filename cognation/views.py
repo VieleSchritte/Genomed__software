@@ -271,6 +271,7 @@ def calculate(request):
             'data': participants_data,
         }
     }
+    print(ctx)
 
     return render(request, formula.get_template(), ctx)
 
@@ -304,15 +305,9 @@ def make_order_cordis():
 
 
 def make_order_verifiler():
-    return ['AMEL', 'Yindel', 'DYS391', 'SRY', 'D3S1358', 'vWA', 'D16S539', 'CSF1PO', 'TPOX', 'D8S1179', 'D21S11', 'D18S51', 'Penta E', 'D2S441',
-            'D19S433', 'TH01', 'FGA', 'D22S1045', 'D5S818', 'D13S317', 'D7S820', 'D6S1043', 'D10S1248', 'D1S1656',
-            'D12S391', 'D2S1338', 'Penta D']
-
-
-def make_order_cordis_exp():
-    return ['AMEL', 'D3S1358', 'TH01', 'D12S391', 'D5S818', 'TPOX', 'D2S441', 'D7S820', 'D13S317', 'FGA',
-            'D22S1045', 'D18S51', 'D16S539', 'D8S1179', 'CSF1PO', 'D6S1043', 'vWA', 'D21S11', 'SE33',
-            'D10S1248', 'D1S1656', 'D19S433', 'D2S1338', 'SRY', 'DYS391', 'Yindel']
+    return ['AMEL', 'D3S1358', 'vWA', 'D16S539', 'CSF1PO', 'TPOX', 'D8S1179', 'D21S11', 'SE33', 'D18S51', 'Penta E',
+            'D2S441', 'D19S433', 'TH01', 'FGA', 'D22S1045', 'D5S818', 'D13S317', 'D7S820','D6S1043', 'D10S1248',
+            'D1S1656', 'D12S391', 'D2S1338', 'Penta D', 'Yindel', 'DYS391', 'SRY']
 
 
 @register.filter
