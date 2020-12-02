@@ -11,10 +11,16 @@ import logging
 
 class TestFormula(TestCase):
     def setUp(self):
-        self.reference_paths = ['no_intersections/no_intersections_ref', 'aa_an_an/aa_an_an_ref'
-                                'ab_an_bn/ab_an_bn_ref1']
-        self.test_paths = ['no_intersections/no_intersections_test', 'aa_an_an/aa_an_an_test',
+        self.reference_paths = [
+                                'no_intersections/no_intersections_ref',
+                                'aa_an_an/aa_an_an_ref',
+                                'ab_an_bn/ab_an_bn_ref1'
+        ]
+        self.test_paths = ['no_intersections/no_intersections_test',
+                           'aa_an_an/aa_an_an_test',
                            'ab_an_bn/ab_an_bn_test']
+
+
 
         short_path = 'cognation/scripts/tests/test_cases/couple_cases/'
         get_ref = GetData()
