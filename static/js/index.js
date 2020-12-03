@@ -1,4 +1,4 @@
-const STEP_CHOOSE_COGNATION = 'choose_cognation';
+/*const STEP_CHOOSE_COGNATION = 'choose_cognation';
 const STEP_COGNATION_PREVIEW = 'cognation_preview';
 const STEP_FILL_IN_DATA = 'fill_in_data';
 
@@ -175,3 +175,4 @@ let previewNextButton = document.getElementById('next-button-preview');
 previewNextButton.addEventListener("click", OnNextClick);
 let nextButtonGenotype = document.getElementById('next-button-genotype');
 nextButtonGenotype.addEventListener("click", OnNextClick);
+*/
