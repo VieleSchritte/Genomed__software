@@ -2,161 +2,176 @@ const STEP_CHOOSE_COGNATION = 'choose_cognation';
 const STEP_COGNATION_PREVIEW = 'cognation_preview';
 const STEP_FILL_IN_DATA = 'fill_in_data';
 
+let value = 0;
+let currentFormula = '';
+
 let step = STEP_CHOOSE_COGNATION;
-/* variable for comparing data.length and participants number (is data list full or not) */
 let fillInPart = 0;
 let data = [];
+let participantsNumber = 2;
 
-function showCognationScreen() {
-    let startHeader = document.getElementById('start-header')
-    let cognationScreen = document.getElementById('cognation-screen');
-    cognationScreen.style.display = 'block';
-    startHeader.style.display = 'block';
+function HideItem(args) {
+    let idList = args[0];
+    for (let id of idList) {
+        let item = document.getElementById(id);
+        item.style.display = 'none';
+
+    }
+    if (args.length > 1) {
+        let numbers = args[1];
+        for (let number of numbers) {
+            let id = 'part' + String(number);
+            let divContainsTextarea = document.getElementById(id);
+            let genotypeHeader = divContainsTextarea.querySelector('.genotype-header');
+            genotypeHeader.innerHTML = ' ';
+            divContainsTextarea.style.display = 'none';
+        }
+    }
 }
 
-function hideChooseCognationScreen() {
-    let startHeader = document.getElementById('start-header');
-    let cognationScreen = document.getElementById('cognation-screen');
-    cognationScreen.style.display = 'none';
-    startHeader.style.display = 'none';
+function ShowItem(args) {
+    let idList = args[0];
+    for (let id of idList) {
+        let item = document.getElementById(id);
+        item.style.display = 'block';
+        if (id === 'next-button-genotype' || id === 'submit-button') {
+            item.style.display = 'inline-block';
+        }
+    }
+
+    if (args.length > 1) {
+        let numbers = args[1];
+        for (let number of numbers) {
+            let id = 'part' + String(number);
+            let divContainsTextarea = document.getElementById(id);
+            let genotypeHeader = divContainsTextarea.querySelector('.genotype-header');
+
+            divContainsTextarea.style.display = 'inline-block';
+            genotypeHeader.innerHTML = args[2][number - 1];
+        }
+    }
 }
 
-function hideCognationPreviewScreen() {
-    let cognationPreviewScreen = document.getElementById('cognation-preview')
-    cognationPreviewScreen.style.display = 'none';
+function GetFirstSecondGenotypes(participantsNumber) {
+    if (participantsNumber % 2 === 0) {
+        return {'first': [1, 2], 'second': [3, 4]};
+    } else {
+        return {'first': [1, 2, 3], 'second': [4, 5]};
+    }
 }
 
-function showAddGenotypeScreen() {
-    let addGenotypeScreen = document.getElementById('add-genotype');
-    addGenotypeScreen.style.display = 'block';
+function ClearTextAreaValue() {
+    for (let textarea of document.querySelectorAll('textarea.form-control')) {
+        textarea.value = "";
+    }
 }
 
-function hideAddGenotypeScreen() {
-    let addGenotypeScreen = document.getElementById('add-genotype');
-    addGenotypeScreen.style.display = 'none';
+function OnRadioClick(event) {
+    if (this !== event.target) {
+        return
+    }
+
+    step = STEP_COGNATION_PREVIEW;
+    let label = event.target;
+    let input = label.querySelector('input');
+    value = Number(input.getAttribute('value'));
+    let imageUrl = input.getAttribute('data-image-url');
+    currentFormula = formulas.find((f) => f['value'] === value);
+
+    if (currentFormula['headers'].length > 2) {
+        participantsNumber = currentFormula['headers'].length;
+    }
+
+    let cognationPreview = document.getElementById('cognation-preview');
+    cognationPreview.querySelector('.preview-header').innerHTML = currentFormula['name'];
+    let imageForm = cognationPreview.querySelector('.preview-image');
+    imageForm.setAttribute('src', imageUrl);
+    imageForm.setAttribute('alt', currentFormula['name']);
+    let previewText = cognationPreview.querySelector('.preview-text');
+    previewText.innerHTML = currentFormula['desc'];
+    HideItem([['cognation-screen', 'start-header']]);
+    ShowItem([['cognation-preview']]);
 }
 
-function showSubmitButton() {
-    let submitButton = document.getElementById('submit-button');
-    submitButton.style.display = 'inline-block';
+
+window.onload = function setUpHandlers() {
+    for (let label of document.querySelectorAll('label.cognation-button')) {
+        label.addEventListener("click", OnRadioClick);
+        ClearTextAreaValue();
+    }
 }
 
-function hideSubmitButton() {
-    let submitButton = document.getElementById('submit-button');
-    submitButton.style.display = 'none';
-}
+function OnBackClick(event) {
+    if (this !== event.target) {
+        return;
+    }
 
-
-function onBackClick(event) {
     if (step === STEP_COGNATION_PREVIEW) {
         step = STEP_CHOOSE_COGNATION;
-        /* hide cognation preview, show radio buttons */
-        hideCognationPreviewScreen();
-        showCognationScreen();
+        currentFormula = '';
+        HideItem([['cognation-preview']]);
+        ShowItem([['cognation-screen', 'start-header']]);
+        ClearTextAreaValue();
+        value = 0;
+        currentFormula = '';
+        fillInPart = 0;
+        participantsNumber = 2;
+        return;
     }
+
     if (step === STEP_FILL_IN_DATA) {
-        if (fillInPart === 0) {
-            /* on the first fill in => show preview, hide fill in */
-            step = STEP_CHOOSE_COGNATION;
-            showCognationPreviewScreen();
-            hideAddGenotypeScreen();
+        if (fillInPart === 1) {
+            step = STEP_COGNATION_PREVIEW;
+            fillInPart--;
+            HideItem([['add-genotype'], GetFirstSecondGenotypes(participantsNumber)['first'],
+                currentFormula['headers']]);
+            ShowItem([['cognation-preview']]);
         }
-        if (fillInPart < formulas['participants_number']) {
-            /* on other fill ins => show previous fill in, hide current */
-            fillInPart --;
+
+        if (fillInPart === 2) {
+            fillInPart--;
+            HideItem([['submit-button'], GetFirstSecondGenotypes(participantsNumber)['second']]);
+            ShowItem([['next-button-genotype'], GetFirstSecondGenotypes(participantsNumber)['first'],
+                currentFormula['headers']])
         }
     }
 }
 
-function onNextClick() {
+let previewBackButton = document.getElementById('back-button-preview');
+previewBackButton.addEventListener('click', OnBackClick);
+let backButtonGenotype = document.getElementById('back-button-genotype');
+backButtonGenotype.addEventListener('click', OnBackClick);
+
+function OnNextClick(event) {
+    if (this !== event.target) {
+        return
+    }
+
+    fillInPart++;
+
     if (step === STEP_COGNATION_PREVIEW) {
         step = STEP_FILL_IN_DATA;
-        /* hide cognation preview, show fill in first */
-        hideCognationPreviewScreen;
-        showAddGenotypeScreen;
-    }
-    if (step === STEP_FILL_IN_DATA) {
-        fillInPart ++;
-        /* hide current fill in, show next */
-    }
-}
-
-function onSubmitClick(event) {
-
-}
-
-/* Behaviour of radio buttons - on click on one of them show its description and hide the rest of buttons */
-for (let label of document.querySelectorAll('label.cognation-button')) {
-    step = STEP_COGNATION_PREVIEW;
-    let labelsValue = label.firstElementChild.getAttribute('value')
-    label.onclick = hideChooseCognationScreen(labelsValue)
-}
-
-/* On click on back button - hide description and show the rest of radio buttons */
-for (let backButton of document.querySelectorAll('label.description-back')) {
-    backButton.onclick = function OnBackButtonClick() {
-        backButton.closest('.description-genotypes').style.display = 'none';
-
-        for (let label of document.querySelectorAll('label.cognation-button')) {
-            label.style.display = 'inline';
-            label.classList.remove("active");
-            let startHeader = document.getElementById('start-header');
-            startHeader.style.display = 'block';
+        if (participantsNumber < 4) {
+            HideItem([['next-button-genotype', 'cognation-preview']]);
+            ShowItem([['add-genotype', 'submit-button'], GetFirstSecondGenotypes(participantsNumber)['first'],
+                currentFormula['headers']]);
+            return;
+        } else {
+            HideItem([['submit-button', 'cognation-preview']]);
+            ShowItem([['add-genotype', 'next-button-genotype'], GetFirstSecondGenotypes(participantsNumber)['first'],
+                currentFormula['headers']]);
+            return;
         }
     }
-}
 
-/* On click on ok button in a description - hide description and label, show first field fof genotype, hide start header */
-for (let okButton of document.querySelectorAll('label.description-ok')) {
-    okButton.onclick = function OnOKButtonClick() {
-        /* hiding label */
-        let labelToHide = okButton.closest('.description-genotypes').previousElementSibling;
-        labelToHide.style.display = 'none';
-
-        /* hiding description */
-        let cognDescr = okButton.closest('.description')
-        cognDescr.style.display = 'none';
-
-        /* hiding start header */
-        document.getElementById('start-header').style.display = 'none';
-
-        /* showing first field for genotype */
-        let addGenotype = cognDescr.nextElementSibling.firstElementChild;
-        addGenotype.style.display = 'block';
+    if (step === STEP_FILL_IN_DATA) {
+        HideItem([['next-button-genotype'], GetFirstSecondGenotypes(participantsNumber)['first']]);
+        ShowItem([['submit-button'], GetFirstSecondGenotypes(participantsNumber)['second'],
+            currentFormula['headers']]);
     }
 }
 
-/* First child back - hides itself, shows description */
-for (let allGenotypes of document.querySelectorAll('div.all-genotypes')) {
-    let buttonGroup = allGenotypes.querySelector('div.first-genotype').querySelector('div.genotype-buttons');
-    let firstBackButton = buttonGroup.querySelector('label.first-back');
-    firstBackButton.onclick = function firstBackButtonBehaviour() {
-        let firstGenotype = allGenotypes.firstElementChild;
-        firstGenotype.style.display = 'none';
-
-        let description = allGenotypes.previousElementSibling;
-        description.style.display = 'block';
-    }
-}
-
-/* All other back buttons - hide themselves, show previous genotypes */
-for (let genotypeBackButton of document.querySelectorAll('label.genotype-back')) {
-    let buttonGroup = genotypeBackButton.closest('.genotype-button-group');
-    let currentGenotype = buttonGroup.parentElement;
-    let previousGenotype = currentGenotype.previousElementSibling;
-    genotypeBackButton.onclick = function OnBackClick() {
-        currentGenotype.style.display = 'none';
-        previousGenotype.style.display = 'block';
-    }
-}
-
-/* Next button always shows next genotype */
-for (let genotypeNextButton of document.querySelectorAll('label.genotype-next')) {
-                let buttonGroup = genotypeNextButton.closest('.genotype-button-group');
-                let currentGenotype = buttonGroup.parentElement;
-                let nextGenotype = currentGenotype.nextElementSibling;
-                genotypeNextButton.onclick = function OnNextClick() {
-                    currentGenotype.style.display = 'none';
-                    nextGenotype.style.display = 'block';
-                }
-            }
+let previewNextButton = document.getElementById('next-button-preview');
+previewNextButton.addEventListener("click", OnNextClick);
+let nextButtonGenotype = document.getElementById('next-button-genotype');
+nextButtonGenotype.addEventListener("click", OnNextClick);

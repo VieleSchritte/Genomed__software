@@ -20,6 +20,7 @@ ALLOWED_HOSTS = [
     u'104.248.249.103',
     'localhost',
 ]
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
