@@ -86,6 +86,18 @@ class Formula(abc.ABC):
 
         return locus, part_alleles, part_sets, intersections, dict_make_result
 
+    # Checks if the string is integer or float
+    @staticmethod
+    def is_digit(string):
+        if string.isdigit():
+            return True
+        else:
+            try:
+                float(string)
+                return True
+            except ValueError:
+                return False
+
     def calculate(self):
         result = OrderedDict()
 
@@ -104,11 +116,19 @@ class Formula(abc.ABC):
             for j in range(len(processed_user_data)):
                 target = processed_user_data[j][i]
                 locus = target[0]
-                if len(target) > 3:
-                    locus += ' ' + target[1]
-                    alleles = '/'.join(target[2:])
+                alleles = []
+                if locus == 'AMEL':
+                    alleles = target[1:]
                 else:
-                    alleles = '/'.join(target[1:])
+                    for k in range(1, len(target)):
+                        if not self.is_digit(target[k]) and ',' not in target[k]:
+                            locus += ' ' + target[k]
+                        else:
+                            alleles.append(target[k])
+                        if len(alleles) > 2:
+                            raise LineFormatException
+
+                alleles = '/'.join(alleles)
 
                 if not self.is_gender_specific(locus):
                     if '/' not in alleles:
@@ -117,6 +137,7 @@ class Formula(abc.ABC):
                 if ',' in alleles:
                     alleles = alleles.replace(',', '.')
                 pair.append([locus, alleles])
+
             base = pair[0]
             for k in range(1, len(pair)):
                 base.append(pair[k][1])
@@ -125,7 +146,6 @@ class Formula(abc.ABC):
         for line in overall_participants:
             if len(line) == 0:
                 continue
-
             try:
                 relation = self.calculate_relation(line)
                 result[relation['locus']] = relation
