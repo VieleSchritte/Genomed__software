@@ -52,6 +52,7 @@ class Formula(abc.ABC):
             raise LineFormatException()
 
         part_alleles = []
+
         dict_make_result = {}
         locus = raw_values[0]
 
@@ -71,6 +72,7 @@ class Formula(abc.ABC):
         for part in part_alleles:
             if not self.is_gender_specific(locus) and len(part) != 2:
                 raise AllelesException(locus, part)
+
             part_sets.append(set(part))
 
         if not self.is_gender_specific(locus):
@@ -107,6 +109,13 @@ class Formula(abc.ABC):
                     alleles = '/'.join(target[2:])
                 else:
                     alleles = '/'.join(target[1:])
+                    
+                if not self.is_gender_specific(locus):
+                    if '/' not in alleles:
+                        alleles += '/' + alleles
+
+                if ',' in alleles:
+                    alleles = alleles.replace(',', '.')
                 pair.append([locus, alleles])
             base = pair[0]
             for k in range(1, len(pair)):
