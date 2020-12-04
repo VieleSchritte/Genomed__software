@@ -109,7 +109,7 @@ class Formula(abc.ABC):
                     alleles = '/'.join(target[2:])
                 else:
                     alleles = '/'.join(target[1:])
-                    
+
                 if not self.is_gender_specific(locus):
                     if '/' not in alleles:
                         alleles += '/' + alleles
