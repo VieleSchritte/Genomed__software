@@ -92,6 +92,7 @@ class Formula(abc.ABC):
             participant_lines = participant.splitlines()
             processed_participant = []
             for line in participant_lines:
+                line = line.strip()
                 processed_participant.append(re.split(r'[\s\t]+', line))
             processed_user_data.append(processed_participant)
 
