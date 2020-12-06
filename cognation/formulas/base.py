@@ -103,12 +103,32 @@ class Formula(abc.ABC):
 
         processed_user_data = []
         for participant in self.user_data:
-            participant_lines = participant.splitlines()
-            processed_participant = []
+            participant_lines = sorted(participant.splitlines())
+            participant = []
             for line in participant_lines:
+
                 line = line.strip()
-                processed_participant.append(re.split(r'[\s\t]+', line))
-            processed_user_data.append(processed_participant)
+                line = re.split(r'[\s\t]+', line)
+                locus = line[0]
+                alleles = []
+
+                for i in range(len(line)):
+                    if ',' in line[i]:
+                        line[i] = line[i].replace(',', '.')
+
+                if locus == 'AMEL':
+                    alleles = line[1:]
+                else:
+                    for i in range(1, len(line)):
+                        if self.is_digit(line[i]):
+                            alleles.append(line[i])
+                        else:
+                            locus += ' ' + line[i]
+                alleles = '/'.join(alleles)
+                if not self.is_gender_specific(locus) and '/' not in alleles:
+                    alleles += '/' + alleles
+                participant.append([locus, alleles])
+            processed_user_data.append(participant)
 
         overall_participants = []
         for i in range(len(processed_user_data[0])):
@@ -116,26 +136,7 @@ class Formula(abc.ABC):
             for j in range(len(processed_user_data)):
                 target = processed_user_data[j][i]
                 locus = target[0]
-                alleles = []
-                if locus == 'AMEL':
-                    alleles = target[1:]
-                else:
-                    for k in range(1, len(target)):
-                        if not self.is_digit(target[k]) and ',' not in target[k]:
-                            locus += ' ' + target[k]
-                        else:
-                            alleles.append(target[k])
-                        if len(alleles) > 2:
-                            raise LineFormatException
-
-                alleles = '/'.join(alleles)
-
-                if not self.is_gender_specific(locus):
-                    if '/' not in alleles:
-                        alleles += '/' + alleles
-
-                if ',' in alleles:
-                    alleles = alleles.replace(',', '.')
+                alleles = target[1]
                 pair.append([locus, alleles])
 
             base = pair[0]
