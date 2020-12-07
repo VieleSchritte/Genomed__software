@@ -127,7 +127,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addAlleleFormTitle">Add allele</h5>
+                    <h5 class="modal-title" id="addAlleleFormTitle">Добавить аллель</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span id="closing-thing" aria-hidden="true">&times;</span>
                     </button>
@@ -136,15 +136,15 @@
                     <form method="post" action="{% url 'cognation:save_allele' %}" id="addAlleleForm">
                         {% csrf_token %}
                         <div class="form-group">
-                            <label class="add-allele-label" for="addAlleleLocus">Locus:</label>
+                            <label class="add-allele-label" for="addAlleleLocus">Локус:</label>
                             <input type="text" readonly class="form-control" id="addAlleleLocus" name="locus" />
                         </div>
                         <div class="form-group">
-                            <label class="add-allele-label" for="addAlleleSat">Sat:</label>
+                            <label class="add-allele-label" for="addAlleleSat">Аллель:</label>
                             <input type="text" readonly class="form-control" id="addAlleleSat" name="sat" />
                         </div>
                         <div class="form-group">
-                            <label class="add-allele-label" for="addAlleleFreq">Freq:</label>
+                            <label class="add-allele-label" for="addAlleleFreq">Частота:</label>
                             <div class="freq-input-wrapper">
                                 <input type="number" min="0" max="1" class="form-control" id="addAlleleFreq" name="freq" />
                             </div>
@@ -221,6 +221,9 @@ $(document).ready(function(){
         XLSX.writeFile(wb, 'Results.xlsx');
     });
 });
+
+let addAlleleButton = document.getElementById('add-allele-button')
+console.log(addAlleleButton.getAttribute('data-locus'))
 
 let modal = document.getElementById('addAlleleModal');
 let closeButton = document.getElementById('closing-thing');

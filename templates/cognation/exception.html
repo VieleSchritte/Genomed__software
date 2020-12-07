@@ -1,0 +1,17 @@
+{% extends "../base.html" %}
+{% block html_title %}
+    {{ block.super }} — Cognation Exception
+{% endblock %}
+
+{% block title %}
+    Cognation Exception
+{% endblock title %}
+
+{% block content %}
+    {{ block.super }}
+    <div class="Exceptions block">
+        <h2>Error:</h2>
+        <p class="exception">{{ exception }}</p>
+        <a href="{% url 'cognation:index' %}" class="exception-button"> Ввести заново</a>
+    </div>
+{% endblock content %}

@@ -10,8 +10,11 @@ class UnknownFormulaException(Exception):
 
 
 class LineFormatException(Exception):
+    def __init__(self, line):
+        self.line = line
+
     def __str__(self):
-        return 'Wrong line format'
+        return 'Неверный формат ввода: ' + str(self.line)
 
 
 class AllelesException(Exception):
@@ -20,7 +23,7 @@ class AllelesException(Exception):
         self.part = part
 
     def __str__(self):
-        return "Alleles count doesn't look right: " + str(self.part) + " in locus " + str(self.locus)
+        return "Неверное число аллелей: " + str(self.part) + " в локусе " + str(self.locus)
 
 
 class UnknownAlleleException(Exception):
@@ -29,7 +32,7 @@ class UnknownAlleleException(Exception):
         self.sat = sat
 
     def __str__(self):
-        return "Unknown allele found in locus " + str(self.locus) + ": " + str(self.sat)
+        return "В локусе " + str(self.locus) + " найден неизвестный аллель: " + str(self.sat)
 
 
 class UnknownSymbolInAlleles(Exception):
@@ -39,7 +42,7 @@ class UnknownSymbolInAlleles(Exception):
         self.symbol = symbol
 
     def __str__(self):
-        return "Unknown symbol '" + str(self.symbol) + "' found in alleles " + str('/'.join(self.alleles)) + " of locus " + str(self.locus)
+        return "Неизвестный символ '" + str(self.symbol) + "' найден среди аллелей " + str('/'.join(self.alleles)) + " в локусе " + str(self.locus)
 
 
 class TooManyDelimitingSymbols(Exception):
@@ -48,7 +51,7 @@ class TooManyDelimitingSymbols(Exception):
         self.alleles = alleles
 
     def __str__(self):
-        return "Too many delimiting symbols found in alleles " + str(self.alleles) + " of locus " + str(self.locus) + ". Use only one '.' symbol in case of float number"
+        return "Слишком много разделяющих символов в списке аллелей " + str(self.alleles) + " в локусе " + str(self.locus) + ". Используйте только одну точку или запятую"
 
 
 class DelimitingLast(Exception):
@@ -56,12 +59,12 @@ class DelimitingLast(Exception):
         self.alleles = alleles
 
     def __str__(self):
-        return "Delimiting character in the end of alleles line: " + str(self.alleles)
+        return "Разделяющий символ в конце числа: " + str(self.alleles)
 
 
 class LociSetDoesNotEqual(Exception):
     def __str__(self):
-        return "participants' loci sets are not match"
+        return "Числа локусов участников не совпадают. Введите одинаковое количество локусов для каждого участника"
 
 
 # Abstract parent class
@@ -86,7 +89,7 @@ class Formula(abc.ABC):
     def getting_alleles_locus(self, raw_values, part_number):
         if len(raw_values) < part_number + 1:
             # Skip line with warning
-            raise LineFormatException()
+            raise LineFormatException(raw_values)
 
         part_alleles = []
 
@@ -138,7 +141,7 @@ class Formula(abc.ABC):
     def alleles_check(self, alleles, locus):
         for allele in alleles:
             if locus == 'AMEL':
-                allowed_alleles = ['X', 'Y']
+                allowed_alleles = ['X', 'Х', 'Y']  # Both English and Russian X variants
                 if allele not in allowed_alleles:
                     counter = 0
                     for symbol in allele:
@@ -147,7 +150,7 @@ class Formula(abc.ABC):
                         else:
                             counter += 1
                     if counter > 1:
-                        raise LineFormatException
+                        raise LineFormatException(alleles)
 
             else:
                 exception_counter = 0
@@ -161,6 +164,8 @@ class Formula(abc.ABC):
                         raise TooManyDelimitingSymbols(locus, alleles)
             if allele[-1] == '.':
                 raise DelimitingLast(alleles)
+        if len(alleles) > 2:
+            raise AllelesException(locus, alleles)
 
     def calculate(self):
         result = OrderedDict()
@@ -221,8 +226,10 @@ class Formula(abc.ABC):
             try:
                 relation = self.calculate_relation(line)
                 result[relation['locus']] = relation
-            except (LineFormatException, AllelesException, UnknownAlleleException) as exception:
+            except (LineFormatException, AllelesException, UnknownAlleleException, UnknownSymbolInAlleles,
+                    TooManyDelimitingSymbols, DelimitingLast, LociSetDoesNotEqual) as exception:
                 result[hash(str(line))] = {'exception': exception, 'line': str(line)}
+
         return result
 
     # getting allele frequencies from DB

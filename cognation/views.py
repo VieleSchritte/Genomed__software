@@ -4,13 +4,13 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.template.defaultfilters import register
-from django.conf.urls.static import static
+from .formulas.base import LineFormatException, AllelesException, UnknownAlleleException, TooManyDelimitingSymbols, UnknownSymbolInAlleles, DelimitingLast, LociSetDoesNotEqual
 import json
 # from django.core.serializers.json import DjangoJSONEncoder
 
 from .formulas import formula_builder
 from .models import Locus
-print(static('ParentFormula.png'))
+
 formulas = [
     {
         'name': 'Отцовство/материнство для двух участников',
@@ -238,37 +238,38 @@ def calculate(request):
             break
 
     formula = formula_builder(data_type, participants_data)
-    result = formula.calculate()
-    cpi = 1
-    mutations = 0
-
-    for key in result:
-        if "lr" in result[key]:
-            if result[key]["lr"] == '-':
-                continue
-            elif result[key]["lr"] > 0:
-                cpi *= round(result[key]["lr"], 2)
-            else:
-                mutations += 1
-
-    if mutations > 2:
-        cpi = 0
+    try:
+        result = formula.calculate()
+        cpi = 1
         mutations = 0
-
-    ctx = {
-        'result': result,
-        'cpi': cpi,
-        'prob': ((cpi / (1. + cpi)) * 100.),
-        'participants': participants_number,
-        'mutations': mutations,
-        'order': make_order(result),
-        'original': {
-            'type': data_type,
-            'data': participants_data,
+        for key in result:
+            if "lr" in result[key]:
+                if result[key]["lr"] == '-':
+                    continue
+                elif result[key]["lr"] > 0:
+                    cpi *= round(result[key]["lr"], 2)
+                else:
+                    mutations += 1
+        if mutations > 2:
+            cpi = 0
+            mutations = 0
+        ctx = {
+            'result': result,
+            'cpi': cpi,
+            'prob': ((cpi / (1. + cpi)) * 100.),
+            'participants': participants_number,
+            'mutations': mutations,
+            'order': make_order(result),
+            'original': {
+                'type': data_type,
+                'data': participants_data,
+            }
         }
-    }
 
-    return render(request, formula.get_template(), ctx)
+        return render(request, formula.get_template(), ctx)
+    except (LineFormatException, AllelesException, UnknownSymbolInAlleles,
+            TooManyDelimitingSymbols, DelimitingLast, LociSetDoesNotEqual) as exception:
+        return render(request, 'cognation/exception.html', {"exception": exception})
 
 
 def save_allele(request):

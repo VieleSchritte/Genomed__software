@@ -8,6 +8,5 @@ app_name = 'cognation'
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^calculate/$', views.calculate, name='calculate'),
-    url(r'^save_allele/', views.save_allele, name='save_allele')
+    url(r'^save_allele/', views.save_allele, name='save_allele'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
