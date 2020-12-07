@@ -32,6 +32,38 @@ class UnknownAlleleException(Exception):
         return "Unknown allele found in locus " + str(self.locus) + ": " + str(self.sat)
 
 
+class UnknownSymbolInAlleles(Exception):
+    def __init__(self, locus, alleles, symbol):
+        self.locus = locus
+        self.alleles = alleles
+        self.symbol = symbol
+
+    def __str__(self):
+        return "Unknown symbol '" + str(self.symbol) + "' found in alleles " + str('/'.join(self.alleles)) + " of locus " + str(self.locus)
+
+
+class TooManyDelimitingSymbols(Exception):
+    def __init__(self, locus, alleles):
+        self.locus = locus
+        self.alleles = alleles
+
+    def __str__(self):
+        return "Too many delimiting symbols found in alleles " + str(self.alleles) + " of locus " + str(self.locus) + ". Use only one '.' symbol in case of float number"
+
+
+class DelimitingLast(Exception):
+    def __init__(self, alleles):
+        self.alleles = alleles
+
+    def __str__(self):
+        return "Delimiting character in the end of alleles line: " + str(self.alleles)
+
+
+class LociSetDoesNotEqual(Exception):
+    def __str__(self):
+        return "participants' loci sets are not match"
+
+
 # Abstract parent class
 class Formula(abc.ABC):
     def __init__(self, user_data):
@@ -40,11 +72,16 @@ class Formula(abc.ABC):
     # Checking out if the locus is gender-specific (so we don't need to add it to cpi calculation)
     @staticmethod
     def is_gender_specific(locus):
-        gender_specific_loci = ['SRY', 'DYS391', 'Yindel']
+        gender_specific_loci = ['SRY', 'DYS391', 'Yindel', 'AMEL']
         for i in range(len(gender_specific_loci)):
             if locus == gender_specific_loci[i]:
                 return True
         return False
+
+    def preparation_check(self, locus, dict_make_result):
+        if locus == 'AMEL':
+            return self.make_result(locus, 1, dict_make_result)
+        return self.make_result(locus, '-', dict_make_result)
 
     def getting_alleles_locus(self, raw_values, part_number):
         if len(raw_values) < part_number + 1:
@@ -98,47 +135,74 @@ class Formula(abc.ABC):
             except ValueError:
                 return False
 
+    def alleles_check(self, alleles, locus):
+        for allele in alleles:
+            if locus == 'AMEL':
+                allowed_alleles = ['X', 'Y']
+                for symbol in allele:
+                    if symbol not in allowed_alleles:
+                        raise UnknownSymbolInAlleles(locus, alleles, symbol)
+            else:
+                exception_counter = 0
+                if not self.is_digit(allele):
+                    for symbol in allele:
+                        if not symbol.isdigit() and symbol != '.':
+                            raise UnknownSymbolInAlleles(locus, alleles, symbol)
+                        if symbol == '.':
+                            exception_counter += 1
+                    if exception_counter > 1:
+                        raise TooManyDelimitingSymbols(locus, alleles)
+            if allele[-1] == '.':
+                raise DelimitingLast(alleles)
+
     def calculate(self):
         result = OrderedDict()
-
         processed_user_data = []
         for participant in self.user_data:
             participant_lines = sorted(participant.splitlines())
             participant = []
             for line in participant_lines:
-
-                line = line.strip()
-                line = re.split(r'[\s\t]+', line)
-                locus = line[0]
-                alleles = []
-
-                for i in range(len(line)):
-                    if ',' in line[i]:
-                        line[i] = line[i].replace(',', '.')
+                # Skip empty line
+                if len(line) == 0:
+                    continue
+                line = re.split(r'[\s\t]+', line.strip())
+                locus, alleles = line[0], []
 
                 if locus == 'AMEL':
                     alleles = line[1:]
                 else:
                     for i in range(1, len(line)):
-                        if self.is_digit(line[i]):
-                            alleles.append(line[i])
-                        else:
+                        if line[i].isalpha():
                             locus += ' ' + line[i]
+                        else:
+                            if ',' in line[i]:
+                                alleles.append(line[i].replace(',', '.'))
+                            else:
+                                alleles.append(line[i])
+                self.alleles_check(alleles, locus)
+
                 alleles = '/'.join(alleles)
                 if not self.is_gender_specific(locus) and '/' not in alleles:
                     alleles += '/' + alleles
                 participant.append([locus, alleles])
             processed_user_data.append(participant)
 
+        print(processed_user_data)
+        print()
+        lengths = []
+        for participant in processed_user_data:
+            lengths.append(len(participant))
+        for i in range(len(lengths)):
+            for j in range(len(lengths)):
+                if j > i:
+                    if lengths[i] != lengths[j]:
+                        raise LociSetDoesNotEqual
         overall_participants = []
         for i in range(len(processed_user_data[0])):
             pair = []
             for j in range(len(processed_user_data)):
                 target = processed_user_data[j][i]
-                locus = target[0]
-                alleles = target[1]
-                pair.append([locus, alleles])
-
+                pair.append([target[0], target[1]])
             base = pair[0]
             for k in range(1, len(pair)):
                 base.append(pair[k][1])
@@ -155,26 +219,16 @@ class Formula(abc.ABC):
         return result
 
     # getting allele frequencies from DB
-    def get_frequencies(self, locus, sat_set):
+    @staticmethod
+    def get_frequencies(locus, sat_set):
         result = {}
         for sat in sat_set:
             try:
-                locus_object = Locus.objects.get(locus=locus, sat=self.normalize_sat(sat))
+                locus_object = Locus.objects.get(locus=locus, sat=float(sat))
                 result[sat] = locus_object.freq
             except Locus.DoesNotExist:
                 raise UnknownAlleleException(locus, sat)
-
         return result
-
-    @staticmethod
-    def normalize_sat(value):
-        # English and Russian variants
-        if value == 'X' or value == 'Х':
-            return 0.0
-        elif value == 'Y':
-            return 1.0
-        else:
-            return float(value)
 
     @staticmethod
     def split_sat(sat_string):
@@ -184,41 +238,9 @@ class Formula(abc.ABC):
         return 'cognation/formula/' + self.__class__.__name__.lower()[:-7] + '.html'
 
     @staticmethod
-    def make_result(locus, lr, dict_alleles):
-        if len(dict_alleles.keys()) == 2:
-            return {
-                "locus": locus,
-                "part1": dict_alleles['part1'],
-                "part2": dict_alleles['part2'],
-                "lr": lr
-            }
-        elif len(dict_alleles.keys()) == 3:
-            return {
-                "locus": locus,
-                "part1": dict_alleles['part1'],
-                "part2": dict_alleles['part2'],
-                "part3": dict_alleles['part3'],
-                "lr": lr
-            }
-        elif len(dict_alleles.keys()) == 4:
-            return {
-                "locus": locus,
-                "part1": dict_alleles['part1'],
-                "part2": dict_alleles['part2'],
-                "part3": dict_alleles['part3'],
-                "part4": dict_alleles['part4'],
-                "lr": lr
-            }
-        elif len(dict_alleles.keys()) == 5:
-            return {
-                "locus": locus,
-                "part1": dict_alleles['part1'],
-                "part2": dict_alleles['part2'],
-                "part3": dict_alleles['part3'],
-                "part4": dict_alleles['part4'],
-                "part5": dict_alleles['part5'],
-                "lr": lr
-            }
+    def make_result(locus, lr, dict_make_result):
+        dict_make_result["locus"], dict_make_result["lr"] = locus, lr
+        return dict_make_result
 
     def get_division_lr(self, locus, key_set, alleles_list, confirmation):
         c = Calculations()

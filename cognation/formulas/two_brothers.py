@@ -10,12 +10,8 @@ class TwoBrothersFormula(Formula):
         inspected_set, brother1_set, brother2_set = sets
         br1insp_inter, br2insp_inter, br2br1_inter = intersections
 
-        # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
-            return self.make_result(locus, '-', dict_make_result)
-
-        if locus == 'AMEL':
-            return self.make_result(locus, 1, dict_make_result)
+            return self.preparation_check(locus, dict_make_result)
 
         c = Calculations()
         common_set = set(inspected_alleles + brother1_alleles + brother2_alleles)

@@ -11,10 +11,7 @@ class TwoChildrenFormula(Formula):
         ch1p_inter, ch2p_inter, ch1ch2_inter = intersections
 
         if self.is_gender_specific(locus):
-            return self.make_result(locus, '-', dict_make_result)
-
-        if locus == 'AMEL':
-            return self.make_result(locus, 1, dict_make_result)
+            return self.preparation_check(locus, dict_make_result)
 
         # If children's genotypes are same, use ParentFormula
         if child1_set == child2_set:

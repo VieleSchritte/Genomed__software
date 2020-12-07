@@ -10,12 +10,8 @@ class GrandParentFormula(Formula):
         grandchild_set, grandparent_set = sets
         intersection = intersections[0]
 
-        # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
-            return self.make_result(locus, '-', dict_make_result)
-
-        if locus == 'AMEL':
-            return self.make_result(locus, 1, dict_make_result)
+            return self.preparation_check(locus, dict_make_result)
 
         freq_dict = self.get_frequencies(locus, grandchild_set)
         calc = Calculations()
@@ -37,7 +33,6 @@ class GrandParentFormula(Formula):
             refutation = calc.hetero_refutation(freq1, freq2)
             confirmation = conf.hetero_gc_confirmation(freq1, freq2, intersection, grandparent_set)
         lr = confirmation / refutation
-
         return self.make_result(locus, lr, dict_make_result)
 
 

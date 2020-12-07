@@ -9,12 +9,8 @@ class BrotherFormula(Formula):
         insp_set, brother_set = sets
         intersection = intersections[0]
 
-        # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
-            return self.make_result(locus, '-', dict_make_result)
-
-        if locus == 'AMEL':
-            return self.make_result(locus, 1, dict_make_result)
+            return self.preparation_check(locus, dict_make_result)
 
         c = Calculations()
         # In cases aa aa or ab ab lr = 1

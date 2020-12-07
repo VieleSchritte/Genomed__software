@@ -9,10 +9,7 @@ class CoupleFormula(Formula):
         child_alleles, child_set = alleles[2], sets[2]
 
         if self.is_gender_specific(locus):
-            return self.make_result(locus, '-', dict_make_result)
-
-        if locus == 'AMEL':
-            return self.make_result(locus, 1, dict_make_result)
+            return self.preparation_check(locus, dict_make_result)
 
         freq_dict = self.get_frequencies(locus, child_alleles)
         freq1, freq2 = freq_dict[child_alleles[0]], freq_dict[child_alleles[1]]

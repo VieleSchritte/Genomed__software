@@ -12,10 +12,7 @@ class ThreeCoupleFormula(Formula):
         mother_father_inter = intersections[0]
 
         if self.is_gender_specific(locus):
-            return self.make_result(locus, '-', dict_make_result)
-
-        if locus == 'AMEL':
-            return self.make_result(locus, 1, dict_make_result)
+            return self.preparation_check(locus, dict_make_result)
 
         for i in range(len(intersections)):
             exceptions_list = [0, 7, 8, 9]

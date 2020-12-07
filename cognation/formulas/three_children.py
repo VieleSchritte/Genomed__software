@@ -9,12 +9,8 @@ class ThreeChildrenFormula(Formula):
         locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 4)
         parent_alleles, child1_alleles, child2_alleles, child3_alleles = alleles
 
-        # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
-            return self.make_result(locus, '-', dict_make_result)
-
-        if locus == 'AMEL':
-            return self.make_result(locus, 1, dict_make_result)
+            return self.preparation_check(locus, dict_make_result)
 
         common_set = set(child1_alleles + child2_alleles + child3_alleles + parent_alleles)
         freq_dict = self.get_frequencies(locus, list(common_set))
@@ -25,9 +21,6 @@ class ThreeChildrenFormula(Formula):
         for i in range(0, 3):
             if intersections[i] == 0:
                 return self.make_result(locus, lr, dict_make_result)
-
-        print(locus)
-        print('freqs: ', freq_dict)
 
         unique_genotype, repeat_genotype = c.get_repeat_unique(child1_alleles, child2_alleles, child3_alleles)
         # There are repeatable children genotypes
@@ -60,7 +53,6 @@ class ThreeChildrenFormula(Formula):
                     break
 
             if repeats_number == 3 and homo_counter == 1 or repeats_number == 4 and homo_counter == 2:
-                print('special case')
                 freq = freq_dict[allele]
                 lr = c.F(freq)
                 return self.make_result(locus, lr, dict_make_result)
@@ -68,10 +60,7 @@ class ThreeChildrenFormula(Formula):
         children_alleles = child1_alleles + child2_alleles + child3_alleles
         children_set = set(children_alleles)
 
-        print('default case through function')
         lr = self.lr_from_possible_genotypes(children_set, children_genotypes, freq_dict)
-        print(lr)
-        print()
         return self.make_result(locus, lr, dict_make_result)
 
     @staticmethod
@@ -91,8 +80,6 @@ class ThreeChildrenFormula(Formula):
                     if counter != 2:
                         possible_parents.append(combination)
 
-        print('possible parents: ', possible_parents)
-        print('children genotypes: ', children_genotypes)
         comb_sum = 0
         for combination in possible_parents:
             comb_sum += freq_dict[combination[0]] * freq_dict[combination[1]]

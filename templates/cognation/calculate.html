@@ -254,5 +254,12 @@ closeModalButton.onclick = function() {
     overlay.style.display = 'none';
 }
 
+for (let lrCell of document.getElementsByClassName('lr-cell')) {
+    lrCell.parentElement
+    if (lrCell.innerHTML == 0) {
+        lrCell.parentElement.style.backgroundColor = '#aaaa'
+    }
+}
+
 </script>
 {% endblock scripts %}

@@ -10,12 +10,8 @@ class ThreeKnownSupposed(Formula):
         known_alleles, child1_alleles, child2_alleles, child3_alleles, supposed_alleles = alleles
         known_set, child1_set, child2_set, child3_set, supposed_set = sets
 
-        # Function in base.py for checking out if the locus is gender-specific; if yes return lr = '-'
         if self.is_gender_specific(locus):
-            return self.make_result(locus, '-', dict_make_result)
-
-        if locus == 'AMEL':
-            return self.make_result(locus, 1, dict_make_result)
+            return self.preparation_check(locus, dict_make_result)
 
         for i in range(len(intersections)):
             exceptions_list = [2, 4, 5]
