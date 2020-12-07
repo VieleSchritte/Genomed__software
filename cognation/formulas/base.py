@@ -139,9 +139,16 @@ class Formula(abc.ABC):
         for allele in alleles:
             if locus == 'AMEL':
                 allowed_alleles = ['X', 'Y']
-                for symbol in allele:
-                    if symbol not in allowed_alleles:
-                        raise UnknownSymbolInAlleles(locus, alleles, symbol)
+                if allele not in allowed_alleles:
+                    counter = 0
+                    for symbol in allele:
+                        if symbol not in allowed_alleles:
+                            raise UnknownSymbolInAlleles(locus, alleles, symbol)
+                        else:
+                            counter += 1
+                    if counter > 1:
+                        raise LineFormatException
+
             else:
                 exception_counter = 0
                 if not self.is_digit(allele):
@@ -166,8 +173,10 @@ class Formula(abc.ABC):
                 if len(line) == 0:
                     continue
                 line = re.split(r'[\s\t]+', line.strip())
-                locus, alleles = line[0], []
+                if len(line) == 1:
+                    raise LineFormatException
 
+                locus, alleles = line[0], []
                 if locus == 'AMEL':
                     alleles = line[1:]
                 else:
@@ -180,23 +189,21 @@ class Formula(abc.ABC):
                             else:
                                 alleles.append(line[i])
                 self.alleles_check(alleles, locus)
-
                 alleles = '/'.join(alleles)
                 if not self.is_gender_specific(locus) and '/' not in alleles:
                     alleles += '/' + alleles
                 participant.append([locus, alleles])
             processed_user_data.append(participant)
 
-        print(processed_user_data)
-        print()
-        lengths = []
+        loci_numbers = []
         for participant in processed_user_data:
-            lengths.append(len(participant))
-        for i in range(len(lengths)):
-            for j in range(len(lengths)):
+            loci_numbers.append(len(participant))
+        for i in range(len(loci_numbers)):
+            for j in range(len(loci_numbers)):
                 if j > i:
-                    if lengths[i] != lengths[j]:
+                    if loci_numbers[i] != loci_numbers[j]:
                         raise LociSetDoesNotEqual
+
         overall_participants = []
         for i in range(len(processed_user_data[0])):
             pair = []
