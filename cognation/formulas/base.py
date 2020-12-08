@@ -68,6 +68,14 @@ class DelimitingLast(Exception):
         return "Разделяющий символ в конце числа: " + str(self.alleles)
 
 
+class DelimitingFirst(Exception):
+    def __init__(self, alleles):
+        self.alleles = alleles
+
+    def __str__(self):
+        return "Разделяющий символ в начале числа: " + str(self.alleles)
+
+
 class LociSetDoesNotEqual(Exception):
     def __str__(self):
         return "Числа локусов участников не совпадают. Введите одинаковое количество локусов для каждого участника"
@@ -158,7 +166,7 @@ class Formula(abc.ABC):
                     if counter > 1:
                         raise LineFormatException(alleles)
 
-            else:
+            elif not self.is_gender_specific(locus):
                 exception_counter = 0
                 if not self.is_digit(allele):
                     for symbol in allele:
@@ -168,8 +176,14 @@ class Formula(abc.ABC):
                             exception_counter += 1
                     if exception_counter > 1:
                         raise TooManyDelimitingSymbols(locus, alleles)
+
+            elif self.is_gender_specific(locus):
+                return
+
             if allele[-1] == '.':
-                raise DelimitingLast(alleles)
+                raise DelimitingLast(allele)
+            if allele[0] == '.':
+                raise DelimitingFirst(allele)
         if len(alleles) > 2:
             raise AllelesException(locus, alleles)
 
@@ -233,7 +247,7 @@ class Formula(abc.ABC):
                 relation = self.calculate_relation(line)
                 result[relation['locus']] = relation
             except (LineFormatException, AllelesException, UnknownAlleleException, UnknownSymbolInAlleles,
-                    TooManyDelimitingSymbols, DelimitingLast, LociSetDoesNotEqual) as exception:
+                    TooManyDelimitingSymbols, DelimitingLast, DelimitingFirst, LociSetDoesNotEqual) as exception:
                 result[hash(str(line))] = {'exception': exception, 'line': str(line)}
 
         return result
