@@ -90,7 +90,14 @@
             </div>
         </div>
         <script>
+            window.onload = function setUpHandlers() {
+                for (let label of document.querySelectorAll('label.cognation-button')) {
+                    label.addEventListener("click", OnRadioClick);
+                }
+            }
+
             let formulas = {{ formulas_dump|safe }};
+
 
             const STEP_CHOOSE_COGNATION = 'choose_cognation';
             const STEP_COGNATION_PREVIEW = 'cognation_preview';
@@ -153,7 +160,7 @@
                 }
             }
 
-            function ClearTextAreaValue() {
+            function ClearTextAreas() {
                 for (let textarea of document.querySelectorAll('textarea.form-control')) {
                     textarea.value = "";
                 }
@@ -163,6 +170,7 @@
                 if (this !== event.target) {
                     return
                 }
+                ClearTextAreas()
 
                 step = STEP_COGNATION_PREVIEW;
                 let label = event.target;
@@ -187,12 +195,7 @@
             }
 
 
-            window.onload = function setUpHandlers() {
-                for (let label of document.querySelectorAll('label.cognation-button')) {
-                    label.addEventListener("click", OnRadioClick);
-                    ClearTextAreaValue();
-                }
-            }
+
 
             function OnBackClick(event) {
                 if (this !== event.target) {
@@ -204,7 +207,7 @@
                     currentFormula = '';
                     HideItem([['cognation-preview']]);
                     ShowItem([['cognation-screen', 'start-header']]);
-                    ClearTextAreaValue();
+                    ClearTextAreas();
                     value = 0;
                     currentFormula = '';
                     fillInPart = 0;
