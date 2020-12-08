@@ -520,3 +520,7 @@ em {
     display: block;
     font-size: 0.85rem;
 }
+
+.exception {
+    font-size: 1.3rem;
+}

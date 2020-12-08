@@ -14,7 +14,13 @@ class LineFormatException(Exception):
         self.line = line
 
     def __str__(self):
-        return 'Неверный формат ввода: ' + str(self.line)
+        return_string = 'Неверный формат ввода: '
+        if type(self.line) == list:
+            for item in self.line:
+                return_string += str(item) + ' '
+            return return_string
+        if type(self.line) == str:
+            return return_string + ' ' + self.line
 
 
 class AllelesException(Exception):
@@ -76,8 +82,8 @@ class Formula(abc.ABC):
     @staticmethod
     def is_gender_specific(locus):
         gender_specific_loci = ['SRY', 'DYS391', 'Yindel', 'AMEL']
-        for i in range(len(gender_specific_loci)):
-            if locus == gender_specific_loci[i]:
+        for g_locus in gender_specific_loci:
+            if locus == g_locus:
                 return True
         return False
 
@@ -179,7 +185,7 @@ class Formula(abc.ABC):
                     continue
                 line = re.split(r'[\s\t]+', line.strip())
                 if len(line) == 1:
-                    raise LineFormatException
+                    raise LineFormatException(line)
 
                 locus, alleles = line[0], []
                 if locus == 'AMEL':

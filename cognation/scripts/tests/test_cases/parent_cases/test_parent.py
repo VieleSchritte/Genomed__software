@@ -16,10 +16,11 @@ class TestParentFormula(TestCase):
                                 'parent2/reference_data_parent2.txt',
                                 'parent3/reference_data_parent3_veri.txt']
         self.test_paths = [
-                           #'parent1/test_data_parent1.txt',
-                           #'parent2/test_data_parent2.txt',
-                           #'parent3/test_data_parent3_veri.txt',
-                           'parent4_exception/parent4_exception_test']
+                           'parent1/test_data_parent1.txt',
+                           'parent2/test_data_parent2.txt',
+                           'parent3/test_data_parent3_veri.txt',
+                           #'parent4_exception/parent4_exception_test'
+        ]
         short_path = 'cognation/scripts/tests/test_cases/parent_cases/'
 
         get_ref = GetData()
