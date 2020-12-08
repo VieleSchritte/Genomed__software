@@ -49,27 +49,27 @@
                         <div class="genotype" id="part1">
                             <h2 class="genotype-header"></h2>
                             <label for="part1text"></label>
-                            <textarea name="part1" id="part1text" cols="50" rows="24" class="form-control"></textarea>
+                            <textarea autocomplete="off" name="part1" id="part1text" cols="50" rows="24" class="form-control"></textarea>
                         </div>
                         <div class="genotype" id="part2">
                             <h2 class="genotype-header"></h2>
                             <label for="part2text"></label>
-                            <textarea name="part2" id="part2text" cols="50" rows="24" class="form-control"></textarea>
+                            <textarea autocomplete="off" name="part2" id="part2text" cols="50" rows="24" class="form-control"></textarea>
                         </div>
                         <div class="genotype" id="part3">
                             <h2 class="genotype-header"></h2>
                             <label for="part3text"></label>
-                            <textarea name="part3" id="part3text" cols="50" rows="24" class="form-control"></textarea>
+                            <textarea autocomplete="off" name="part3" id="part3text" cols="50" rows="24" class="form-control"></textarea>
                         </div>
                         <div class="genotype" id="part4">
                             <h2 class="genotype-header"></h2>
                             <label for="part4text"></label>
-                            <textarea name="part4" id="part4text" cols="50" rows="24" class="form-control"></textarea>
+                            <textarea autocomplete="off" name="part4" id="part4text" cols="50" rows="24" class="form-control"></textarea>
                         </div>
                         <div class="genotype" id="part5">
                             <h2 class="genotype-header"></h2>
                             <label for="part5text"></label>
-                            <textarea name="part5" id="part5text" cols="50" rows="24" class="form-control"></textarea>
+                            <textarea autocomplete="off" name="part5" id="part5text" cols="50" rows="24" class="form-control"></textarea>
                         </div>
 
                         {% csrf_token %}
@@ -90,7 +90,14 @@
             </div>
         </div>
         <script>
+            window.onload = function setUpHandlers() {
+                for (let label of document.querySelectorAll('label.cognation-button')) {
+                    label.addEventListener("click", OnRadioClick);
+                }
+            }
+
             let formulas = {{ formulas_dump|safe }};
+
 
             const STEP_CHOOSE_COGNATION = 'choose_cognation';
             const STEP_COGNATION_PREVIEW = 'cognation_preview';
@@ -153,7 +160,7 @@
                 }
             }
 
-            function ClearTextAreaValue() {
+            function ClearTextAreas() {
                 for (let textarea of document.querySelectorAll('textarea.form-control')) {
                     textarea.value = "";
                 }
@@ -163,6 +170,7 @@
                 if (this !== event.target) {
                     return
                 }
+                ClearTextAreas()
 
                 step = STEP_COGNATION_PREVIEW;
                 let label = event.target;
@@ -187,12 +195,7 @@
             }
 
 
-            window.onload = function setUpHandlers() {
-                for (let label of document.querySelectorAll('label.cognation-button')) {
-                    label.addEventListener("click", OnRadioClick);
-                    ClearTextAreaValue();
-                }
-            }
+
 
             function OnBackClick(event) {
                 if (this !== event.target) {
@@ -204,7 +207,7 @@
                     currentFormula = '';
                     HideItem([['cognation-preview']]);
                     ShowItem([['cognation-screen', 'start-header']]);
-                    ClearTextAreaValue();
+                    ClearTextAreas();
                     value = 0;
                     currentFormula = '';
                     fillInPart = 0;
