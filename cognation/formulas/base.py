@@ -118,7 +118,6 @@ class Formula(abc.ABC):
         for part in part_alleles:
             if not self.is_gender_specific(locus) and len(part) != 2:
                 raise AllelesException(locus, part)
-
             part_sets.append(set(part))
 
         if not self.is_gender_specific(locus):

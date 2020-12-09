@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.template.defaultfilters import register
-from .formulas.base import LineFormatException, AllelesException, UnknownAlleleException, TooManyDelimitingSymbols, UnknownSymbolInAlleles, DelimitingLast, LociSetDoesNotEqual
+from .formulas.base import LineFormatException, AllelesException, TooManyDelimitingSymbols, UnknownSymbolInAlleles, DelimitingLast, LociSetDoesNotEqual
 import json
 # from django.core.serializers.json import DjangoJSONEncoder
 
@@ -203,6 +203,18 @@ formulas = [
         'headers': ['Введите гаплотип проверяемого лица', 'Введите гаплотип предполагаемой бабушки/дедушки'],
     },
     {
+        'name': 'Бабушка, дедушка и внук/внучка',
+        'desc': """
+Исследованию подвергают биологические образцы проверяемого лица и предполагаемых бабаушки и дедушки. Предполагается, 
+что один из родителей проверяемого лица является дочерью или сыном предполагаемых бабушки и дедушки. Биологические 
+образцы предполагаемых родителей проверяемого лица для исследования недоступны.""",
+        'image': '',
+        'value': 18,
+        'participants_number': 3,
+        'headers': ['Введите гаплотип проверяемого лица', 'Введите гаплотип предполагаемого дедушки',
+                    'Введите гаплотип предполагаемой бабушки'],
+    },
+    {
         'name': 'Проверяемое лицо и предполагаемая бабушка/дедушка',
         'desc': """
 Исследованию подвергают биологические образцы проверяемого лица и предполагаемой бабушки(дедушки). Предполагается, 
@@ -213,7 +225,7 @@ formulas = [
         'participants_number': 3,
         'headers': ['Введите гаплотип предполагаемой бабушки/дедушки', 'Введите гаплотип предполагаемого родителя',
                     'Введите гаплотип проверяемого лица'],
-    }
+    },
 ]
 
 
