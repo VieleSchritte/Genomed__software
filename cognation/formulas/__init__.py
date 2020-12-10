@@ -16,6 +16,7 @@ from cognation.formulas.two_brothers import TwoBrothersFormula
 from cognation.formulas.three_known_supposed import ThreeKnownSupposed
 from cognation.formulas.two_couple import TwoCoupleFormula
 from cognation.formulas.three_couple import ThreeCoupleFormula
+from cognation.formulas.both_grands_parent import BothGrandsParent
 
 
 numToFormula = {
@@ -34,7 +35,7 @@ numToFormula = {
     13: TwoBrothersFormula,
     14: CousinFormula,
     15: UncleFormula,
-    16: [],
+    16: BothGrandsParent,
     17: GrandParentFormula,
     18: [],
     19: YesParentGrandChild,
