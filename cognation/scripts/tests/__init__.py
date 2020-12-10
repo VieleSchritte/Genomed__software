@@ -14,7 +14,7 @@ from cognation.formulas.three_known_supposed import ThreeKnownSupposed
 from cognation.formulas.couple import CoupleFormula
 from cognation.formulas.two_couple import TwoCoupleFormula
 from cognation.formulas.two_brothers import TwoBrothersFormula
-from cognation.formulas.grand_parent_child_yes import YesParentGrandChild
+from cognation.formulas.grand_parent_yes import GrandParentYes
 import re
 from django.core.management import call_command
 
@@ -41,7 +41,7 @@ class GetData:
             16: [],
             17: GrandParentFormula,
             18: [],
-            19: YesParentGrandChild,
+            19: GrandParentYes,
             20: [],
             21: []
         }

@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 from cognation.formulas.base import Formula, Calculations
 
 
-class YesParentGrandChild(Formula):
+class GrandParentYes(Formula):
     def calculate_relation(self, raw_values):
         locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 3)
         grandparent_alleles, parent_alleles, child_alleles = alleles
