@@ -15,6 +15,7 @@ from cognation.formulas.couple import CoupleFormula
 from cognation.formulas.two_couple import TwoCoupleFormula
 from cognation.formulas.two_brothers import TwoBrothersFormula
 from cognation.formulas.grand_parent_child_yes import YesParentGrandChild
+from cognation.formulas.both_grandparents import BothGrandparentsFormula
 import re
 from django.core.management import call_command
 
@@ -42,7 +43,7 @@ class GetData:
             17: GrandParentFormula,
             18: [],
             19: YesParentGrandChild,
-            20: [],
+            20: BothGrandparentsFormula,
             21: []
         }
 
@@ -57,7 +58,7 @@ class GetData:
 
         with open(short_path + doc_name, 'r') as test_data:
             for line in test_data:
-                line = line.strip()
+                line = line.strip().replace(',', '.')
 
                 case_formula = self.formula_usage(number)
                 formula_dict = case_formula.calculate_relation(re.split(r'[\s\t]+', line))
@@ -66,7 +67,7 @@ class GetData:
                 lr = formula_dict['lr']
 
                 if lr != '-':
-                    test_cpi *= lr
+                    test_cpi *= round(lr, 2)
                     lr = float("{0:.2f}".format(lr))
                     test_dict[locus] = lr
 
@@ -88,7 +89,9 @@ class GetData:
         p = 0.0
         with open(short_path + doc_name, 'r') as ref_data:
             for line in ref_data:
-                line = line.strip().split('\t')
+                new_line = line.replace(',', '.')
+                line = new_line.strip().split('\t')
+                print(line)
 
                 # not gender specific loci - there is int meaning of lr
                 if len(line) != 1:

@@ -27,7 +27,7 @@ class BothGrandparentsFormula(Formula):
             for intersection in intersections:
                 inters_lens.append(len(intersection))
             refutation = calc.hetero_refutation(freq1, freq2)
-            confirmation = c.hetero_gc_confirmation(grandparents_sets, inters_lens, freq1, freq2)
+            confirmation = c.hetero_gc_confirmation(grandparents_sets, grandchild_set, inters_lens, freq1, freq2)
         lr = confirmation / refutation
         return self.make_result(locus, lr, dict_make_result)
 
@@ -59,7 +59,7 @@ class Confirmations:
                     return int_counts_dict[key]
 
     @staticmethod
-    def hetero_gc_confirmation(grandparents_sets, inters_lens, freq1, freq2):
+    def hetero_gc_confirmation(grandparents_sets, grandchild_set, inters_lens, freq1, freq2):
         calc = Calculations()
         homo_counter = 0
         if inters_lens[0:2] == [0, 0]:
@@ -89,9 +89,11 @@ class Confirmations:
                 (1, 1, 0): calc.F(freq2) + 0.5 * (calc.F(freq1) - 2 * freq1 * freq2),  # ab aa bn, n != b
                 (2, 0, 0): 0.5 * (calc.F(freq1) + calc.F(freq2)),  # ab ab any != an, bn
                 (0, 2, 0): 0.5 * (calc.F(freq1) + calc.F(freq2)),  # ab ab any != an, bn
-                (1, 1, 1): 0.5 * calc.F(freq2),  # ab aa an/cn, n != b
-                (1, 0, 0): 0.5 * calc.F(freq2),  # ab aa an/cn, n != b
-                (0, 1, 0): 0.5 * calc.F(freq2)  # ab aa an/cn, n != b
+                (1, 1, 1): calc.F(freq2),  # ab aa an/cn, n != b
+                (1, 0, 0): calc.F(freq2),  # ab aa an/cn, n != b
+                (0, 1, 0): calc.F(freq2),  # ab aa an/cn, n != b
+                (1, 0, 1): 0.5 * calc.F(freq2),  # ab ac any != an, bn
+                (0, 1, 1): 0.5 * calc.F(freq2),  # ab ac any != an, bn
             },
             2: {
                 (1, 1, 0): (freq1 + freq2) * (2 - (freq1 + freq2)),  # ab aa bb
@@ -100,9 +102,15 @@ class Confirmations:
                 (1, 1, 1): calc.F(freq2)  # ab aa an/cn, n != b
             }
         }
+
         for h_counter in h_counter_form_dict.keys():
             if homo_counter == h_counter:
                 target_dict = h_counter_form_dict[h_counter]
                 for key in target_dict.keys():
+                    moot_tuples = [(1, 0, 0), (0, 1, 0)]
+                    if homo_counter == 1 and tuple(inters_lens) in moot_tuples:
+                        for grandparent_set in grandparents_sets:
+                            if len(grandparent_set) == 1 and len(grandparent_set & grandchild_set) == 0:
+                                return 0.5 * calc.F(freq2)
                     if key == tuple(inters_lens):
                         return target_dict[key]
