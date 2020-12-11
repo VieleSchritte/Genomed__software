@@ -48,7 +48,8 @@ class UnknownSymbolInAlleles(Exception):
         self.symbol = symbol
 
     def __str__(self):
-        return "Неизвестный символ '" + str(self.symbol) + "' найден среди аллелей " + str('/'.join(self.alleles)) + " в локусе " + str(self.locus)
+        return "Неизвестный символ '" + str(self.symbol) + "' найден среди аллелей " + str(
+            '/'.join(self.alleles)) + " в локусе " + str(self.locus)
 
 
 class TooManyDelimitingSymbols(Exception):
@@ -57,7 +58,8 @@ class TooManyDelimitingSymbols(Exception):
         self.alleles = alleles
 
     def __str__(self):
-        return "Слишком много разделяющих символов в списке аллелей " + str(self.alleles) + " в локусе " + str(self.locus) + ". Используйте только одну точку или запятую"
+        return "Слишком много разделяющих символов в списке аллелей " + str(self.alleles) + " в локусе " + str(
+            self.locus) + ". Используйте только одну точку или запятую"
 
 
 class DelimitingLast(Exception):
@@ -114,7 +116,7 @@ class Formula(abc.ABC):
             locus += ' ' + raw_values[1]
             for i in range(2, part_number + 2):
                 part_alleles.append(self.split_sat(raw_values[i]))
-                key = 'part' + str(i-1)
+                key = 'part' + str(i - 1)
                 dict_make_result[key] = '/'.join(part_alleles[i - 2])
         else:
             for i in range(1, part_number + 1):
@@ -323,26 +325,25 @@ class Calculations:
         repeats_dict = {}
         for genotype in children_genotypes:
             repeats_dict[tuple(genotype)] = children_genotypes.count(genotype)
-        print(children_genotypes, repeats_dict)
         return repeats_dict
 
     def get_repeatable_lr(self, raw_values, children_genotypes, formulas):
         repeats_dict = self.get_repeat_unique(children_genotypes)
         for key in repeats_dict:
             raw_values.append('/'.join(key))
-        print('========new raw:', raw_values)
+        pos_dict = {
+            2: False,
+            1: formulas[0].calculate_relation
+        }
         if len(children_genotypes) == 3:
             pos_dict = {
                 3: False,
-                2: formulas[1].calculate_relation(raw_values)['lr'],
-                1: formulas[0].calculate_relation(raw_values)['lr']
-            }
-        else:
-            pos_dict = {
-                2: False,
-                1: formulas[0].calculate_relation(raw_values)['lr']
+                2: formulas[1].calculate_relation,
+                1: formulas[0].calculate_relation
             }
         for key in pos_dict.keys():
-            print(len(repeats_dict.keys()))
             if len(repeats_dict.keys()) == key:
-                return pos_dict[key]
+                if not pos_dict[key]:
+                    return pos_dict[key]
+                else:
+                    return pos_dict[key](raw_values)['lr']

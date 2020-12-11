@@ -5,6 +5,7 @@ from .base import Formula, Calculations
 class OneKnownSupposedFormula(Formula):
     def calculate_relation(self, raw_values):
         print('One known supposed')
+        print()
         (locus, alleles, sets, intersections, dict_make_result) = self.getting_alleles_locus(raw_values, 3)
         known_alleles, child_alleles, sup_alleles = alleles
         known_set, child_set, sup_set = sets

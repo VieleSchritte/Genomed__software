@@ -10,13 +10,21 @@ from cognation.scripts.tests import GetData
 
 class TestFormula(TestCase):
     def setUp(self):
-        self.reference_paths = ['no_intersections/no_intersections_ref', 'three_same_children/three_same_children_ref',
-                                'two_same_one_unique/two_same_one_unique_ref', 'aa_ab_ac_ab_ac/aa_ab_ac_ab_ac_ref',
-                                'ab_ac_bc_ab_acbc/ab_ac_bc_ab_acbc_ref']
+        self.reference_paths = [
+            #'no_intersections/no_intersections_ref',
+            'three_same_children/three_same_children_ref',
+            #'two_same_one_unique/two_same_one_unique_ref',
+            #'aa_ab_ac_ab_ac/aa_ab_ac_ab_ac_ref',
+            #'ab_ac_bc_ab_acbc/ab_ac_bc_ab_acbc_ref'
+        ]
 
-        self.test_paths = ['no_intersections/no_intersections_test', 'three_same_children/three_same_children_test',
-                           'two_same_one_unique/two_same_one_unique_test', 'aa_ab_ac_ab_ac/aa_ab_ac_ab_ac_test',
-                           'ab_ac_bc_ab_acbc/ab_ac_bc_ab_acbc_test']
+        self.test_paths = [
+            #'no_intersections/no_intersections_test',
+            'three_same_children/three_same_children_test',
+            #'two_same_one_unique/two_same_one_unique_test',
+            #'aa_ab_ac_ab_ac/aa_ab_ac_ab_ac_test',
+            #'ab_ac_bc_ab_acbc/ab_ac_bc_ab_acbc_test'
+        ]
 
         short_path = 'cognation/scripts/tests/test_cases/three_known_supposed_cases/'
 

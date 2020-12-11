@@ -6,6 +6,7 @@ from .one_known_supposed import OneKnownSupposedFormula
 class TwoKnownSupposedFormula(Formula):
     def calculate_relation(self, raw_values):
         print('Two known supposed')
+        print()
         (locus, alleles, sets, intersections, dict_make_result) = self.getting_alleles_locus(raw_values, 4)
         known_alleles, supposed_alleles, children_genotypes = alleles[0], alleles[1], alleles[2:]
         known_set, supposed_set, child1_set, child2_set = sets
