@@ -317,21 +317,32 @@ class Calculations:
         return 2 * self.F(freq1) * self.F(freq2) - (2 * freq1 * freq2) ** 2
 
     # Returns unique and repeatable children's genotypes in case of two and three children
+
     @staticmethod
-    def get_repeat_unique(child1_alleles, child2_alleles, child3_alleles):
-        children_genotypes = [child1_alleles, child2_alleles, child3_alleles]
-        unique_genotype, repeatable_genotype = [], []
+    def get_repeat_unique(children_genotypes):
+        repeats_dict = {}
+        for genotype in children_genotypes:
+            repeats_dict[tuple(genotype)] = children_genotypes.count(genotype)
+        print(children_genotypes, repeats_dict)
+        return repeats_dict
 
-        for i in range(len(children_genotypes)):
-            for j in range(len(children_genotypes)):
-                for k in range(len(children_genotypes)):
-
-                    if j > i and children_genotypes[i] == children_genotypes[j]:
-                        if children_genotypes[k] != children_genotypes[i]:
-                            unique_genotype = children_genotypes[k]
-                            repeatable_genotype = children_genotypes[i]
-
-        if children_genotypes[0] == children_genotypes[1] == children_genotypes[2]:
-            repeatable_genotype = children_genotypes[0]
-
-        return unique_genotype, repeatable_genotype
+    def get_repeatable_lr(self, raw_values, children_genotypes, formulas):
+        repeats_dict = self.get_repeat_unique(children_genotypes)
+        for key in repeats_dict:
+            raw_values.append('/'.join(key))
+        print('========new raw:', raw_values)
+        if len(children_genotypes) == 3:
+            pos_dict = {
+                3: False,
+                2: formulas[1].calculate_relation(raw_values)['lr'],
+                1: formulas[0].calculate_relation(raw_values)['lr']
+            }
+        else:
+            pos_dict = {
+                2: False,
+                1: formulas[0].calculate_relation(raw_values)['lr']
+            }
+        for key in pos_dict.keys():
+            print(len(repeats_dict.keys()))
+            if len(repeats_dict.keys()) == key:
+                return pos_dict[key]

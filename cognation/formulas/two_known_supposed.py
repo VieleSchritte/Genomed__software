@@ -5,9 +5,10 @@ from .one_known_supposed import OneKnownSupposedFormula
 
 class TwoKnownSupposedFormula(Formula):
     def calculate_relation(self, raw_values):
+        print('Two known supposed')
         (locus, alleles, sets, intersections, dict_make_result) = self.getting_alleles_locus(raw_values, 4)
-        known_alleles, child1_alleles, child2_alleles, supposed_alleles = alleles
-        known_set, child1_set, child2_set, supposed_set = sets
+        known_alleles, supposed_alleles, children_genotypes = alleles[0], alleles[1], alleles[2:]
+        known_set, supposed_set, child1_set, child2_set = sets
         ch1ch2_inter = intersections[3]
 
         if self.is_gender_specific(locus):
@@ -19,23 +20,23 @@ class TwoKnownSupposedFormula(Formula):
                 continue
             if len(intersections[i]) == 0:
                 return self.make_result(locus, 0, dict_make_result)
-
-        common_set = set(child1_alleles + child2_alleles + known_alleles + supposed_alleles)
-        freq_dict = self.get_frequencies(locus, list(common_set))
+        common = []
+        for genotype in alleles:
+            common += genotype
+        common_set, freq_dict = set(common), self.get_frequencies(locus, common)
         c = Calculations()
 
         # If children's genotypes are same, use OneKnownSupposedFormula
-        if child1_set == child2_set:
-            raw_values = [locus, '/'.join(known_alleles), '/'.join(child1_alleles), '/'.join(supposed_alleles)]
-            result = OneKnownSupposedFormula(Formula).calculate_relation(raw_values)
-            lr = result['lr']
+        raw_values = [locus, '/'.join(known_alleles), '/'.join(supposed_alleles)]
+        lr = c.get_repeatable_lr(raw_values, children_genotypes, [OneKnownSupposedFormula(Formula)])
+        if lr:
             return self.make_result(locus, lr, dict_make_result)
 
         # homozygous first child
         if len(child1_set) == 1:
             # aa ab ab an
             if (len(common_set) == 2 or len(common_set) == 3) and child2_set == known_set:
-                freq = freq_dict[child1_alleles[0]]
+                freq = freq_dict[children_genotypes[0]]
                 lr = c.F(freq)
                 return self.make_result(locus, lr, dict_make_result)
 
