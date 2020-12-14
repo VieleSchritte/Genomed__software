@@ -31,34 +31,4 @@ class TwoKnownSupposedFormula(Formula):
         if lr:
             return self.make_result(locus, lr, dict_make_result)
 
-        # homozygous first child
-        if len(child1_set) == 1:
-            # aa ab ab an
-            if (len(common_set) == 2 or len(common_set) == 3) and child2_set == known_set:
-                freq = freq_dict[children_genotypes[0]]
-                lr = c.F(freq)
-                return self.make_result(locus, lr, dict_make_result)
 
-            freq1, freq2 = freq_dict[supposed_alleles[0]], freq_dict[supposed_alleles[1]]
-            lr = 2 * freq1 * freq2
-            return self.make_result(locus, lr, dict_make_result)
-
-        # Heterozygous first child
-        else:
-            # ab cd bd ac, ab ac an (n != b) bc
-            if len(ch1ch2_inter) == 0 or list(child1_set - child2_set)[0] not in known_alleles:
-                freq1, freq2 = freq_dict[supposed_alleles[0]], freq_dict[supposed_alleles[1]]
-                lr = 2 * freq1 * freq2
-                return self.make_result(locus, lr, dict_make_result)
-
-            # ab ac ab ac/bc
-            if list(ch1ch2_inter)[0] in known_alleles and child1_set == known_set:
-                freq1, freq2 = freq_dict[known_alleles[0]], freq_dict[known_alleles[1]]
-                freq3 = freq_dict[list(child2_set - child1_set)[0]]
-                lr = 2 * freq3 * (freq1 + freq2)
-                return self.make_result(locus, lr, dict_make_result)
-
-            # ab ac bc an
-            freq = freq_dict[list(ch1ch2_inter)[0]]
-            lr = c.F(freq)
-            return self.make_result(locus, lr, dict_make_result)
