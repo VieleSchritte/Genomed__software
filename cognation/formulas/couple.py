@@ -24,8 +24,8 @@ class CoupleFormula(Formula):
         # aa an an
         if len(child_set) == 1:
             lr = (c.F(freq1)) ** 2
-            return self.make_result(locus, lr, dict_make_result)
+            return self.make_result(locus, 1 / lr, dict_make_result)
 
         # ab an bn
         lr = 2 * c.F(freq1) * c.F(freq2) - (2 * freq1 * freq2) ** 2
-        return self.make_result(locus, lr, dict_make_result)
+        return self.make_result(locus, 1 / lr, dict_make_result)

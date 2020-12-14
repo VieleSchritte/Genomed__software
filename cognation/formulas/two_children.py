@@ -34,11 +34,11 @@ class TwoChildrenFormula(Formula):
             # aa an an
             if ch1p_inter == ch2p_inter:
                 lr = c.F(freq_dict[list(ch1p_inter)[0]])
-                return self.make_result(locus, lr, dict_make_result)
+                return self.make_result(locus, 1 / lr, dict_make_result)
             # aa bb ab
             else:
                 lr = 2 * freq_dict[child1_alleles[0]] * freq_dict[child2_alleles[0]]
-                return self.make_result(locus, lr, dict_make_result)
+                return self.make_result(locus, 1 / lr, dict_make_result)
 
         # aa bc ab/ac and ab cc ac/bc
         if len(child1_set) != len(child2_set):
@@ -51,16 +51,16 @@ class TwoChildrenFormula(Formula):
                 else:
                     hetero_alleles = list(child_set)
             lr = 2 * freq_dict[homo_allele[0]] * (freq_dict[hetero_alleles[0]] + freq_dict[hetero_alleles[1]])
-            return self.make_result(locus, lr, dict_make_result)
+            return self.make_result(locus, 1 / lr, dict_make_result)
 
         # ab ac an/bc
         if len(child1_set) == len(child2_set) == 2 and len(ch1ch2_inter) != 0:
             freq1 = freq_dict[list(ch1ch2_inter)[0]]
             freq2, freq3 = freq_dict[list(child1_set - child2_set)[0]], freq_dict[list(child2_set - child1_set)[0]]
             lr = c.F(freq1) + 2 * freq2 * freq3
-            return self.make_result(locus, lr, dict_make_result)
+            return self.make_result(locus, 1 / lr, dict_make_result)
 
         freq1, freq2 = freq_dict[child1_alleles[0]], freq_dict[child1_alleles[1]]
         freq3, freq4 = freq_dict[child2_alleles[0]], freq_dict[child2_alleles[1]]
         lr = 2 * (freq1 + freq2) * (freq3 + freq4)
-        return self.make_result(locus, lr, dict_make_result)
+        return self.make_result(locus, 1 / lr, dict_make_result)

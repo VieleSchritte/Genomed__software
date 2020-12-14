@@ -29,12 +29,12 @@ class ThreeCoupleFormula(Formula):
             if len(unique_genotype) == 0:
                 result = CoupleFormula(Formula).calculate_relation(raw_values)
                 lr = result['lr']
-                return self.make_result(locus, lr, dict_make_result)
+                return self.make_result(locus, 1 / lr, dict_make_result)
 
             raw_values.append('/'.join(unique_genotype))
             result = TwoCoupleFormula(Formula).calculate_relation(raw_values)
             lr = result['lr']
-            return self.make_result(locus, lr, dict_make_result)
+            return self.make_result(locus, 1 / lr, dict_make_result)
 
         common_set = set(child1_alleles + child2_alleles + mother_alleles + father_alleles)
         alleles_list = list(common_set)
@@ -43,19 +43,19 @@ class ThreeCoupleFormula(Formula):
         if len(common_set) == 2:
             freq1, freq2 = freq_dict[list(common_set)[0]], freq_dict[list(common_set)[1]]
             lr = (2 * freq1 * freq2) ** 2
-            return self.make_result(locus, lr, dict_make_result)
+            return self.make_result(locus, 1 / lr, dict_make_result)
 
         if len(common_set) == 4:
             lr = 8
             for i in range(len(alleles_list)):
                 lr *= alleles_list[i]
-            return self.make_result(locus, lr, dict_make_result)
+            return self.make_result(locus, 1 / lr, dict_make_result)
 
         if len(child1_set) == 1:
             freq1 = freq_dict[list(mother_father_inter)[0]]
             freq2, freq3 = freq_dict[list(mother_set - father_set)[0]], freq_dict[list(father_set - mother_set)[0]]
             lr = 8 * freq1 ** 2 * freq2 * freq3
-            return self.make_result(locus, lr, dict_make_result)
+            return self.make_result(locus, 1 / lr, dict_make_result)
 
         composition = 1
         sum_fr = 0
@@ -63,4 +63,4 @@ class ThreeCoupleFormula(Formula):
             composition *= alleles_list[i]
             sum_fr += alleles_list[i]
         lr = 8 * composition * sum_fr
-        return self.make_result(locus, lr, dict_make_result)
+        return self.make_result(locus, 1 / lr, dict_make_result)

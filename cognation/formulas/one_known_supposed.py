@@ -6,8 +6,8 @@ class OneKnownSupposedFormula(Formula):
     def calculate_relation(self, raw_values):
         (locus, alleles, sets, intersections, dict_make_result) = self.getting_alleles_locus(raw_values, 3)
         known_alleles, child_alleles, sup_alleles = alleles
-        known_set, child_set, sup_set = sets
-        kch_inter, sk_inter, sch_inter = intersections
+        known_set, child_set = sets[0], sets[1]
+        kch_inter, sch_inter = intersections[0], intersections[2]
 
         if self.is_gender_specific(locus):
             return self.preparation_check(locus, dict_make_result)
@@ -22,15 +22,15 @@ class OneKnownSupposedFormula(Formula):
         # cases ab ab an/bn
         if child_set == known_set and len(child_set) == 2:
             lr = (freq1 + freq2) * (2 - (freq1 + freq2))
-            return self.make_result(locus, lr, dict_make_result)
+            return self.make_result(locus, 1 / lr, dict_make_result)
 
         c = Calculations()
         # case ab an bn
         if len(child_set) == 2:
             freq = freq_dict[list(child_set - known_set)[0]]
             lr = c.F(freq)
-            return self.make_result(locus, lr, dict_make_result)
+            return self.make_result(locus, 1 / lr, dict_make_result)
 
         freq = freq_dict[list(sch_inter)[0]]
         lr = c.F(freq)
-        return self.make_result(locus, lr, dict_make_result)
+        return self.make_result(locus, 1 / lr, dict_make_result)

@@ -29,14 +29,14 @@ class ThreeKnownSupposed(Formula):
             if len(unique_genotype) == 0:
                 result = OneKnownSupposedFormula(Formula).calculate_relation(raw_values)
                 lr = result['lr']
-                return self.make_result(locus, lr, dict_make_result)
+                return self.make_result(locus, 1 / lr, dict_make_result)
 
             # If there are two same child alleles, use TwoKnownSupposed
             raw_values.append('/'.join(unique_genotype))
             raw_values[-1], raw_values[-2] = raw_values[-2], raw_values[-1]
             result = TwoKnownSupposedFormula(Formula).calculate_relation(raw_values)
             lr = result['lr']
-            return self.make_result(locus, lr, dict_make_result)
+            return self.make_result(locus, 1 / lr, dict_make_result)
 
         common_set = set(child1_alleles + child2_alleles + child3_alleles + supposed_alleles + known_alleles)
         freq_dict = self.get_frequencies(locus, list(common_set))
@@ -46,9 +46,9 @@ class ThreeKnownSupposed(Formula):
             freq1, freq2 = freq_dict[child1_alleles[0]], freq_dict[child1_alleles[1]]
             freq3 = freq_dict[list(child2_set - child1_set)[0]]
             lr = 2 * freq3 * (freq1 + freq2)
-            return self.make_result(locus, lr, dict_make_result)
+            return self.make_result(locus, 1 / lr, dict_make_result)
 
         # default describes all other cases
         freq1, freq2 = freq_dict[supposed_alleles[0]], freq_dict[supposed_alleles[1]]
         lr = 2 * freq1 * freq2
-        return self.make_result(locus, lr, dict_make_result)
+        return self.make_result(locus, 1 / lr, dict_make_result)

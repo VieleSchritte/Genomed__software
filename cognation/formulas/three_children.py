@@ -31,14 +31,14 @@ class ThreeChildrenFormula(Formula):
             if len(unique_genotype) == 0:
                 result = ParentFormula(Formula).calculate_relation(raw_values)
                 lr = result['lr']
-                return self.make_result(locus, lr, dict_make_result)
+                return self.make_result(locus, 1 / lr, dict_make_result)
 
             # Two children have same genotypes
             else:
                 raw_values.append('/'.join(unique_genotype))
                 result = TwoChildrenFormula(Formula).calculate_relation(raw_values)
                 lr = result['lr']
-                return self.make_result(locus, lr, dict_make_result)
+                return self.make_result(locus, 1 / lr, dict_make_result)
 
         # special cases (aa ab ac an) and (ab ac ad an)
         alleles_list = child1_alleles + child2_alleles + child3_alleles
@@ -55,13 +55,13 @@ class ThreeChildrenFormula(Formula):
             if repeats_number == 3 and homo_counter == 1 or repeats_number == 4 and homo_counter == 2:
                 freq = freq_dict[allele]
                 lr = c.F(freq)
-                return self.make_result(locus, lr, dict_make_result)
+                return self.make_result(locus, 1 / lr, dict_make_result)
 
         children_alleles = child1_alleles + child2_alleles + child3_alleles
         children_set = set(children_alleles)
 
         lr = self.lr_from_possible_genotypes(children_set, children_genotypes, freq_dict)
-        return self.make_result(locus, lr, dict_make_result)
+        return self.make_result(locus, 1 / lr, dict_make_result)
 
     @staticmethod
     def lr_from_possible_genotypes(children_set, children_genotypes, freq_dict):
