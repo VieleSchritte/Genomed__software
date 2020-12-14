@@ -10,10 +10,20 @@ from cognation.scripts.tests import GetData
 
 class TestFormula(TestCase):
     def setUp(self):
-        self.reference_paths = ['no_intersections/no_intersections_ref', 'aa_an_an/aa_an_an_ref', 'ab_an_bn/ab_an_bn_ref1',
-                                'ab_ab_an/ab_ab_an_ref', 'ab_ab_bn/ab_ab_bn_ref']
-        self.test_paths = ['no_intersections/no_intersections_test', 'aa_an_an/aa_an_an_test', 'ab_an_bn/ab_an_bn_test',
-                           'ab_ab_an/ab_ab_an_test', 'ab_ab_bn/ab_ab_bn_test']
+        self.reference_paths = [
+            'no_intersections/no_intersections_ref',
+            'aa_an_an/aa_an_an_ref',
+            'ab_an_bn/ab_an_bn_ref',
+            'ab_ab_an/ab_ab_an_ref',
+            'ab_ab_bn/ab_ab_bn_ref'
+        ]
+        self.test_paths = [
+            'no_intersections/no_intersections_test',
+            'aa_an_an/aa_an_an_test',
+            'ab_an_bn/ab_an_bn_test',
+            'ab_ab_an/ab_ab_an_test',
+            'ab_ab_bn/ab_ab_bn_test'
+        ]
 
         short_path = 'cognation/scripts/tests/test_cases/one_known_supposed_cases/'
 

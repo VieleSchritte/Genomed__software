@@ -42,7 +42,7 @@ class ThreeKnownSupposed(Formula):
                 for allele in freq_dict.keys():
                     lr *= freq_dict[allele]
                 return self.make_result(locus, lr, dict_make_result)
-            homo_dict = {
+            """homo_dict = {
                 1: {
                     (1, 1, 1): 2 * freq1 * freq3,
                     (1, 0, 1): [2 * freq1 * freq3, 2 * freq1 * freq2],
@@ -55,4 +55,4 @@ class ThreeKnownSupposed(Formula):
                     (1, 0, 1): 2 * freq2 * freq4,
                     (0, 1, 1): 2 * freq2 * freq4,
                 }
-            }
+            }"""

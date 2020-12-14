@@ -66,8 +66,9 @@ class GetData:
                 lr = formula_dict['lr']
 
                 if lr != '-':
+                    lr = round(lr, 2)
+                    #cpi *= round(result[key]["lr"], 2)
                     test_cpi *= lr
-                    lr = float("{0:.2f}".format(lr))
                     test_dict[locus] = lr
 
                 #  case of gender specific loci

@@ -347,3 +347,39 @@ class Calculations:
                     return pos_dict[key]
                 else:
                     return pos_dict[key](raw_values)['lr']
+
+    @staticmethod
+    def get_possible_genotypes(children_set, children_genotypes, *known_set):
+        known_set = known_set[0]
+        all_children_alleles = list(children_set)
+        possible_parents = []
+        combinations = []
+        print('===known: ', known_set)
+        for i in range(len(all_children_alleles)):
+            for j in range(len(all_children_alleles)):
+                if j > i:
+                    combinations.append([all_children_alleles[i], all_children_alleles[j]])
+
+        for combination in combinations:
+            intersections_counter = 0
+            for child_genotype in children_genotypes:
+                if len(set(combination) & set(child_genotype)) != 0:
+                    intersections_counter += 1
+
+            if type(known_set) == 'str':
+                print('gone to str')
+                if intersections_counter == 2:
+                    possible_parents.append(combination)
+            else:
+                print('gone to set, set(combination) != known_set is ', set(combination) != known_set, intersections_counter, combination)
+                if intersections_counter == 2 and set(combination) != known_set:
+                    possible_parents.append(combination)
+        return possible_parents
+
+    @ staticmethod
+    def get_children_set(children_genotypes):
+        common_list = []
+        for genotype in children_genotypes:
+            for allele in genotype:
+                common_list.append(allele)
+        return set(common_list)
