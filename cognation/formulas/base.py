@@ -373,7 +373,7 @@ class Calculations:
             counter = 0
             for child_genotype in children_genotypes:
                 counter += possible_children_genotypes.count(set(child_genotype))
-            if counter == len(children_genotypes):
+            if counter >= len(children_genotypes):
                 answer.append(parent_genotype)
         return answer
 
@@ -400,3 +400,18 @@ class Calculations:
             for allele in genotype:
                 common_list.append(allele)
         return set(common_list)
+
+    @ staticmethod
+    def get_lr_from_possible(possible_parent_genotypes, freq_dict):
+        if len(possible_parent_genotypes) == 1:
+            possible_genotype = list(possible_parent_genotypes[0])
+            freq1, freq2 = freq_dict[possible_genotype[0]], freq_dict[possible_genotype[1]]
+            lr = 2 * freq1 * freq2
+            return lr
+        else:
+            allele3 = possible_parent_genotypes[0] & possible_parent_genotypes[1]
+            allele1, allele2 = possible_parent_genotypes[0] - allele3, possible_parent_genotypes[1] - allele3
+            freq3 = freq_dict[list(allele3)[0]]
+            freq1, freq2 = freq_dict[list(allele1)[0]], freq_dict[list(allele2)[0]]
+            lr = 2 * freq3 * (freq1 + freq2)
+            return lr

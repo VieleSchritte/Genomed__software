@@ -26,27 +26,10 @@ class TwoKnownSupposedFormula(Formula):
         else:
             children_alleles = c.get_overall_alleles(children_genotypes)
             freq_dict = self.get_frequencies(locus, children_alleles)
-            possible_parents_sets = c.get_possible_genotypes(children_alleles, children_genotypes, known_set)
-            if type(possible_parents_sets) == set:  # cases where lr = c.F(Pa)
-                lr = c.F(freq_dict[list(possible_parents_sets)[0]])
+            possible_parents_genotypes = c.get_possible_genotypes(children_alleles, children_genotypes, known_set)
+            if type(possible_parents_genotypes) == set:  # cases where lr = c.F(Pa)
+                lr = c.F(freq_dict[list(possible_parents_genotypes)[0]])
                 return self.make_result(locus, 1 / lr, dict_make_result)
 
-            for child_set in children_sets:  # the rest of homozygosity is default cases
-                if len(child_set) == 1:
-                    possible_genotype = list(possible_parents_sets[0])
-                    freq1, freq2 = freq_dict[possible_genotype[0]], freq_dict[possible_genotype[1]]
-                    lr = 2 * freq1 * freq2
-                    return self.make_result(locus, 1 / lr, dict_make_result)
-                else:
-                    if len(possible_parents_sets) == 1:
-                        possible_genotype = list(possible_parents_sets[0])
-                        freq1, freq2 = freq_dict[possible_genotype[0]], freq_dict[possible_genotype[1]]
-                        lr = 2 * freq1 * freq2
-                        return self.make_result(locus, 1 / lr, dict_make_result)
-                    if len(possible_parents_sets) == 2:
-                        allele3 = possible_parents_sets[0] & possible_parents_sets[1]
-                        allele1, allele2 = possible_parents_sets[0] - allele3, possible_parents_sets[1] - allele3
-                        freq3 = freq_dict[list(allele3)[0]]
-                        freq1, freq2 = freq_dict[list(allele1)[0]], freq_dict[list(allele2)[0]]
-                        lr = 2 * freq3 * (freq1 + freq2)
-                        return self.make_result(locus, 1 / lr, dict_make_result)
+            lr = c.get_lr_from_possible(possible_parents_genotypes, freq_dict)
+            return self.make_result(locus, 1 / lr, dict_make_result)
