@@ -62,12 +62,10 @@ class GetData:
                 case_formula = self.formula_usage(number)
                 formula_dict = case_formula.calculate_relation(re.split(r'[\s\t]+', line))
                 locus = formula_dict['locus']
-
                 lr = formula_dict['lr']
 
                 if lr != '-':
                     lr = round(lr, 2)
-                    #cpi *= round(result[key]["lr"], 2)
                     test_cpi *= lr
                     test_dict[locus] = lr
 

@@ -7,14 +7,14 @@ class TwoKnownSupposedFormula(Formula):
     def calculate_relation(self, raw_values):
         (locus, alleles, sets, intersections, dict_make_result) = self.getting_alleles_locus(raw_values, 4)
         known_alleles, supposed_alleles, children_genotypes = alleles[0], alleles[1], alleles[2:]
-        known_set, supposed_set, children_sets = sets[0], sets[1], sets[2:]
+        known_set, children_sets = sets[0], sets[2:]
 
         if self.is_gender_specific(locus):
             return self.preparation_check(locus, dict_make_result)
 
         # If there are no intersections between children and parents, return lr = 0 and start counting mutations
-        for child_set in children_sets:
-            if child_set & known_set == 0 or child_set & supposed_set == 0:
+        for i in range(1, 3):
+            if len(intersections[i]) == 0:
                 return self.make_result(locus, 0, dict_make_result)
 
         # If children's genotypes are same, use OneKnownSupposedFormula
@@ -24,23 +24,29 @@ class TwoKnownSupposedFormula(Formula):
         if lr:
             return self.make_result(locus, lr, dict_make_result)
         else:
-            possible_genotypes = c.get_possible_genotypes(c.get_children_set(children_genotypes), children_genotypes, known_set)
-            common_pos = []
-            for genotype in possible_genotypes:
-                common_pos += genotype
-            freq_dict = self.get_frequencies(locus, common_pos)
+            children_alleles = c.get_overall_alleles(children_genotypes)
+            freq_dict = self.get_frequencies(locus, children_alleles)
+            possible_parents_sets = c.get_possible_genotypes(children_alleles, children_genotypes, known_set)
+            if type(possible_parents_sets) == set:  # cases where lr = c.F(Pa)
+                lr = c.F(freq_dict[list(possible_parents_sets)[0]])
+                return self.make_result(locus, 1 / lr, dict_make_result)
 
-            if len(possible_genotypes) == 0:
-                for child_set in children_sets:
-                    if len(child_set) == 1:
-                        freq = freq_dict[list(child_set)[0]]
-                        return c.F(freq)
-            if len(possible_genotypes) == 1:
-                freq1, freq2 = freq_dict[possible_genotypes[0][0]], freq_dict[possible_genotypes[0][1]]
-                return 2 * freq1 * freq2
-
-            freq3 = freq_dict[set(possible_genotypes[0]) & set(possible_genotypes[1])]
-            other_freqs = []
-            for i in range(len(possible_genotypes)):
-                other_freqs.append(freq_dict[list(set(possible_genotypes[i]) - set(possible_genotypes[i - 1]))[0]])
-            return 2 * freq3 * (other_freqs[0] + other_freqs[1])
+            for child_set in children_sets:  # the rest of homozygosity is default cases
+                if len(child_set) == 1:
+                    possible_genotype = list(possible_parents_sets[0])
+                    freq1, freq2 = freq_dict[possible_genotype[0]], freq_dict[possible_genotype[1]]
+                    lr = 2 * freq1 * freq2
+                    return self.make_result(locus, 1 / lr, dict_make_result)
+                else:
+                    if len(possible_parents_sets) == 1:
+                        possible_genotype = list(possible_parents_sets[0])
+                        freq1, freq2 = freq_dict[possible_genotype[0]], freq_dict[possible_genotype[1]]
+                        lr = 2 * freq1 * freq2
+                        return self.make_result(locus, 1 / lr, dict_make_result)
+                    if len(possible_parents_sets) == 2:
+                        allele3 = possible_parents_sets[0] & possible_parents_sets[1]
+                        allele1, allele2 = possible_parents_sets[0] - allele3, possible_parents_sets[1] - allele3
+                        freq3 = freq_dict[list(allele3)[0]]
+                        freq1, freq2 = freq_dict[list(allele1)[0]], freq_dict[list(allele2)[0]]
+                        lr = 2 * freq3 * (freq1 + freq2)
+                        return self.make_result(locus, 1 / lr, dict_make_result)

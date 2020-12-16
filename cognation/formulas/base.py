@@ -348,33 +348,50 @@ class Calculations:
                 else:
                     return pos_dict[key](raw_values)['lr']
 
-    @staticmethod
-    def get_possible_genotypes(children_set, children_genotypes, *known_set):
-        known_set = known_set[0]
-        all_children_alleles = list(children_set)
-        possible_parents = []
-        combinations = []
-        print('===known: ', known_set)
-        for i in range(len(all_children_alleles)):
-            for j in range(len(all_children_alleles)):
-                if j > i:
-                    combinations.append([all_children_alleles[i], all_children_alleles[j]])
-
-        for combination in combinations:
-            intersections_counter = 0
+    def get_possible_genotypes(self, children_alleles, children_genotypes, known_set):
+        single_alleles_combinations = []
+        for children_allele in children_alleles:
+            single_alleles_combinations.append(self.get_combinations(list(known_set), [children_allele]))
+        for item in single_alleles_combinations:
+            counter = 0
             for child_genotype in children_genotypes:
-                if len(set(combination) & set(child_genotype)) != 0:
-                    intersections_counter += 1
+                counter += item.count(set(child_genotype))
+            if counter == len(children_genotypes):
+                return set(children_genotypes[0]) & set(children_genotypes[1])  # case lr = F(Pa)
 
-            if type(known_set) == 'str':
-                print('gone to str')
-                if intersections_counter == 2:
-                    possible_parents.append(combination)
-            else:
-                print('gone to set, set(combination) != known_set is ', set(combination) != known_set, intersections_counter, combination)
-                if intersections_counter == 2 and set(combination) != known_set:
-                    possible_parents.append(combination)
-        return possible_parents
+        possible_parent_genotypes = []
+        for i in range(len(children_alleles)):
+            for j in range(len(children_alleles)):
+                if j > i:
+                    possible_parent_genotypes.append({children_alleles[i], children_alleles[j]})
+        answer = []
+        for parent_genotype in possible_parent_genotypes:
+            known_supposed_alleles = self.get_overall_alleles([list(parent_genotype), list(known_set)])
+            if len(known_supposed_alleles) < len(children_alleles):
+                continue
+            possible_children_genotypes = self.get_combinations(list(parent_genotype), list(known_set))
+            counter = 0
+            for child_genotype in children_genotypes:
+                counter += possible_children_genotypes.count(set(child_genotype))
+            if counter == len(children_genotypes):
+                answer.append(parent_genotype)
+        return answer
+
+    @staticmethod
+    def get_combinations(known_alleles, children_allele):
+        combinations = []
+        for other_allele in children_allele:
+            for children_allele in known_alleles:
+                combinations.append({children_allele, other_allele})
+        return combinations
+
+    @staticmethod
+    def get_overall_alleles(genotypes):
+        overall_alleles = []
+        for genotype in genotypes:
+            overall_alleles += genotype
+        overall_alleles = list(set(overall_alleles))
+        return overall_alleles
 
     @ staticmethod
     def get_children_set(children_genotypes):

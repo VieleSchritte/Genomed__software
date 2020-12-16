@@ -10,17 +10,31 @@ from cognation.scripts.tests import GetData
 
 class TestFormula(TestCase):
     def setUp(self):
-        self.reference_paths = ['no_intersections/no_intersections_ref', 'same_genotypes/same_genotypes_ref',
-                                'aa_ab_ab_an/aa_ab_ab_an_ref', 'aa_ab_an_ab/aa_ab_an_ab_ref',
-                                'aa_bb_ab_ab/aa_bb_ab_ab_ref', 'aa_bc_ab_ac/aa_bc_ab_ac_ref',
-                                'ab_ac_ab_acbc/ab_ac_ab_acbc_ref', 'ab_ac_an_bc/ab_ac_an_bc_ref',
-                                'ab_ac_bc_an/ab_ac_bc_an_ref', 'ab_cd_bd_ac/ab_cd_bd_ac_ref']
+        self.reference_paths = [
+            'no_intersections/no_intersections_ref',
+            'same_genotypes/same_genotypes_ref',
+            'aa_ab_ab_an/aa_ab_ab_an_ref',
+            'aa_ab_an_ab/aa_ab_an_ab_ref',
+            'aa_bb_ab_ab/aa_bb_ab_ab_ref',
+            'aa_bc_ab_ac/aa_bc_ab_ac_ref',
+            'ab_ac_ab_acbc/ab_ac_ab_acbc_ref',
+            'ab_ac_an_bc/ab_ac_an_bc_ref',
+            'ab_ac_bc_an/ab_ac_bc_an_ref',
+            'ab_cd_bd_ac/ab_cd_bd_ac_ref'
+        ]
 
-        self.test_paths = ['no_intersections/no_intersections_test', 'same_genotypes/same_genotypes_test',
-                           'aa_ab_ab_an/aa_ab_ab_an_test', 'aa_ab_an_ab/aa_ab_an_ab_test',
-                           'aa_bb_ab_ab/aa_bb_ab_ab_test', 'aa_bc_ab_ac/aa_bc_ab_ac_test',
-                           'ab_ac_ab_acbc/ab_ac_ab_acbc_test', 'ab_ac_an_bc/ab_ac_an_bc_test',
-                           'ab_ac_bc_an/ab_ac_bc_an_test', 'ab_cd_bd_ac/ab_cd_bd_ac_test']
+        self.test_paths = [
+            'no_intersections/no_intersections_test',
+            'same_genotypes/same_genotypes_test',
+            'aa_ab_ab_an/aa_ab_ab_an_test',
+            'aa_ab_an_ab/aa_ab_an_ab_test',
+            'aa_bb_ab_ab/aa_bb_ab_ab_test',
+            'aa_bc_ab_ac/aa_bc_ab_ac_test',
+            'ab_ac_ab_acbc/ab_ac_ab_acbc_test',
+            'ab_ac_an_bc/ab_ac_an_bc_test',
+            'ab_ac_bc_an/ab_ac_bc_an_test',
+            'ab_cd_bd_ac/ab_cd_bd_ac_test'
+        ]
 
         short_path = 'cognation/scripts/tests/test_cases/two_known_supposed_cases/'
 
