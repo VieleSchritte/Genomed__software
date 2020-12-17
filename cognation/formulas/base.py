@@ -469,15 +469,20 @@ class Calculations:
         if len(other_alleles) == 0:
             target_inter_list = list(children_sets[0] & children_sets[1])
             freq1, other_alleles = freq_dict[target_inter_list[0]],  list(set(children_alleles) - set(target_inter_list))
-        freq2, freq3 = freq_dict[other_alleles[0]], freq_dict[other_alleles[1]]
-        return freq1, freq2, freq3
+        if len(other_alleles) == 1:
+            return freq1, freq_dict[other_alleles[0]], 0
+        return freq1, freq_dict[other_alleles[0]], freq_dict[other_alleles[1]]
 
     @staticmethod
     def get_lr_from_dict_couple(overall_dict, hetero_counter, children_alleles_len):
+        print('hetero_counter=', hetero_counter)
+        print('children_alleles_len=', children_alleles_len)
         for key in overall_dict.keys():
             if key == hetero_counter:
-                return overall_dict[key]
-            target_dict = overall_dict[key]
-            for length in target_dict.keys():
-                if length == children_alleles_len:
-                    return target_dict[length]
+                types = [int, float]
+                if type(overall_dict[hetero_counter]) in types:
+                    return overall_dict[hetero_counter]
+                target_dict = overall_dict[hetero_counter]
+                for length in target_dict.keys():
+                    if length == children_alleles_len:
+                        return target_dict[length]

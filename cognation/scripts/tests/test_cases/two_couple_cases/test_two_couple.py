@@ -11,12 +11,24 @@ from cognation.scripts.tests import GetData
 
 class TestFormula(TestCase):
     def setUp(self):
-        self.reference_paths = ['no_intersections/no_intersections_ref', 'calls_CoupleFormula/calls_CoupleFormula_ref',
-                                'aa_ab_an_ab/aa_ab_an_ab_ref', 'aa_bb_ab_ab/aa_bb_ab_ab_ref', 'aa_bc_ab_ac/aa_bc_ab_ac_ref',
-                                'ab_ac_anab_bcac/ab_ac_anab_bcac_ref', 'ab_cd_adac_bcbd/ab_cd_adac_bcbd_ref']
-        self.test_paths = ['no_intersections/no_intersections_test', 'calls_CoupleFormula/calls_CoupleFormula_test',
-                           'aa_ab_an_ab/aa_ab_an_ab_test', 'aa_bb_ab_ab/aa_bb_ab_ab_test', 'aa_bc_ab_ac/aa_bc_ab_ac_test',
-                           'ab_ac_anab_bcac/ab_ac_anab_bcac_test', 'ab_cd_adac_bcbd/ab_cd_adac_bcbd_test']
+        self.reference_paths = [
+            'no_intersections/no_intersections_ref',
+            'calls_CoupleFormula/calls_CoupleFormula_ref',
+            'aa_ab_an_ab/aa_ab_an_ab_ref',
+            'aa_bb_ab_ab/aa_bb_ab_ab_ref',
+            'aa_bc_ab_ac/aa_bc_ab_ac_ref',
+            'ab_ac_anab_bcac/ab_ac_anab_bcac_ref',
+            'ab_cd_adac_bcbd/ab_cd_adac_bcbd_ref'
+        ]
+        self.test_paths = [
+            'no_intersections/no_intersections_test',
+            'calls_CoupleFormula/calls_CoupleFormula_test',
+            'aa_ab_an_ab/aa_ab_an_ab_test',
+            'aa_bb_ab_ab/aa_bb_ab_ab_test',
+            'aa_bc_ab_ac/aa_bc_ab_ac_test',
+            'ab_ac_anab_bcac/ab_ac_anab_bcac_test',
+            'ab_cd_adac_bcbd/ab_cd_adac_bcbd_test'
+        ]
 
         short_path = 'cognation/scripts/tests/test_cases/two_couple_cases/'
         get_ref = GetData()
