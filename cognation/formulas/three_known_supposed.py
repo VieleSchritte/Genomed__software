@@ -37,6 +37,6 @@ class ThreeKnownSupposed(Formula):
         if lr:
             return self.make_result(locus, lr, dict_make_result)
         else:
-            possible_parent_genotypes = c.get_possible_genotypes(children_alleles, children_genotypes, known_set)
+            possible_parent_genotypes = c.get_possible_genotypes(children_alleles, children_genotypes, [known_set, 'known'])
             lr = c.get_lr_from_possible(possible_parent_genotypes, freq_dict)
             return self.make_result(locus, 1 / lr, dict_make_result)

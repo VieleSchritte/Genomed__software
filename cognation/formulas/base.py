@@ -348,34 +348,75 @@ class Calculations:
                 else:
                     return pos_dict[key](raw_values)['lr']
 
-    def get_possible_genotypes(self, children_alleles, children_genotypes, known_set):
+    def get_possible_genotypes(self, children_alleles, children_genotypes, parents_data):
         single_alleles_combinations = []
+        parent_set, key_word = parents_data[0], parents_data[1]
         for children_allele in children_alleles:
-            single_alleles_combinations.append(self.get_combinations(list(known_set), [children_allele]))
+            single_alleles_combinations.append(self.get_combinations(list(parent_set), [children_allele]))
+        if self.is_get_F_case(single_alleles_combinations, children_genotypes, parents_data, children_alleles):
+            return set(children_genotypes[0]) & set(children_genotypes[1])  # case lr = F(Pa)
+
+        possible_parent_genotypes = self.get_possible_parent_genotypes(children_alleles)
+        answer = []
+        if key_word == 'known':
+            for parent_genotype in possible_parent_genotypes:
+                known_supposed_alleles = self.get_overall_alleles([list(parent_genotype), list(parent_set)])
+                if len(known_supposed_alleles) < len(children_alleles):
+                    continue
+                possible_children_genotypes = self.get_combinations(list(parent_genotype), list(parent_set))
+                answer = self.answer_genotypes_selection(key_word, children_genotypes, possible_children_genotypes, answer, parent_genotype)
+            return answer
+        if key_word == 'supposed':
+            print('gone to supposed')
+            for possible_parent in possible_parent_genotypes:
+                answer = self.answer_genotypes_selection(key_word, children_genotypes, possible_parent_genotypes, answer, possible_parent)
+            return answer
+
+    @staticmethod
+    def answer_genotypes_selection(key_word, children_genotypes, possible_genotypes, answer, parent_genotype):
+        if key_word == 'known':
+            counter = 0
+            for child_genotype in children_genotypes:
+                counter += possible_genotypes.count(set(child_genotype))
+            if counter >= len(children_genotypes):
+                answer.append(parent_genotype)
+            return answer
+        if key_word == 'supposed':
+            counter = 0
+            for child_genotype in children_genotypes:
+                if len(set(child_genotype) & parent_genotype) != 0:
+                    counter += 1
+            if counter == 2:
+                answer.append(parent_genotype)
+            return answer
+
+    @staticmethod
+    def F_check(single_alleles_combinations, children_genotypes):
         for item in single_alleles_combinations:
             counter = 0
             for child_genotype in children_genotypes:
                 counter += item.count(set(child_genotype))
             if counter == len(children_genotypes):
-                return set(children_genotypes[0]) & set(children_genotypes[1])  # case lr = F(Pa)
+                return True
 
+    def is_get_F_case(self, single_alleles_combinations, children_genotypes, parents_data, children_alleles):
+        if self.F_check(single_alleles_combinations, children_genotypes):
+            return True
+        elif parents_data[1] == 'supposed':
+            another_combinations = []
+            for parent_allele in list(parents_data[0]):
+                another_combinations.append(self.get_combinations(children_alleles, [parent_allele]))
+            if self.F_check(another_combinations, children_genotypes):
+                return True
+
+    @staticmethod
+    def get_possible_parent_genotypes(children_alleles):
         possible_parent_genotypes = []
         for i in range(len(children_alleles)):
             for j in range(len(children_alleles)):
                 if j > i:
                     possible_parent_genotypes.append({children_alleles[i], children_alleles[j]})
-        answer = []
-        for parent_genotype in possible_parent_genotypes:
-            known_supposed_alleles = self.get_overall_alleles([list(parent_genotype), list(known_set)])
-            if len(known_supposed_alleles) < len(children_alleles):
-                continue
-            possible_children_genotypes = self.get_combinations(list(parent_genotype), list(known_set))
-            counter = 0
-            for child_genotype in children_genotypes:
-                counter += possible_children_genotypes.count(set(child_genotype))
-            if counter >= len(children_genotypes):
-                answer.append(parent_genotype)
-        return answer
+        return possible_parent_genotypes
 
     @staticmethod
     def get_combinations(known_alleles, children_allele):
@@ -394,24 +435,10 @@ class Calculations:
         return overall_alleles
 
     @ staticmethod
-    def get_children_set(children_genotypes):
-        common_list = []
-        for genotype in children_genotypes:
-            for allele in genotype:
-                common_list.append(allele)
-        return set(common_list)
-
-    @ staticmethod
     def get_lr_from_possible(possible_parent_genotypes, freq_dict):
-        if len(possible_parent_genotypes) == 1:
-            possible_genotype = list(possible_parent_genotypes[0])
-            freq1, freq2 = freq_dict[possible_genotype[0]], freq_dict[possible_genotype[1]]
-            lr = 2 * freq1 * freq2
-            return lr
-        else:
-            allele3 = possible_parent_genotypes[0] & possible_parent_genotypes[1]
-            allele1, allele2 = possible_parent_genotypes[0] - allele3, possible_parent_genotypes[1] - allele3
-            freq3 = freq_dict[list(allele3)[0]]
-            freq1, freq2 = freq_dict[list(allele1)[0]], freq_dict[list(allele2)[0]]
-            lr = 2 * freq3 * (freq1 + freq2)
-            return lr
+        lr = 0
+        for genotype in possible_parent_genotypes:
+            genotype = list(genotype)
+            freq1, freq2 = freq_dict[genotype[0]], freq_dict[genotype[1]]
+            lr += 2 * freq1 * freq2
+        return lr
