@@ -4,23 +4,23 @@ from django.test import TestCase
 from cognation.scripts.tests import GetData
 import logging
 
-#logger = logging.getLogger('django.db.backends')
-#logger.setLevel(logging.DEBUG)
-#logger.addHandler(logging.StreamHandler())
+logger = logging.getLogger('django.db.backends')
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging.StreamHandler())
 
 
 class TestFormula(TestCase):
     def setUp(self):
         self.reference_paths = [
-                                'no_intersections/no_intersections_ref',
-                                'aa_an_an/aa_an_an_ref',
-                                'ab_an_bn/ab_an_bn_ref1'
+            'no_intersections/no_intersections_ref',
+            'aa_an_an/aa_an_an_ref',
+            'ab_an_bn/ab_an_bn_ref'
         ]
-        self.test_paths = ['no_intersections/no_intersections_test',
-                           'aa_an_an/aa_an_an_test',
-                           'ab_an_bn/ab_an_bn_test']
-
-
+        self.test_paths = [
+            'no_intersections/no_intersections_test',
+            'aa_an_an/aa_an_an_test',
+            'ab_an_bn/ab_an_bn_test'
+        ]
 
         short_path = 'cognation/scripts/tests/test_cases/couple_cases/'
         get_ref = GetData()
