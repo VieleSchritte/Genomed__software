@@ -354,6 +354,7 @@ class Calculations:
         for children_allele in children_alleles:
             single_alleles_combinations.append(self.get_combinations(list(parent_set), [children_allele]))
         if self.is_get_F_case(single_alleles_combinations, children_genotypes, parents_data, children_alleles):
+            print('F')
             return set(children_genotypes[0]) & set(children_genotypes[1])  # case lr = F(Pa)
 
         possible_parent_genotypes = self.get_possible_parent_genotypes(children_alleles)
@@ -367,7 +368,7 @@ class Calculations:
                 answer = self.answer_genotypes_selection(key_word, children_genotypes, possible_children_genotypes, answer, parent_genotype)
             return answer
         if key_word == 'supposed':
-            print('gone to supposed')
+            print('other cases')
             for possible_parent in possible_parent_genotypes:
                 answer = self.answer_genotypes_selection(key_word, children_genotypes, possible_parent_genotypes, answer, possible_parent)
             return answer
@@ -386,7 +387,7 @@ class Calculations:
             for child_genotype in children_genotypes:
                 if len(set(child_genotype) & parent_genotype) != 0:
                     counter += 1
-            if counter == 2:
+            if counter == len(children_genotypes):
                 answer.append(parent_genotype)
             return answer
 
@@ -434,9 +435,11 @@ class Calculations:
         overall_alleles = list(set(overall_alleles))
         return overall_alleles
 
-    @ staticmethod
-    def get_lr_from_possible(possible_parent_genotypes, freq_dict):
+    def get_lr_from_possible(self, possible_parent_genotypes, freq_dict):
         lr = 0
+        if type(possible_parent_genotypes) == set:  # cases where lr = c.F(Pa)
+            lr = self.F(freq_dict[list(possible_parent_genotypes)[0]])
+            return lr
         for genotype in possible_parent_genotypes:
             genotype = list(genotype)
             freq1, freq2 = freq_dict[genotype[0]], freq_dict[genotype[1]]

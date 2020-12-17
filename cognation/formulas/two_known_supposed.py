@@ -27,9 +27,5 @@ class TwoKnownSupposedFormula(Formula):
             children_alleles = c.get_overall_alleles(children_genotypes)
             freq_dict = self.get_frequencies(locus, children_alleles)
             possible_parents_genotypes = c.get_possible_genotypes(children_alleles, children_genotypes, [known_set, 'known'])
-            if type(possible_parents_genotypes) == set:  # cases where lr = c.F(Pa)
-                lr = c.F(freq_dict[list(possible_parents_genotypes)[0]])
-                return self.make_result(locus, 1 / lr, dict_make_result)
-
             lr = c.get_lr_from_possible(possible_parents_genotypes, freq_dict)
             return self.make_result(locus, 1 / lr, dict_make_result)
