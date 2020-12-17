@@ -445,3 +445,39 @@ class Calculations:
             freq1, freq2 = freq_dict[genotype[0]], freq_dict[genotype[1]]
             lr += 2 * freq1 * freq2
         return lr
+
+    @staticmethod
+    def multiply_lr_on_children_allele(lr, children_alleles, freq_dict):
+        for allele in children_alleles:
+            lr *= freq_dict[allele]
+        return lr
+
+    @staticmethod
+    def hetero_counter(target_sets):
+        hetero_counter = 0
+        for child_set in target_sets:
+            if len(child_set) == 2:
+                hetero_counter += 1
+        return hetero_counter
+
+    @staticmethod
+    def get_correct_frequency_order_couple(children_sets, freq_dict, children_alleles):
+        freq1, other_alleles = 1, []
+        for child_set in children_sets:
+            if len(child_set) == 1:
+                freq1, other_alleles = freq_dict[list(child_set)[0]], list(set(children_alleles) - child_set)
+        if len(other_alleles) == 0:
+            target_inter_list = list(children_sets[0] & children_sets[1])
+            freq1, other_alleles = freq_dict[target_inter_list[0]],  list(set(children_alleles) - set(target_inter_list))
+        freq2, freq3 = freq_dict[other_alleles[0]], freq_dict[other_alleles[1]]
+        return freq1, freq2, freq3
+
+    @staticmethod
+    def get_lr_from_dict_couple(overall_dict, hetero_counter, children_alleles_len):
+        for key in overall_dict.keys():
+            if key == hetero_counter:
+                return overall_dict[key]
+            target_dict = overall_dict[key]
+            for length in target_dict.keys():
+                if length == children_alleles_len:
+                    return target_dict[length]

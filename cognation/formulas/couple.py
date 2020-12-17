@@ -14,18 +14,17 @@ class CoupleFormula(Formula):
         freq_dict = self.get_frequencies(locus, child_alleles)
         freq1, freq2 = freq_dict[child_alleles[0]], freq_dict[child_alleles[1]]
         c = Calculations()
-        lr = 0
 
         # If there are no intersections between child and couple, return lr = 0 and start counting mutations
-        for i in range(1, 2):
+        for i in range(1, 3):
             if len(intersections[i]) == 0:
-                return self.make_result(locus, lr, dict_make_result)
+                return self.make_result(locus, 0, dict_make_result)
 
         # aa an an
         if len(child_set) == 1:
             lr = (c.F(freq1)) ** 2
-            return self.make_result(locus, lr, dict_make_result)
+            return self.make_result(locus, 1 / lr, dict_make_result)
 
         # ab an bn
         lr = 2 * c.F(freq1) * c.F(freq2) - (2 * freq1 * freq2) ** 2
-        return self.make_result(locus, lr, dict_make_result)
+        return self.make_result(locus, 1 / lr, dict_make_result)
