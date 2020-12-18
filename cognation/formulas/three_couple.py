@@ -12,19 +12,20 @@ class ThreeCoupleFormula(Formula):
 
         if self.is_gender_specific(locus):
             return self.preparation_check(locus, dict_make_result)
-        for i in range(1, 7):
-            if len(intersections[i]) == 0:
-                return self.make_result(locus, 0, dict_make_result)
-
         c = Calculations()
+        hetero_counter = c.hetero_counter(children_sets)
+        children_alleles = c.get_overall_alleles(children_genotypes)
+        if not (hetero_counter == 3 and len(children_alleles) == 4):
+            for i in range(1, 7):
+                if len(intersections[i]) == 0:
+                    return self.make_result(locus, 0, dict_make_result)
+
         raw_values = [locus, '/'.join(father_alleles), '/'.join(mother_alleles)]
         formulas = [CoupleFormula(Formula), TwoCoupleFormula(Formula)]
         lr = c.get_repeatable_lr(raw_values, children_genotypes, formulas)
         if lr:
             return self.make_result(locus, lr, dict_make_result)
         else:
-            hetero_counter = c.hetero_counter(children_sets)
-            children_alleles = c.get_overall_alleles(children_genotypes)
             freq_dict = self.get_frequencies(locus, children_alleles)
             freq1, freq2, freq3 = c.get_correct_frequency_order_couple(children_sets, freq_dict, children_alleles)
             freq_sum = 0
@@ -35,8 +36,11 @@ class ThreeCoupleFormula(Formula):
                     4: c.multiply_lr_on_children_allele(8, children_alleles, freq_dict),
                     3: c.multiply_lr_on_children_allele(8, children_alleles, freq_dict) * freq_sum
                 },
-                2: 8 * freq1 ** 2 * freq2 * freq3,
+                2: freq1 * c.multiply_lr_on_children_allele(8, children_alleles, freq_dict),
                 1: c.multiply_lr_on_children_allele(2, children_alleles, freq_dict) ** 2
             }
             lr = c.get_lr_from_dict_couple(overall_dict, hetero_counter, len(children_alleles))
+            print(children_genotypes)
+            print(freq_dict, lr, 1/lr)
+            print()
             return self.make_result(locus, 1 / lr, dict_make_result)

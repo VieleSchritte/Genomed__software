@@ -14,12 +14,24 @@ class TestFormula(TestCase):
         self.reference_paths = [
             'no_intersections/no_intersections_ref',
             'call_CoupleFormula/call_CoupleFormula_ref',
-            'call_TwoCouple_Formula/call_TwoCouple_Formula_ref'
+            'call_TwoCouple_Formula/call_TwoCouple_Formula_ref',
+            'aa_ab_ac_ab_ac/aa_ab_ac_ab_ac_ref',
+            'aa_ab_bb_ab_ab/aa_ab_bb_ab_ab_ref',
+            'ab_ac_bc_ab_ac/ab_ac_bc_ab_ac_ref',
+            'ab_ac_bc_ab_bc/ab_ac_bc_ab_bc_ref',
+            'ab_ac_bc_ac_bc/ab_ac_bc_ac_bc_ref',
+            'ab_ac_bd_ac_bd/ab_ac_bd_ac_bd_ref'
         ]
         self.test_paths = [
             'no_intersections/no_intersections_test',
             'call_CoupleFormula/call_CoupleFormula_test',
-            'call_TwoCouple_Formula/call_TwoCouple_Formula_test'
+            'call_TwoCouple_Formula/call_TwoCouple_Formula_test',
+            'aa_ab_ac_ab_ac/aa_ab_ac_ab_ac_test',
+            'aa_ab_bb_ab_ab/aa_ab_bb_ab_ab_test',
+            'ab_ac_bc_ab_ac/ab_ac_bc_ab_ac_test',
+            'ab_ac_bc_ab_bc/ab_ac_bc_ab_bc_test',
+            'ab_ac_bc_ac_bc/ab_ac_bc_ac_bc_test',
+            'ab_ac_bd_ac_bd/ab_ac_bd_ac_bd_test'
         ]
 
         short_path = 'cognation/scripts/tests/test_cases/three_couple_cases/'

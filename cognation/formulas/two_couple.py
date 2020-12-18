@@ -6,7 +6,6 @@ from .base import Calculations
 
 class TwoCoupleFormula(Formula):
     def calculate_relation(self, raw_values):
-        print('called TwoCouple')
         (locus, alleles, sets, intersections, dict_make_result) = self.getting_alleles_locus(raw_values, 4)
         father_alleles, mother_alleles, children_genotypes = alleles[0], alleles[1], alleles[2:]
         children_sets = sets[2:]
