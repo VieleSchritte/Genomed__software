@@ -40,7 +40,4 @@ class ThreeCoupleFormula(Formula):
                 1: c.multiply_lr_on_children_allele(2, children_alleles, freq_dict) ** 2
             }
             lr = c.get_lr_from_dict_couple(overall_dict, hetero_counter, len(children_alleles))
-            print(children_genotypes)
-            print(freq_dict, lr, 1/lr)
-            print()
             return self.make_result(locus, 1 / lr, dict_make_result)
