@@ -453,6 +453,14 @@ class Calculations:
         return lr
 
     @staticmethod
+    def homo_counter(target_sets):
+        homo_counter = 0
+        for single_set in target_sets:
+            if len(single_set) == 1:
+                homo_counter += 1
+        return homo_counter
+
+    @staticmethod
     def hetero_counter(target_sets):
         hetero_counter = 0
         for child_set in target_sets:
