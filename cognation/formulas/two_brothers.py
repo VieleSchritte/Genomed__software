@@ -30,15 +30,16 @@ class TwoBrothersFormula(Formula):
                         freq2, freq3 = freq_dict[bro_genotype[0]], freq_dict[bro_genotype[1]]
 
                 homo_dict = {
-                    [1, 1, 1]: 2 * freq1 / (2 - freq1 + 2 * freq2),
-                    [1, 0, 1]: 2 * freq1 / (2 + freq2)
+                    (1, 1, 1): 2 * freq1 / (2 - freq1 + 2 * freq2),
+                    (1, 0, 1): 2 * freq1 / (2 + freq2)
                 }
-                if intersections in homo_dict.keys():
-                    return self.make_result(locus, homo_dict[intersections] / homo_refutation, dict_make_result)
-                else:
-                    return self.make_result(locus, 0, dict_make_result)
+                for key in homo_dict.keys():
+                    if key == tuple(intersections):
+                        return self.make_result(locus, homo_dict[tuple(intersections)] / homo_refutation, dict_make_result)
+                    else:
+                        return self.make_result(locus, 0, dict_make_result)
 
-            hetero_refutation = c.hetero_refutation(freq_dict.keys()[0], freq_dict.keys()[1])
+            hetero_refutation = c.hetero_refutation(freq_dict[inspected_alleles[0]], freq_dict[inspected_alleles[1]])
             zero_conditions = [
                 intersections == [1, 0, 0],
                 intersections[0] == 0,
@@ -75,10 +76,8 @@ class TwoBrothersFormula(Formula):
             for key in hetero_dict.keys():
                 if type(key) == int:
                     if intersections[0] == 2:
-                        confirmation = hetero_dict[key]
-                if intersections == key:
+                        return self.make_result(locus, hetero_dict[key] / hetero_refutation, dict_make_result)
+                if tuple(intersections) == key:
                     target_dict = hetero_dict[key]
                     if hetero_counter in target_dict.keys():
-                        confirmation = target_dict[hetero_counter]
-            lr = confirmation / hetero_refutation
-            return self.make_result(locus, lr, dict_make_result)
+                        return self.make_result(locus, target_dict[hetero_counter] / hetero_refutation, dict_make_result)
