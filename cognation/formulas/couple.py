@@ -4,7 +4,6 @@ from .base import Formula, Calculations
 
 class CoupleFormula(Formula):
     def calculate_relation(self, raw_values):
-        print('called CoupleFormula')
         (locus, alleles, sets, intersections, dict_make_result) = self.getting_alleles_locus(raw_values, 3)
         child_alleles, child_set = alleles[2], sets[2]
 

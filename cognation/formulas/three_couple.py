@@ -13,7 +13,7 @@ class ThreeCoupleFormula(Formula):
         if self.is_gender_specific(locus):
             return self.preparation_check(locus, dict_make_result)
         for i in range(1, 7):
-            if intersections[i] == 0:
+            if len(intersections[i]) == 0:
                 return self.make_result(locus, 0, dict_make_result)
 
         c = Calculations()

@@ -475,8 +475,6 @@ class Calculations:
 
     @staticmethod
     def get_lr_from_dict_couple(overall_dict, hetero_counter, children_alleles_len):
-        print('hetero_counter=', hetero_counter)
-        print('children_alleles_len=', children_alleles_len)
         for key in overall_dict.keys():
             if key == hetero_counter:
                 types = [int, float]

@@ -6,6 +6,7 @@ from .base import Calculations
 
 class TwoCoupleFormula(Formula):
     def calculate_relation(self, raw_values):
+        print('called TwoCouple')
         (locus, alleles, sets, intersections, dict_make_result) = self.getting_alleles_locus(raw_values, 4)
         father_alleles, mother_alleles, children_genotypes = alleles[0], alleles[1], alleles[2:]
         children_sets = sets[2:]
@@ -28,7 +29,6 @@ class TwoCoupleFormula(Formula):
             freq1, freq2, freq3 = 0, 0, 0
             if len(children_alleles) < 4:
                 freq1, freq2, freq3 = c.get_correct_frequency_order_couple(children_sets, freq_dict, children_alleles)
-            print(freq1, freq2, freq3)
             overall_dict = {
                 2: {
                     3: c.multiply_lr_on_children_allele(4, children_alleles, freq_dict) * (2 + freq1),  # ab ac an bc
@@ -41,7 +41,4 @@ class TwoCoupleFormula(Formula):
                 0: (c.multiply_lr_on_children_allele(2, children_alleles, freq_dict)) ** 2  # aa bb ab ab
             }
             lr = c.get_lr_from_dict_couple(overall_dict, hetero_counter, len(children_alleles))
-            print(children_genotypes)
-            print(freq_dict, lr)
-            print()
             return self.make_result(locus, 1 / lr, dict_make_result)
