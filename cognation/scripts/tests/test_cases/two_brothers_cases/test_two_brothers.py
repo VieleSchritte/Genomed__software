@@ -10,39 +10,15 @@ from cognation.scripts.tests import GetData
 class TestFormula(TestCase):
     def setUp(self):
         self.reference_paths = [
-            'aa_ab_cccd/aa_ab_cccd_ref',
-            'ab_aa_cccd/ab_aa_cccd_ref',
-            'ab_ac_ad/ab_ac_ad_ref',
-            'ab_notab_notab/ab_notab_notab_ref',
-            #'aa_aa_any/aa_aa_any_ref',
-            #'ab_ab_any/ab_ab_any_ref',
-            #'ab_aa_bn/ab_aa_bn_ref',
-            #'aa_ab_ac/aa_ab_ac_ref',
-            #'aa_ab_bc/aa_ab_bc_ref',
-            #'ab_aa_ac/ab_aa_ac_ref',
-            #'ab_ac_bc/ab_ac_bc_ref',
-            #'ab_ac_bd/ab_ac_bd_ref',
-            #'ab_ac_cc/ab_ac_cc_ref',
-            #'ab_ac_cd/ab_ac_cd_ref',
-            #'call_BrotherFormula/call_BrotherFormula_ref'
+            'brother_1/brother_1_ref',
+            'brother_2/brother_2_ref',
+            'zero_cases/zero_cases_ref'
         ]
 
         self.test_paths = [
-            'aa_ab_cccd/aa_ab_cccd_test',
-            'ab_aa_cccd/ab_aa_cccd_test',
-            'ab_ac_ad/ab_ac_ad_test',
-            'ab_notab_notab/ab_notab_notab_test',
-            #'aa_aa_any/aa_aa_any_test',
-            #'ab_ab_any/ab_ab_any_test',
-            #'ab_aa_bn/ab_aa_bn_test',
-            #'aa_ab_ac/aa_ab_ac_test',
-            #'aa_ab_bc/aa_ab_bc_test',
-            #'ab_aa_ac/ab_aa_ac_test',
-            #'ab_ac_bc/ab_ac_bc_test',
-            #'ab_ac_bd/ab_ac_bd_test',
-            #'ab_ac_cc/ab_ac_cc_test',
-            #'ab_ac_cd/ab_ac_cd_test',
-            #'call_BrotherFormula/call_BrotherFormula_test'
+            'brother_1/brother_1_test',
+            'brother_2/brother_2_test',
+            'zero_cases/zero_cases_test'
         ]
 
         short_path = 'cognation/scripts/tests/test_cases/two_brothers_cases/'

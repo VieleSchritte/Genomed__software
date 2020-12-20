@@ -15,14 +15,13 @@ class TwoBrothersFormula(Formula):
         c = Calculations()
         all_alleles = c.get_overall_alleles(alleles)
 
-        print(locus)
         if self.is_gender_specific(locus):
             return self.preparation_check(locus, dict_make_result)
         zero_conditions = [
             inters_lens == (1, 0, 0) and inspected_set not in brothers_sets,  # aa ab cc/cd, ab aa cc/cd
             inters_lens == (0, 1, 0) and inspected_set not in brothers_sets,  # aa ab cc/cd
             inters_lens == (1, 1, 1) and len(all_alleles) == 4,  # ab ac ad
-            inters_lens[0] == 0 and inspected_set not in brothers_sets  # ab any != an/bn any != an/bn
+            inters_lens[0] == 0 and inters_lens[1:] != (1, 1) and inspected_set not in brothers_sets  # ab any != an/bn any != an/bn
         ]
         for condition in zero_conditions:
             if condition:
@@ -46,8 +45,11 @@ class TwoBrothersFormula(Formula):
                 freq1, freq2 = 1, 1
                 for bro_set in brothers_sets:
                     if len(bro_set & inspected_set) != 0:
-                        freq1 = freq_dict[list(bro_set & inspected_set)[0]]
-                        freq2 = freq_dict[list(inspected_set - bro_set & inspected_set)[0]]
+                        if inspected_set == bro_set:
+                            freq1, freq2 = freq_dict[inspected_alleles[0]], freq_dict[inspected_alleles[1]]
+                        else:
+                            freq1 = freq_dict[list(bro_set & inspected_set)[0]]
+                            freq2 = freq_dict[list(inspected_set - bro_set & inspected_set)[0]]
                 freqs = [freq1, freq2, freq3]
                 refutation = c.hetero_refutation(freq_dict[inspected_alleles[0]], freq_dict[inspected_alleles[1]])
                 confirmation = conf.hetero_confirmation(inters_lens, intersections, sets, freqs)
@@ -58,11 +60,8 @@ class TwoBrothersFormula(Formula):
 class Confirmations:
     @staticmethod
     def homo_confirmation(inspected_set, brothers_sets, freq1, freq2, inters_lens):
-        print('called homo')
         if inspected_set in brothers_sets:  # aa aa any
-            print('right')
             return 1
-
         homo_dict = {
             (1, 1, 1): 2 * freq1 / (2 - freq1 + 2 * freq2),  # aa ab ac
             (1, 0, 1): 2 * freq1 / (2 + freq2)  # aa ab bc
@@ -90,13 +89,21 @@ class Confirmations:
                 2: 2 * freq2 * freq3 / c.F(freq1),  # ab ac cc
                 3: 2 * freq2 / (2 + freq3)  # ab ac cd
             },
+            (1, 2, 1): 1,
+            (0, 2, 0): 1,
+            (0, 1, 1): {
+                2: 2 * freq2 * freq3 / c.F(freq1),  # ab ac cc
+                3: 2 * freq2 / (2 + freq3)  # ab ac cd
+            },
             2: 1  # ab ab any / ab aa bn (case ab aa ab)
         }
-        for key in hetero_dict.keys():
-            if type(key) == int:
-                if intersections[0] == 2:
-                    return hetero_dict[key]
-            if inters_lens == key:
-                target_dict = hetero_dict[key]
-                if hetero_counter in target_dict.keys():
-                    return target_dict[hetero_counter]
+        if inters_lens in hetero_dict.keys():
+            target = hetero_dict[inters_lens]
+            if type(target) != dict:
+                return target
+            target_dict = target
+            if hetero_counter in target_dict.keys():
+                return target_dict[hetero_counter]
+        else:
+            if len(intersections[0]) in hetero_dict.keys():
+                return hetero_dict[len(intersections[0])]

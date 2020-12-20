@@ -4,7 +4,6 @@ from .base import Formula, Calculations
 
 class BrotherFormula(Formula):
     def calculate_relation(self, raw_values):
-        print('call BrotherFormula')
         locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 2)
         insp_set = sets[0]
 
