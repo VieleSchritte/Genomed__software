@@ -83,35 +83,23 @@ class GetData:
 
     @staticmethod
     def get_reference_data(short_path, doc_name, part_number):
-        ref_dict = {}
-        cpi = 0
-        p = 0.0
+        ref_dict, cpi, p = {}, 0, 0.0
         with open(short_path + doc_name, 'r') as ref_data:
             for line in ref_data:
                 line = line.strip().split('\t')
-
-                # not gender specific loci - there is int meaning of lr
-                if len(line) != 1:
-                    locus = line[0]
-                    lr = line[-1]
+                if len(line) != 1:  # not gender specific loci - there is int meaning of lr
+                    locus, lr = line[0], line[-1]
                     if part_number == 3:
                         lr = line[4]
-
-                    #  case of gender specific loci
-                    if lr == '-':
+                    if lr == '-':  # case of gender specific loci
                         ref_dict[locus] = lr
                         continue
-                    # case of int lr meanings of loci
-                    else:
+                    else:  # case of int lr meanings of loci
                         lr = float(lr) * 100 / 100
                         ref_dict[locus] = lr
-
-                # case for getting cpi and p meanings
-                elif len(line) == 1 and line[0] != '':
+                elif len(line) == 1 and line[0] != '':  # case for getting cpi and p meanings
                     line = line[0].split('=')
                     if line[0] == 'CPI':
                         cpi = int(line[1])
-                    elif line[0] == 'P':
-                        p = float(line[1])
-
+                    p = float(line[1])
         return ref_dict, cpi, p
