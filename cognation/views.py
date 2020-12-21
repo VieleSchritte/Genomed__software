@@ -269,18 +269,18 @@ def calculate(request):
         prob = (cpi / (1. + cpi)) * 100.
         target_number = str(prob).split('.')[1]
         if target_number[0] != '9':
-            new_prob = prob
+            processed_prob = prob
         else:
             new_number = ''
             for i in range(len(target_number)):
                 new_number += target_number[i]
                 if target_number[i] != '9':
                     break
-            new_prob = float(str(int(prob)) + '.' + new_number)
+            processed_prob = float(str(int(prob)) + '.' + new_number)
         ctx = {
             'result': result,
             'cpi': cpi,
-            'prob': new_prob,
+            'prob': processed_prob,
             'participants': participants_number,
             'mutations': mutations,
             'order': make_order(result),
