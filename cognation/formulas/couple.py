@@ -13,14 +13,11 @@ class CoupleFormula(Formula):
         freq_dict = self.get_frequencies(locus, child_alleles)
         freq1, freq2 = freq_dict[child_alleles[0]], freq_dict[child_alleles[1]]
         c = Calculations()
-
         for i in range(1, 3):
             if len(intersections[i]) == 0:
                 return self.make_result(locus, 0, dict_make_result)
-
         if len(child_set) == 1:  # aa an an
             lr = (c.F(freq1)) ** 2
             return self.make_result(locus, 1 / lr, dict_make_result)
-
         lr = 2 * c.F(freq1) * c.F(freq2) - (2 * freq1 * freq2) ** 2  # ab an bn
         return self.make_result(locus, 1 / lr, dict_make_result)

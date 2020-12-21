@@ -319,7 +319,6 @@ class Calculations:
         return 2 * self.F(freq1) * self.F(freq2) - (2 * freq1 * freq2) ** 2
 
     # Returns unique and repeatable children's genotypes in case of two and three children
-
     @staticmethod
     def get_repeat_unique(children_genotypes):
         repeats_dict = {}
@@ -354,7 +353,6 @@ class Calculations:
         for children_allele in children_alleles:
             single_alleles_combinations.append(self.get_combinations(list(parent_set), [children_allele]))
         if self.is_get_F_case(single_alleles_combinations, children_genotypes, parents_data, children_alleles):
-            print('F')
             return set(children_genotypes[0]) & set(children_genotypes[1])  # case lr = F(Pa)
 
         possible_parent_genotypes = self.get_possible_parent_genotypes(children_alleles)
@@ -368,7 +366,6 @@ class Calculations:
                 answer = self.answer_genotypes_selection(key_word, children_genotypes, possible_children_genotypes, answer, parent_genotype)
             return answer
         if key_word == 'supposed':
-            print('other cases')
             for possible_parent in possible_parent_genotypes:
                 answer = self.answer_genotypes_selection(key_word, children_genotypes, possible_parent_genotypes, answer, possible_parent)
             return answer
