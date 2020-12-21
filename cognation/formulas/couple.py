@@ -19,5 +19,6 @@ class CoupleFormula(Formula):
         if len(child_set) == 1:  # aa an an
             lr = (c.F(freq1)) ** 2
             return self.make_result(locus, 1 / lr, dict_make_result)
+
         lr = 2 * c.F(freq1) * c.F(freq2) - (2 * freq1 * freq2) ** 2  # ab an bn
         return self.make_result(locus, 1 / lr, dict_make_result)

@@ -43,7 +43,7 @@ class GetData:
             17: GrandParentFormula,
             18: [],
             19: YesParentGrandChild,
-            20: [],
+            20: BothGrandparentsFormula,
             21: []
         }
 
@@ -58,7 +58,7 @@ class GetData:
 
         with open(short_path + doc_name, 'r') as test_data:
             for line in test_data:
-                line = line.strip()
+                line = line.strip().replace(',', '.')
 
                 case_formula = self.formula_usage(number)
                 formula_dict = case_formula.calculate_relation(re.split(r'[\s\t]+', line))
