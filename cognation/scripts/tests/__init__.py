@@ -16,6 +16,7 @@ from cognation.formulas.two_couple import TwoCoupleFormula
 from cognation.formulas.two_brothers import TwoBrothersFormula
 from cognation.formulas.grand_parent_child_yes import YesParentGrandChild
 from cognation.formulas.three_couple import ThreeCoupleFormula
+from cognation.formulas.both_grandparents import BothGrandparentsFormula
 import re
 from django.core.management import call_command
 
@@ -52,33 +53,27 @@ class GetData:
                 return num_to_formula[key](Formula)
 
     def get_test_data(self, short_path, doc_name, number):
-        test_cpi = 1
-        test_dict = {}
+        test_cpi, test_dict = 1, {}
         call_command("loaddata", "converted.json", verbosity=0)
 
         with open(short_path + doc_name, 'r') as test_data:
             for line in test_data:
                 line = line.strip().replace(',', '.')
-
                 case_formula = self.formula_usage(number)
                 formula_dict = case_formula.calculate_relation(re.split(r'[\s\t]+', line))
-                locus = formula_dict['locus']
-                lr = formula_dict['lr']
+                locus, lr = formula_dict['locus'], formula_dict['lr']
 
                 if lr != '-':
                     lr = round(lr, 2)
                     test_cpi *= lr
                     test_dict[locus] = lr
-
-                #  case of gender specific loci
-                else:
+                else:  # case of gender specific loci
                     test_dict[locus] = lr
                     continue
 
             test_cpi = float(test_cpi)
             test_p = (test_cpi / (1 + test_cpi)) * 100
             test_cpi = round(test_cpi)
-
             return test_dict, test_cpi, test_p
 
     @staticmethod

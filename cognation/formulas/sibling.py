@@ -25,8 +25,6 @@ class SiblingFormula(Formula):
             if len(all_alleles) == 3:
                 freq1, freq2, freq3 = (freq_dict[child_alleles[0]], freq_dict[list(parent_set - child_set)[0]], freq_dict[list(set_all - parent_set)[0]])
 
-            print(freq1, freq2, freq3)
-            print('(len(all_alleles), homo_counter, len(sibling_set)): ', (len(all_alleles), homo_counter, len(sibling_set)))
             refutation = c.homo_refutation(freq1)
             conf_dict = {
                 (1, 3, 1): 1,
@@ -54,9 +52,6 @@ class SiblingFormula(Formula):
             if len(all_alleles) == 4:
                 freq2, freq4 = freq_dict[list(child_set - cp_inter)[0]], freq_dict[list(set_all - child_set - parent_set)[0]]
 
-            print(freq1, freq2, freq3, freq4)
-            print((len(all_alleles), homo_counter, len(sibling_set), len(sc_inter)))
-            print()
             refutation = c.hetero_refutation(freq1, freq2)
             answers = {
                 (2, 2, 1, 1): c.M(freq1, freq2),  # ab aa aa

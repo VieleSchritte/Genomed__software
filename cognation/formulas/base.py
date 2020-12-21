@@ -103,28 +103,21 @@ class Formula(abc.ABC):
         return self.make_result(locus, '-', dict_make_result)
 
     def getting_alleles_locus(self, raw_values, part_number):
-        if len(raw_values) < part_number + 1:
-            # Skip line with warning
+        if len(raw_values) < part_number + 1:  # Skip line with warning
             raise LineFormatException(raw_values)
 
-        part_alleles = []
-
-        dict_make_result = {}
-        locus = raw_values[0]
-
+        part_alleles, dict_make_result, locus = [], {}, raw_values[0]
         if len(raw_values) > part_number + 1:
             locus += ' ' + raw_values[1]
             for i in range(2, part_number + 2):
                 part_alleles.append(self.split_sat(raw_values[i]))
-                key = 'part' + str(i - 1)
-                dict_make_result[key] = '/'.join(part_alleles[i - 2])
+                dict_make_result['part' + str(i - 1)] = '/'.join(part_alleles[i - 2])
         else:
             for i in range(1, part_number + 1):
                 part_alleles.append(self.split_sat(raw_values[i]))
-                key = 'part' + str(i)
-                dict_make_result[key] = '/'.join(part_alleles[i - 1])
+                dict_make_result['part' + str(i)] = '/'.join(part_alleles[i - 1])
 
-        part_sets = []
+        part_sets, intersections = [], []
         for part in part_alleles:
             if not self.is_gender_specific(locus) and len(part) != 2:
                 raise AllelesException(locus, part)
@@ -132,8 +125,6 @@ class Formula(abc.ABC):
 
         if not self.is_gender_specific(locus):
             self.get_frequencies(locus, part_alleles[0] + part_alleles[1])
-
-        intersections = []
         for i in range(len(part_alleles)):
             for j in range(len(part_alleles)):
                 if j > i:
@@ -166,7 +157,6 @@ class Formula(abc.ABC):
                             counter += 1
                     if counter > 1:
                         raise LineFormatException(alleles)
-
             elif not self.is_gender_specific(locus):
                 exception_counter = 0
                 if not self.is_digit(allele):
@@ -177,7 +167,6 @@ class Formula(abc.ABC):
                             exception_counter += 1
                     if exception_counter > 1:
                         raise TooManyDelimitingSymbols(locus, alleles)
-
             elif self.is_gender_specific(locus):
                 return
 
@@ -250,7 +239,6 @@ class Formula(abc.ABC):
             except (LineFormatException, AllelesException, UnknownAlleleException, UnknownSymbolInAlleles,
                     TooManyDelimitingSymbols, DelimitingLast, DelimitingFirst, LociSetDoesNotEqual) as exception:
                 result[hash(str(line))] = {'exception': exception, 'line': str(line)}
-
         return result
 
     # getting allele frequencies from DB
