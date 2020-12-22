@@ -9,18 +9,21 @@ logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.StreamHandler())
 
 
-class TestCousinFormula(TestCase):
+class TestFormula(TestCase):
     def setUp(self):
-
         self.reference_paths = [
             'case1/case1_ref',
             'case2/case2_ref',
-            'case3/case3_ref'
+            'case3/case3_ref',
+            'case4/case4_ref',
+            'case5/case5_ref'
         ]
         self.test_paths = [
             'case1/case1_test',
             'case2/case2_test',
-            'case3/case3_test'
+            'case3/case3_test',
+            'case4/case4_test',
+            'case5/case5_test'
         ]
         short_path = 'cognation/scripts/tests/test_cases/gr_parent_child_no_cases/'
         get_ref = GetData()
