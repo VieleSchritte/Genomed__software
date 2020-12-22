@@ -5,7 +5,7 @@ from .base import Formula
 class StepbrotherFormula(Formula):
     def calculate_relation(self, raw_values):
         locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 2)
-        stb1_set, stb2_set = sets
+        insp_set, step_bro = sets
         intersection = intersections[0]
 
         if self.is_gender_specific(locus):
@@ -25,13 +25,13 @@ class StepbrotherFormula(Formula):
 
         freq = freq_dict[list(intersection)[0]]
 
-        if len(stb1_set) == len(stb2_set) == 2:
+        if len(insp_set) == len(step_bro) == 2:
             lr += 0.25 / (2 * freq)
 
-        if len(stb1_set) == len(stb2_set) == 1:
+        if len(insp_set) == len(step_bro) == 1:
             lr += 0.5 / freq
 
-        if len(stb1_set) != len(stb2_set):
+        if len(insp_set) != len(step_bro):
             lr += 0.25 / freq
 
         return self.make_result(locus, lr, dict_make_result)

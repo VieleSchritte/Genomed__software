@@ -14,7 +14,9 @@ from cognation.formulas.three_known_supposed import ThreeKnownSupposed
 from cognation.formulas.couple import CoupleFormula
 from cognation.formulas.two_couple import TwoCoupleFormula
 from cognation.formulas.two_brothers import TwoBrothersFormula
-from cognation.formulas.grand_parent_child_yes import YesParentGrandChild
+from cognation.formulas.grand_parent_yes import GrandParentYes
+from cognation.formulas.grand_parent_no import GrandParentNo
+from cognation.formulas.three_couple import ThreeCoupleFormula
 import re
 from django.core.management import call_command
 
@@ -32,7 +34,7 @@ class GetData:
             7: CoupleFormula,
             8: OneKnownSupposedFormula,
             9: TwoCoupleFormula,
-            10: [],
+            10: ThreeCoupleFormula,
             11: StepbrotherFormula,
             12: BrotherFormula,
             13: TwoBrothersFormula,
@@ -41,8 +43,8 @@ class GetData:
             16: [],
             17: GrandParentFormula,
             18: [],
-            19: YesParentGrandChild,
-            20: [],
+            19: GrandParentYes,
+            20: GrandParentNo,
             21: []
         }
 
@@ -51,67 +53,48 @@ class GetData:
                 return num_to_formula[key](Formula)
 
     def get_test_data(self, short_path, doc_name, number):
-        test_cpi = 1
-        test_dict = {}
+        test_cpi, test_dict = 1, {}
         call_command("loaddata", "converted.json", verbosity=0)
 
         with open(short_path + doc_name, 'r') as test_data:
             for line in test_data:
-                line = line.strip()
-
+                line = line.strip().replace(',', '.')
                 case_formula = self.formula_usage(number)
                 formula_dict = case_formula.calculate_relation(re.split(r'[\s\t]+', line))
-                locus = formula_dict['locus']
-
-                lr = formula_dict['lr']
+                locus, lr = formula_dict['locus'], formula_dict['lr']
 
                 if lr != '-':
+                    lr = round(lr, 2)
                     test_cpi *= lr
-                    lr = float("{0:.2f}".format(lr))
                     test_dict[locus] = lr
-
-                #  case of gender specific loci
-                else:
+                else:  # case of gender specific loci
                     test_dict[locus] = lr
                     continue
 
             test_cpi = float(test_cpi)
             test_p = (test_cpi / (1 + test_cpi)) * 100
             test_cpi = round(test_cpi)
-
             return test_dict, test_cpi, test_p
 
     @staticmethod
     def get_reference_data(short_path, doc_name, part_number):
-        ref_dict = {}
-        cpi = 0
-        p = 0.0
+        ref_dict, cpi, p = {}, 0, 0.0
         with open(short_path + doc_name, 'r') as ref_data:
             for line in ref_data:
                 line = line.strip().split('\t')
-
-                # not gender specific loci - there is int meaning of lr
-                if len(line) != 1:
-                    locus = line[0]
-                    lr = line[-1]
+                if len(line) != 1:  # not gender specific loci - there is int meaning of lr
+                    locus, lr = line[0], line[-1]
                     if part_number == 3:
                         lr = line[4]
-
-                    #  case of gender specific loci
-                    if lr == '-':
+                    if lr == '-':  # case of gender specific loci
                         ref_dict[locus] = lr
                         continue
-                    # case of int lr meanings of loci
-                    else:
+                    else:  # case of int lr meanings of loci
                         lr = float(lr) * 100 / 100
                         ref_dict[locus] = lr
-
-                # case for getting cpi and p meanings
-                elif len(line) == 1 and line[0] != '':
+                elif len(line) == 1 and line[0] != '':  # case for getting cpi and p meanings
                     line = line[0].split('=')
                     if line[0] == 'CPI':
                         cpi = int(line[1])
-                    elif line[0] == 'P':
-                        p = float(line[1])
-
+                    p = float(line[1])
         return ref_dict, cpi, p
