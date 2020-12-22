@@ -12,14 +12,14 @@ logger.addHandler(logging.StreamHandler())
 class TestFormula(TestCase):
     def setUp(self):
         self.reference_paths = [
-            'sibling1/sibling1_ref',
-            'sibling2/sibling2_ref'
+            'case1/case1_ref',
+            'case2/case2_ref'
         ]
         self.test_paths = [
-            'sibling1/sibling1_test',
-            'sibling2/sibling2_test'
+            'case1/case1_test',
+            'case2/case2_test'
         ]
-        short_path = 'cognation/scripts/tests/test_cases/sibling_cases/'
+        short_path = 'cognation/scripts/tests/test_cases/yes_parent_grand_child_cases/'
         get_ref = GetData()
         self.overall_ref_dict, self.overall_test_dict = {}, {}
 
@@ -27,7 +27,7 @@ class TestFormula(TestCase):
         for i in range(len(self.reference_paths)):
             ref_path, test_path = self.reference_paths[i], self.test_paths[i]
             self.overall_ref_dict[ref_path] = get_ref.get_reference_data(short_path, ref_path, 3)
-            self.overall_test_dict[test_path] = get_ref.get_test_data(short_path, test_path, 3)
+            self.overall_test_dict[test_path] = get_ref.get_test_data(short_path, test_path, 19)
 
     def test_formula(self):
         for i in range(len(self.reference_paths)):

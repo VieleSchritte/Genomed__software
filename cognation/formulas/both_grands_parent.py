@@ -36,20 +36,17 @@ class Confirmations:
         child_allele = list(child_set)[0]
         counter = 0
         for grandparent_set in grandparents_sets:
-            if grandparent_set == child_set:
-                print('conf = 1')
-                print()
-                return 1  # aa an aa any
+            if grandparent_set == child_set:  # aa an aa any
+                return 1
             if child_allele in list(grandparent_set):
                 counter += 1
-        if counter == 2:
-            print('conf = 0.75')
-            print()
-            return 0.75  # aa an ab an, n != b
-        else:
-            print('conf = 0.5')
-            print()
-            return 0.5  # aa an ab any != an
+        answers = {
+            counter == 2: 0.75,  # aa an ab an, n != b
+            counter != 2: 0.5  # aa an ab any != an
+        }
+        for key in answers.keys():
+            if key:
+                return answers[key]
 
     @staticmethod
     def hetero_confirmation(sets, child_alleles):

@@ -9,7 +9,7 @@ from cognation.formulas.couple import CoupleFormula
 from cognation.formulas.base import UnknownFormulaException
 from cognation.formulas.two_children import TwoChildrenFormula
 from cognation.formulas.three_children import ThreeChildrenFormula
-from cognation.formulas.grand_parent_yes import GrandParentYes
+from cognation.formulas.grand_parent_yes import YesGrandParent
 from cognation.formulas.one_known_supposed import OneKnownSupposedFormula
 from cognation.formulas.two_known_supposed import TwoKnownSupposedFormula
 from cognation.formulas.two_brothers import TwoBrothersFormula
@@ -17,7 +17,7 @@ from cognation.formulas.three_known_supposed import ThreeKnownSupposed
 from cognation.formulas.two_couple import TwoCoupleFormula
 from cognation.formulas.three_couple import ThreeCoupleFormula
 from cognation.formulas.both_grands_parent import BothGrandsParent
-from cognation.formulas.grand_parent_no import GrandParentNo
+from cognation.formulas.grand_parent_no import NoGrandParent
 from cognation.formulas.both_grandparents import BothGrandparentsFormula
 
 
@@ -40,8 +40,8 @@ numToFormula = {
     16: BothGrandsParent,
     17: GrandParentFormula,
     18: BothGrandparentsFormula,
-    19: GrandParentYes,
-    20: GrandParentNo,
+    19: YesGrandParent,
+    20: NoGrandParent,
     21: []
 }
 
