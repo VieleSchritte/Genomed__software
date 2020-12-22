@@ -15,6 +15,7 @@ from cognation.formulas.couple import CoupleFormula
 from cognation.formulas.two_couple import TwoCoupleFormula
 from cognation.formulas.two_brothers import TwoBrothersFormula
 from cognation.formulas.grand_parent_yes import GrandParentYes
+from cognation.formulas.grand_parent_no import GrandParentNo
 import re
 from django.core.management import call_command
 
@@ -42,7 +43,7 @@ class GetData:
             17: GrandParentFormula,
             18: [],
             19: GrandParentYes,
-            20: [],
+            20: GrandParentNo,
             21: []
         }
 
