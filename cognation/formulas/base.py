@@ -48,7 +48,8 @@ class UnknownSymbolInAlleles(Exception):
         self.symbol = symbol
 
     def __str__(self):
-        return "Неизвестный символ '" + str(self.symbol) + "' найден среди аллелей " + str('/'.join(self.alleles)) + " в локусе " + str(self.locus)
+        return "Неизвестный символ '" + str(self.symbol) + "' найден среди аллелей " + str(
+            '/'.join(self.alleles)) + " в локусе " + str(self.locus)
 
 
 class TooManyDelimitingSymbols(Exception):
@@ -57,7 +58,8 @@ class TooManyDelimitingSymbols(Exception):
         self.alleles = alleles
 
     def __str__(self):
-        return "Слишком много разделяющих символов в списке аллелей " + str(self.alleles) + " в локусе " + str(self.locus) + ". Используйте только одну точку или запятую"
+        return "Слишком много разделяющих символов в списке аллелей " + str(self.alleles) + " в локусе " + str(
+            self.locus) + ". Используйте только одну точку или запятую"
 
 
 class DelimitingLast(Exception):
@@ -66,6 +68,14 @@ class DelimitingLast(Exception):
 
     def __str__(self):
         return "Разделяющий символ в конце числа: " + str(self.alleles)
+
+
+class DelimitingFirst(Exception):
+    def __init__(self, alleles):
+        self.alleles = alleles
+
+    def __str__(self):
+        return "Разделяющий символ в начале числа: " + str(self.alleles)
 
 
 class LociSetDoesNotEqual(Exception):
@@ -93,38 +103,28 @@ class Formula(abc.ABC):
         return self.make_result(locus, '-', dict_make_result)
 
     def getting_alleles_locus(self, raw_values, part_number):
-        if len(raw_values) < part_number + 1:
-            # Skip line with warning
+        if len(raw_values) < part_number + 1:  # Skip line with warning
             raise LineFormatException(raw_values)
 
-        part_alleles = []
-
-        dict_make_result = {}
-        locus = raw_values[0]
-
+        part_alleles, dict_make_result, locus = [], {}, raw_values[0]
         if len(raw_values) > part_number + 1:
             locus += ' ' + raw_values[1]
             for i in range(2, part_number + 2):
                 part_alleles.append(self.split_sat(raw_values[i]))
-                key = 'part' + str(i-1)
-                dict_make_result[key] = '/'.join(part_alleles[i - 2])
+                dict_make_result['part' + str(i - 1)] = '/'.join(part_alleles[i - 2])
         else:
             for i in range(1, part_number + 1):
                 part_alleles.append(self.split_sat(raw_values[i]))
-                key = 'part' + str(i)
-                dict_make_result[key] = '/'.join(part_alleles[i - 1])
+                dict_make_result['part' + str(i)] = '/'.join(part_alleles[i - 1])
 
-        part_sets = []
+        part_sets, intersections = [], []
         for part in part_alleles:
             if not self.is_gender_specific(locus) and len(part) != 2:
                 raise AllelesException(locus, part)
-
             part_sets.append(set(part))
 
         if not self.is_gender_specific(locus):
             self.get_frequencies(locus, part_alleles[0] + part_alleles[1])
-
-        intersections = []
         for i in range(len(part_alleles)):
             for j in range(len(part_alleles)):
                 if j > i:
@@ -157,8 +157,7 @@ class Formula(abc.ABC):
                             counter += 1
                     if counter > 1:
                         raise LineFormatException(alleles)
-
-            else:
+            elif not self.is_gender_specific(locus):
                 exception_counter = 0
                 if not self.is_digit(allele):
                     for symbol in allele:
@@ -168,8 +167,13 @@ class Formula(abc.ABC):
                             exception_counter += 1
                     if exception_counter > 1:
                         raise TooManyDelimitingSymbols(locus, alleles)
+            elif self.is_gender_specific(locus):
+                return
+
             if allele[-1] == '.':
-                raise DelimitingLast(alleles)
+                raise DelimitingLast(allele)
+            if allele[0] == '.':
+                raise DelimitingFirst(allele)
         if len(alleles) > 2:
             raise AllelesException(locus, alleles)
 
@@ -233,9 +237,8 @@ class Formula(abc.ABC):
                 relation = self.calculate_relation(line)
                 result[relation['locus']] = relation
             except (LineFormatException, AllelesException, UnknownAlleleException, UnknownSymbolInAlleles,
-                    TooManyDelimitingSymbols, DelimitingLast, LociSetDoesNotEqual) as exception:
+                    TooManyDelimitingSymbols, DelimitingLast, DelimitingFirst, LociSetDoesNotEqual) as exception:
                 result[hash(str(line))] = {'exception': exception, 'line': str(line)}
-
         return result
 
     # getting allele frequencies from DB
@@ -304,20 +307,172 @@ class Calculations:
 
     # Returns unique and repeatable children's genotypes in case of two and three children
     @staticmethod
-    def get_repeat_unique(child1_alleles, child2_alleles, child3_alleles):
-        children_genotypes = [child1_alleles, child2_alleles, child3_alleles]
-        unique_genotype, repeatable_genotype = [], []
+    def get_repeat_unique(children_genotypes):
+        repeats_dict = {}
+        for genotype in children_genotypes:
+            repeats_dict[tuple(genotype)] = children_genotypes.count(genotype)
+        return repeats_dict
 
-        for i in range(len(children_genotypes)):
-            for j in range(len(children_genotypes)):
-                for k in range(len(children_genotypes)):
+    def get_repeatable_lr(self, raw_values, children_genotypes, formulas):
+        repeats_dict = self.get_repeat_unique(children_genotypes)
+        for key in repeats_dict:
+            raw_values.append('/'.join(key))
+        pos_dict = {
+            2: False,
+            1: formulas[0].calculate_relation
+        }
+        if len(children_genotypes) == 3:
+            pos_dict = {
+                3: False,
+                2: formulas[1].calculate_relation,
+                1: formulas[0].calculate_relation
+            }
+        for key in pos_dict.keys():
+            if len(repeats_dict.keys()) == key:
+                if not pos_dict[key]:
+                    return pos_dict[key]
+                else:
+                    return pos_dict[key](raw_values)['lr']
 
-                    if j > i and children_genotypes[i] == children_genotypes[j]:
-                        if children_genotypes[k] != children_genotypes[i]:
-                            unique_genotype = children_genotypes[k]
-                            repeatable_genotype = children_genotypes[i]
+    def get_possible_genotypes(self, children_alleles, children_genotypes, parents_data):
+        single_alleles_combinations = []
+        parent_set, key_word = parents_data[0], parents_data[1]
+        for children_allele in children_alleles:
+            single_alleles_combinations.append(self.get_combinations(list(parent_set), [children_allele]))
+        if self.is_get_F_case(single_alleles_combinations, children_genotypes, parents_data, children_alleles):
+            return set(children_genotypes[0]) & set(children_genotypes[1])  # case lr = F(Pa)
 
-        if children_genotypes[0] == children_genotypes[1] == children_genotypes[2]:
-            repeatable_genotype = children_genotypes[0]
+        possible_parent_genotypes = self.get_possible_parent_genotypes(children_alleles)
+        answer = []
+        if key_word == 'known':
+            for parent_genotype in possible_parent_genotypes:
+                known_supposed_alleles = self.get_overall_alleles([list(parent_genotype), list(parent_set)])
+                if len(known_supposed_alleles) < len(children_alleles):
+                    continue
+                possible_children_genotypes = self.get_combinations(list(parent_genotype), list(parent_set))
+                answer = self.answer_genotypes_selection(key_word, children_genotypes, possible_children_genotypes, answer, parent_genotype)
+            return answer
+        if key_word == 'supposed':
+            for possible_parent in possible_parent_genotypes:
+                answer = self.answer_genotypes_selection(key_word, children_genotypes, possible_parent_genotypes, answer, possible_parent)
+            return answer
 
-        return unique_genotype, repeatable_genotype
+    @staticmethod
+    def answer_genotypes_selection(key_word, children_genotypes, possible_genotypes, answer, parent_genotype):
+        if key_word == 'known':
+            counter = 0
+            for child_genotype in children_genotypes:
+                counter += possible_genotypes.count(set(child_genotype))
+            if counter >= len(children_genotypes):
+                answer.append(parent_genotype)
+            return answer
+        if key_word == 'supposed':
+            counter = 0
+            for child_genotype in children_genotypes:
+                if len(set(child_genotype) & parent_genotype) != 0:
+                    counter += 1
+            if counter == len(children_genotypes):
+                answer.append(parent_genotype)
+            return answer
+
+    @staticmethod
+    def F_check(single_alleles_combinations, children_genotypes):
+        for item in single_alleles_combinations:
+            counter = 0
+            for child_genotype in children_genotypes:
+                counter += item.count(set(child_genotype))
+            if counter == len(children_genotypes):
+                return True
+
+    def is_get_F_case(self, single_alleles_combinations, children_genotypes, parents_data, children_alleles):
+        if self.F_check(single_alleles_combinations, children_genotypes):
+            return True
+        elif parents_data[1] == 'supposed':
+            another_combinations = []
+            for parent_allele in list(parents_data[0]):
+                another_combinations.append(self.get_combinations(children_alleles, [parent_allele]))
+            if self.F_check(another_combinations, children_genotypes):
+                return True
+
+    @staticmethod
+    def get_possible_parent_genotypes(children_alleles):
+        possible_parent_genotypes = []
+        for i in range(len(children_alleles)):
+            for j in range(len(children_alleles)):
+                if j > i:
+                    possible_parent_genotypes.append({children_alleles[i], children_alleles[j]})
+        return possible_parent_genotypes
+
+    @staticmethod
+    def get_combinations(known_alleles, children_allele):
+        combinations = []
+        for other_allele in children_allele:
+            for children_allele in known_alleles:
+                combinations.append({children_allele, other_allele})
+        return combinations
+
+    @staticmethod
+    def get_overall_alleles(genotypes):
+        overall_alleles = []
+        for genotype in genotypes:
+            overall_alleles += genotype
+        overall_alleles = list(set(overall_alleles))
+        return overall_alleles
+
+    def get_lr_from_possible(self, possible_parent_genotypes, freq_dict):
+        lr = 0
+        if type(possible_parent_genotypes) == set:  # cases where lr = c.F(Pa)
+            lr = self.F(freq_dict[list(possible_parent_genotypes)[0]])
+            return lr
+        for genotype in possible_parent_genotypes:
+            genotype = list(genotype)
+            freq1, freq2 = freq_dict[genotype[0]], freq_dict[genotype[1]]
+            lr += 2 * freq1 * freq2
+        return lr
+
+    @staticmethod
+    def multiply_lr_on_children_allele(lr, children_alleles, freq_dict):
+        for allele in children_alleles:
+            lr *= freq_dict[allele]
+        return lr
+
+    @staticmethod
+    def homo_counter(target_sets):
+        homo_counter = 0
+        for single_set in target_sets:
+            if len(single_set) == 1:
+                homo_counter += 1
+        return homo_counter
+
+    @staticmethod
+    def hetero_counter(target_sets):
+        hetero_counter = 0
+        for child_set in target_sets:
+            if len(child_set) == 2:
+                hetero_counter += 1
+        return hetero_counter
+
+    @staticmethod
+    def get_correct_frequency_order_couple(children_sets, freq_dict, children_alleles):
+        freq1, other_alleles = 1, []
+        for child_set in children_sets:
+            if len(child_set) == 1:
+                freq1, other_alleles = freq_dict[list(child_set)[0]], list(set(children_alleles) - child_set)
+        if len(other_alleles) == 0:
+            target_inter_list = list(children_sets[0] & children_sets[1])
+            freq1, other_alleles = freq_dict[target_inter_list[0]],  list(set(children_alleles) - set(target_inter_list))
+        if len(other_alleles) == 1:
+            return freq1, freq_dict[other_alleles[0]], 0
+        return freq1, freq_dict[other_alleles[0]], freq_dict[other_alleles[1]]
+
+    @staticmethod
+    def get_lr_from_dict_couple(overall_dict, hetero_counter, children_alleles_len):
+        for key in overall_dict.keys():
+            if key == hetero_counter:
+                types = [int, float]
+                if type(overall_dict[hetero_counter]) in types:
+                    return overall_dict[hetero_counter]
+                target_dict = overall_dict[hetero_counter]
+                for length in target_dict.keys():
+                    if length == children_alleles_len:
+                        return target_dict[length]

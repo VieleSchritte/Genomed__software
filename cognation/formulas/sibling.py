@@ -5,105 +5,78 @@ from cognation.formulas.base import Formula, Calculations
 class SiblingFormula(Formula):
     def calculate_relation(self, raw_values):
         locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 3)
-        parent_alleles, sibling_alleles, child_alleles = alleles
+        child_alleles = alleles[-1]
         parent_set, sibling_set, child_set = sets
         sp_inter, cp_inter, sc_inter = intersections
 
         if self.is_gender_specific(locus):
             return self.preparation_check(locus, dict_make_result)
-
-        #  If there's no relation then return lr = 0 and start collecting mutations
         if len(sp_inter) == 0 or len(cp_inter) == 0:
-            lr = 0
-            return self.make_result(locus, lr, dict_make_result)
+            return self.make_result(locus, 0, dict_make_result)
 
         c = Calculations()
-        freq_dict = self.get_frequencies(locus, child_alleles + parent_alleles + sibling_alleles)
-        unavailable_parent_alleles = [0, 0]
+        all_alleles, set_all, homo_counter = c.get_overall_alleles(alleles), set(c.get_overall_alleles(alleles)), c.homo_counter(sets)
+        freq_dict = self.get_frequencies(locus, all_alleles)
+        freq1, freq2, freq3, freq4 = freq_dict[child_alleles[0]], 1, 1, 1
 
-        # Homozygous child
-        if len(child_set) == 1:
-            freq = freq_dict[child_alleles[0]]
-            refutation = c.homo_refutation(freq)
+        if len(child_set) == 1:  # Homozygous child
+            if len(all_alleles) == 2:
+                freq1, freq2, freq3 = freq_dict[child_alleles[0]], freq_dict[list(set(all_alleles) - child_set)[0]], 1
+            if len(all_alleles) == 3:
+                freq1, freq2, freq3 = (freq_dict[child_alleles[0]], freq_dict[list(parent_set - child_set)[0]], freq_dict[list(set_all - parent_set)[0]])
 
-            #  A special case for confirmation = F(Pa) / (F(Pa) + F(Pb) - 2 * Pa * Pb) aa ab ab
-            if len(parent_set) == 2 and parent_set == sibling_set:
-                freq2 = freq_dict[list(parent_set - child_set)[0]]
-                confirmation = c.F(freq) / (c.F(freq) + c.F(freq2) - 2 * freq * freq2)
-                lr = confirmation / refutation
+            refutation = c.homo_refutation(freq1)
+            conf_dict = {
+                (1, 3, 1): 1,
+                (2, 2, 2): c.M(freq2, freq1),
+                (2, 2, 1): 1,
+                (2, 1, 2): c.F(freq1) / (c.F(freq1) + c.F(freq2) - 2 * freq1 * freq2),
+                (3, 1, 2): c.M(freq3, freq1)
+            }
+            if (len(all_alleles), homo_counter, len(sibling_set)) in conf_dict.keys():
+                lr = conf_dict[(len(all_alleles), homo_counter, len(sibling_set))] / refutation
                 return self.make_result(locus, lr, dict_make_result)
 
-        # Heterozygous child
-        else:
+        else:  # Heterozygous child
             freq1, freq2 = freq_dict[child_alleles[0]], freq_dict[child_alleles[1]]
-            refutation = c.hetero_refutation(freq1, freq2)
-
-            # A special case for confirmation = M(Pc, Pa) + M(Pc, Pb) ab ab ac
-            if parent_set == child_set and len(sibling_set) == 2 and sibling_set != parent_set:
-                freq1, freq2 = freq_dict[parent_alleles[0]], freq_dict[parent_alleles[1]]
-                freq3 = freq_dict[list(sibling_set - parent_set)[0]]
-                confirmation = c.M(freq3, freq1) + c.M(freq3, freq2)
-                lr = confirmation / refutation
-                return self.make_result(locus, lr, dict_make_result)
-
-            #  A special case for confirmation = 2 * Pb / (2 - Pa - Pc) ab ac ac
-            if parent_set == sibling_set and parent_set != child_set and len(parent_set) == len(sibling_set) == 2:
-                freq1, freq3 = freq_dict[parent_alleles[0]], freq_dict[parent_alleles[1]]
-                freq2 = freq_dict[list(child_set - parent_set)[0]]
-                confirmation = 2 * freq2 / (2 - freq1 - freq3)
-                lr = confirmation / refutation
-                return self.make_result(locus, lr, dict_make_result)
-
-            # ab aa ac case confirmation = M(Pc, Pa)
-            if len(child_set) == len(sibling_set) == 2 and child_set != sibling_set and len(parent_set) == 1:
-                unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, sibling_alleles, sp_inter, 0)
-                unavailable_parent_alleles[1] = list(sp_inter)[0]
-                lr = self.get_lr(freq_dict, unavailable_parent_alleles, refutation)
-                return self.make_result(locus, lr, dict_make_result)
-
-            # ab ac aa case confirmation = M(Pa, Pc)
-            if len(child_set) == len(parent_set) == 2 and len(sibling_set) == len(sp_inter) == len(cp_inter) == len(sc_inter) == 1 and child_set != parent_set:
-                unavailable_parent_alleles[1] = list(parent_set - child_set)
-                unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, sibling_alleles, sp_inter, 0)
-                lr = self.get_lr(freq_dict, unavailable_parent_alleles, refutation)
-                return self.make_result(locus, lr, dict_make_result)
-
-        # Default is confirmation = M(x,y); x, y = unavailable_parent_alleles[0], unavailable_parent_alleles[1]
-        unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, sibling_alleles, sp_inter, 0)
-        unavailable_parent_alleles = self.get_parent2_alleles(unavailable_parent_alleles, child_alleles, cp_inter, 1)
-        set_unavailable = set(unavailable_parent_alleles)
-
-        # special case for confirmation = 1
-        if len(set_unavailable) == 1 or parent_set == child_set and len(parent_set) == len(child_set) == 2 and len(sibling_set) == 1:
-            lr = 1 / refutation
-            return self.make_result(locus, lr, dict_make_result)
-
-        lr = self.get_lr(freq_dict, unavailable_parent_alleles, refutation)
-        return self.make_result(locus, lr, dict_make_result)
-
-    # A method to fill M(freq1, freq2) formula in base.Calculations. Returns list of alleles in required range
-    @staticmethod
-    def get_parent2_alleles(parent2_alleles, ch_sib_alleles, intersection, position):
-        counter = 0
-
-        for allele in ch_sib_alleles:
-            if allele == list(intersection)[0]:
-                counter += 1
-        if counter == 2:
-            parent2_alleles[position] = ch_sib_alleles[position]
-        else:
-            for allele in ch_sib_alleles:
-                if allele == list(intersection)[0]:
-                    continue
+            if len(all_alleles) == 2:
+                if len(cp_inter) == 1:
+                    freq1, freq2 = freq_dict[list(cp_inter)[0]], freq_dict[list(set_all - cp_inter)[0]]
                 else:
-                    parent2_alleles[position] = allele
+                    freq1, freq2 = freq_dict[child_alleles[0]], freq_dict[child_alleles[1]]
+            if len(all_alleles) == 3:
+                if len(cp_inter) == 1:
+                    freq1, freq2, freq3 = freq_dict[list(cp_inter)[0]], freq_dict[list(child_set - cp_inter)[0]], freq_dict[list(set_all - child_set)[0]]
+                else:
+                    freq1, freq2, freq3 = freq_dict[child_alleles[0]], freq_dict[child_alleles[1]], freq_dict[list(set_all - child_set)[0]]
+            if len(all_alleles) == 4:
+                freq2, freq4 = freq_dict[list(child_set - cp_inter)[0]], freq_dict[list(set_all - child_set - parent_set)[0]]
 
-        return parent2_alleles
-
-    @staticmethod
-    def get_lr(freq_dict, parent2_alleles, refutation):
-        c = Calculations()
-        freq1, freq2 = freq_dict[parent2_alleles[0]], freq_dict[parent2_alleles[1]]
-        confirmation = c.M(freq1, freq2)
-        lr = confirmation / refutation
-        return lr
+            refutation = c.hetero_refutation(freq1, freq2)
+            answers = {
+                (2, 2, 1, 1): c.M(freq1, freq2),  # ab aa aa
+                (2, 1, 2, 2): 1,  # ab aa ab
+                (3, 1, 2, 1): c.M(freq3, freq1),  # ab aa ac
+                (2, 1, 1, 1): 1,  # ab ab aa
+                (2, 0, 2, 2): 1,  # ab ab ab
+                (3, 0, 2, 1): {
+                    parent_set == child_set: c.M(freq3, freq1) + c.M(freq3, freq2),  # ab ab ac
+                    parent_set == sibling_set: 2 * freq2 / (2 - freq1 - freq3),  # ab ac ac
+                    parent_set != child_set != sibling_set: 1  # ab ac bc
+                },
+                (3, 0, 2, 2): 1,  # ab ac ab
+                (3, 1, 1, 1): c.M(freq1, freq3),  # ab ac aa
+                (4, 0, 2, 1): c.M(freq4, freq2),  # ab ac ad
+                (3, 1, 1, 0): c.M(freq3, freq2),  # ab ac cc
+                (4, 0, 2, 0): c.M(freq4, freq2)  # ab ac cd
+            }
+            for key in answers.keys():
+                if (len(all_alleles), homo_counter, len(sibling_set), len(sc_inter)) == key:
+                    if type(answers[key]) == dict:
+                        target_dict = answers[key]
+                        for condition in target_dict.keys():
+                            if condition:
+                                lr = target_dict[condition] / refutation
+                                return self.make_result(locus, lr, dict_make_result)
+                    lr = answers[key] / refutation
+                    return self.make_result(locus, lr, dict_make_result)

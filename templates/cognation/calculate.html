@@ -214,7 +214,6 @@ $(document).ready(function(){
     });
 
     $('#saveResults').on('click', function(event) {
-        console.log('clicked saveResults');
         event.preventDefault();
         let tbl = document.getElementById('resultTable');
         let wb = XLSX.utils.table_to_book(tbl, {raw: true});
@@ -223,8 +222,6 @@ $(document).ready(function(){
 });
 
 let addAlleleButton = document.getElementById('add-allele-button')
-console.log(addAlleleButton.getAttribute('data-locus'))
-
 let modal = document.getElementById('addAlleleModal');
 let closeButton = document.getElementById('closing-thing');
 let closeModalButton = document.getElementById('close-modal-button');
@@ -238,7 +235,6 @@ let addAlleleFreq = document.getElementById('addAlleleFreq');
 for (let addButton of document.getElementsByClassName('button-add-allele')) {
     let locus = addButton.getAttribute('data-locus')
     let sat = addButton.getAttribute('data-sat')
-    console.log(locus, sat)
     addButton.onclick = function() {
         modal.style.display = 'block';
         overlay.style.display = 'block';

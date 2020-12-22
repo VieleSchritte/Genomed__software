@@ -41,6 +41,7 @@ class Confirmations:
     def hetero_gc_confirmation(sets, intersections, freq1, freq2, grandparent_alleles):
         child_set, parent_set, grandparent_set = sets
         cp_inter, cg_inter, pg_inter = intersections
+        inters_lens = [len(cp_inter), len(cg_inter), len(pg_inter)]
         c = Calculations()
         homo_counter = c.homo_counter(sets)
         print(child_set, parent_set, grandparent_set)
@@ -53,15 +54,19 @@ class Confirmations:
             return 1  # ab ab aa/ab
         else:
             print('went to else')
-            if [len(cp_inter), len(cg_inter), len(pg_inter)] == [1, 1, 0] and len(grandparent_set) == 1:  # ab an bb
+            if inters_lens == [1, 1, 0] and len(grandparent_set) == 1:  # ab an bb
                 return 1
-            partly_answers = {
-                [1, 2, 1]:
-                    [1, 1, 0]:
-            [2, 1, 0]:
-            [1, 2, 1]:
-            [1, 1, 1] and
-            }
-            if list(child_set - parent_set) not in grandparent_alleles:  # ab an any != bn
-                return freq2
-            return 0.5 * (1 + freq2)  # ab an bn n != b
+            if inters_lens == [1, 1, 1]:
+                if homo_counter == 0:
+                    return 0.5 * (1 + freq2)  # ab an bn n != b
+                else:
+                    return freq2
+            other_answers = [
+                [[1, 2, 1], [1, 1, 0], [2, 1, 0], [1, 2, 1]],
+                [[1, 1, 2], [1, 0, 0]]
+            ]
+            if inters_lens in other_answers[0]:
+                return 0.5 * (1 + freq2)  # ab an bn n != b
+            if inters_lens in other_answers[1]:
+                return freq2  # ab an any != bn
+
