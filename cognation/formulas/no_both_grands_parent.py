@@ -3,7 +3,7 @@ from .base import Formula, Calculations
 
 
 # FORMULA_TYPE_GRANDPARENT
-class BothGrandsParent(Formula):
+class NoBothGrandsParent(Formula):
     def calculate_relation(self, raw_values):
         locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 4)
         child_alleles, child_set = alleles[0], sets[0]

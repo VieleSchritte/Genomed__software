@@ -17,6 +17,8 @@ from cognation.formulas.two_brothers import TwoBrothersFormula
 from cognation.formulas.grand_parent_yes import YesGrandParent
 from cognation.formulas.grand_parent_no import NoGrandParent
 from cognation.formulas.three_couple import ThreeCoupleFormula
+from cognation.formulas.both_grandparents import BothGrandparents
+from cognation.formulas.no_both_grands_parent import NoBothGrandsParent
 import re
 from django.core.management import call_command
 
@@ -40,9 +42,9 @@ class GetData:
             13: TwoBrothersFormula,
             14: CousinFormula,
             15: UncleFormula,
-            16: [],
+            16: NoBothGrandsParent,
             17: GrandParentFormula,
-            18: [],
+            18: BothGrandparents,
             19: YesGrandParent,
             20: NoGrandParent,
             21: []
