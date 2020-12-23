@@ -19,6 +19,7 @@ from cognation.formulas.three_couple import ThreeCoupleFormula
 from cognation.formulas.no_both_grands_parent import NoBothGrandsParent
 from cognation.formulas.grand_parent_no import NoGrandParent
 from cognation.formulas.both_grandparents import BothGrandparents
+from cognation.formulas.IBD_grandparent import IBDGrandParent
 
 
 numToFormula = {
@@ -42,7 +43,7 @@ numToFormula = {
     18: BothGrandparents,
     19: YesGrandParent,
     20: NoGrandParent,
-    21: []
+    21: IBDGrandParent,
 }
 
 

@@ -19,6 +19,7 @@ from cognation.formulas.grand_parent_no import NoGrandParent
 from cognation.formulas.three_couple import ThreeCoupleFormula
 from cognation.formulas.both_grandparents import BothGrandparents
 from cognation.formulas.no_both_grands_parent import NoBothGrandsParent
+from cognation.formulas.IBD_grandparent import IBDGrandParent
 import re
 from django.core.management import call_command
 
@@ -47,7 +48,7 @@ class GetData:
             18: BothGrandparents,
             19: YesGrandParent,
             20: NoGrandParent,
-            21: []
+            21: IBDGrandParent
         }
 
         for key in num_to_formula.keys():
