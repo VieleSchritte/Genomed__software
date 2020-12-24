@@ -184,8 +184,7 @@ class Formula(abc.ABC):
             participant_lines = sorted(participant.splitlines())
             participant = []
             for line in participant_lines:
-                # Skip empty line
-                if len(line) == 0:
+                if len(line) == 0:  # Skip empty line
                     continue
                 line = re.split(r'[\s\t]+', line.strip())
                 if len(line) == 1:
