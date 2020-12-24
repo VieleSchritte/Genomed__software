@@ -144,7 +144,7 @@ class Formula(abc.ABC):
             except ValueError:
                 return False
 
-    def alleles_check(self, alleles, locus):
+    def alleles_check(self, alleles, locus):  # Checks if everything's right in alleles, if not - raises correct exception
         for allele in alleles:
             if locus == 'AMEL':
                 allowed_alleles = ['X', 'Х', 'Y']  # Both English and Russian X variants
@@ -204,8 +204,11 @@ class Formula(abc.ABC):
                                 alleles.append(line[i])
                 self.alleles_check(alleles, locus)
                 alleles = '/'.join(alleles)
-                if not self.is_gender_specific(locus) and '/' not in alleles:
-                    alleles += '/' + alleles
+                homozygous_cases = [not self.is_gender_specific(locus) and '/' not in alleles,
+                                    locus == 'AMEL' and '/' not in alleles]
+                for condition in homozygous_cases:
+                    if condition:
+                        alleles += '/' + alleles
                 participant.append([locus, alleles])
             processed_user_data.append(participant)
 
