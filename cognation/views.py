@@ -291,10 +291,21 @@ def calculate(request):
         if mutations > 2:
             cpi = 0
             mutations = 0
+        prob = (cpi / (1. + cpi)) * 100.
+        target_number = str(prob).split('.')[1]
+        if target_number[0] != '9':
+            processed_prob = prob
+        else:
+            new_number = ''
+            for i in range(len(target_number)):
+                new_number += target_number[i]
+                if target_number[i] != '9':
+                    break
+            processed_prob = float(str(int(prob)) + '.' + new_number)
         ctx = {
             'result': result,
             'cpi': cpi,
-            'prob': ((cpi / (1. + cpi)) * 100.),
+            'prob': processed_prob,
             'participants': participants_number,
             'mutations': mutations,
             'order': make_order(result),
