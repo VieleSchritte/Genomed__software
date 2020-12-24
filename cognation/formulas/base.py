@@ -478,3 +478,9 @@ class Calculations:
                 for length in target_dict.keys():
                     if length == children_alleles_len:
                         return target_dict[length]
+
+    @staticmethod
+    def get_lr_from_cond_dict(answers):
+        for condition in answers.keys():
+            if condition:
+                return condition[key]
