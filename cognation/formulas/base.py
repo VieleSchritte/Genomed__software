@@ -481,6 +481,11 @@ class Calculations:
 
     @staticmethod
     def get_lr_from_cond_dict(answers):
+        counter = 0
         for condition in answers.keys():
+            if not condition:
+                counter += 1
             if condition:
-                return condition[key]
+                return 1 / answers[condition]
+        if counter == len(answers.keys()):
+            return 0

@@ -20,6 +20,7 @@ from cognation.formulas.three_couple import ThreeCoupleFormula
 from cognation.formulas.both_grandparents import BothGrandparents
 from cognation.formulas.no_both_grands_parent import NoBothGrandsParent
 from cognation.formulas.IBD_grandparent import IBDGrandParent
+from cognation.formulas.known_supposed_grand import GrandKnownSupposed
 import re
 from django.core.management import call_command
 
@@ -48,7 +49,8 @@ class GetData:
             18: BothGrandparents,
             19: YesGrandParent,
             20: NoGrandParent,
-            21: IBDGrandParent
+            21: IBDGrandParent,
+            22: GrandKnownSupposed
         }
 
         for key in num_to_formula.keys():
@@ -76,8 +78,18 @@ class GetData:
 
             test_cpi = float(test_cpi)
             test_p = (test_cpi / (1 + test_cpi)) * 100
+            target_number = str(test_p).split('.')[1]
+            if target_number[0] != '9':
+                processed_prob = test_p
+            else:
+                new_number = ''
+                for i in range(len(target_number)):
+                    new_number += target_number[i]
+                    if target_number[i] != '9':
+                        break
+                processed_prob = float(str(int(test_p)) + '.' + new_number)
             test_cpi = round(test_cpi)
-            return test_dict, test_cpi, test_p
+            return test_dict, test_cpi, processed_prob
 
     @staticmethod
     def get_reference_data(short_path, doc_name, part_number):
