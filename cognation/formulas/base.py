@@ -414,6 +414,39 @@ class Calculations:
         return combinations
 
     @staticmethod
+    def combination_processing(combinations):
+        new_combinations = []
+        for combination in combinations:
+            if combinations.count(combination) == len(combinations):
+                return [combination]
+            if combination not in new_combinations:
+                new_combinations.append(combination)
+        return new_combinations
+
+    # function for getting supposed parent's possible genotypes using known genotype and grandparent's one
+    def get_supposed_one_child(self, child_alleles, grandparent_alleles, known_set):
+        combinations = self.combination_processing(self.get_combinations(grandparent_alleles, child_alleles))
+        if len(set(child_alleles)) == 1:  # Homozygous child
+            len_one_combination = self.is_len_one(combinations)
+            if len_one_combination:  # case of lr = F(freq)
+                return set(len_one_combination)
+            else:
+                return combinations  # other cases can be processed through function for getting lr from possible genotypes
+
+        if known_set != set(child_alleles):
+            parent_ch_allele, new_combinations = list(set(child_alleles) - known_set)[0], []
+            for combination in combinations:
+                if parent_ch_allele in combination:
+                    new_combinations.append(combination)
+            return new_combinations
+        return combinations
+
+    def is_len_one(self, combinations):
+        for combination in combinations:
+            if len(combination) == 1:
+                return combination
+
+    @staticmethod
     def get_overall_alleles(genotypes):
         overall_alleles = []
         for genotype in genotypes:

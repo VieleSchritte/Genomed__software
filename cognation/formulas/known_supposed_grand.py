@@ -7,74 +7,50 @@ class GrandKnownSupposed(Formula):
         locus, alleles, sets, intersections, dict_make_result = self.getting_alleles_locus(raw_values, 4)
         child_alleles, grandparent_alleles = alleles[0], alleles[2]
         child_set, known_set, grandparent_set, supposed_set = sets
-        target_sets, target_alleles, target_inters = sets[0:3], [alleles[0], alleles[2]], intersections[0:2]
-        ch_known_inter, ch_grand_inter = intersections[0], intersections[1]
+        target_alleles = [alleles[0], alleles[2]]
+        ch_grand_inter = intersections[1]
 
-        if len(intersections[0]) == 0 or len(intersections[2]) == 0:
-            return self.make_result(locus, 0, dict_make_result)
+        zeros_list = [0, 2, 5]
+        for item in zeros_list:
+            if len(intersections[item]) == 0:
+                return self.make_result(locus, 0, dict_make_result)
         if self.is_gender_specific(locus):
             return self.preparation_check(locus, dict_make_result)
         c = Calculations()
         all_alleles = c.get_overall_alleles(target_alleles)
         freq_dict = self.get_frequencies(locus, all_alleles)
-        freq1, freq2, freq3, freq4 = self.get_freqs_order(target_sets, target_alleles, freq_dict, target_inters)
 
+        supposed_genotypes = c.get_supposed_one_child(child_alleles, grandparent_alleles, known_set)
         if len(child_set) == 1:  # Homozygous child
-            if len(ch_grand_inter) == 0:
-                unique_sup_allele = list(supposed_set - child_set)[0]
-                if unique_sup_allele not in grandparent_alleles:
-                    return self.make_result(locus, 0, dict_make_result)
-            answers = {
-                len(ch_grand_inter) == 0 and len(grandparent_set) == 1: 2 * freq1 * freq2,  # aa an bb ab
-                len(ch_grand_inter) == 0 and len(grandparent_set) == 2: 2 * freq1 * (freq2 + freq3),  # aa an bc b/ac
-                len(ch_grand_inter) != 0: c.F(freq1)  # aa an an an
-            }
-            return self.make_result(locus, c.get_lr_from_cond_dict(answers), dict_make_result)
+            if type(supposed_genotypes) == list and supposed_set not in supposed_genotypes:
+                return self.make_result(locus, 0, dict_make_result)  # checked if parent's combination is proper for counting lr, if not => lr=0
+            lr = c.get_lr_from_possible(supposed_genotypes, freq_dict)
+            return self.make_result(locus, 1 / lr, dict_make_result)
 
-        if known_set == child_set:
-            answers = {
-                len(ch_grand_inter) == 0 and len(grandparent_set) == 1: 2 * freq3 * (freq1 + freq2),  # ab ab cc ac/bc
-                len(ch_grand_inter) == 0 and len(grandparent_set) == 2: 2 * (freq1 + freq2) * (freq3 + freq4),  # ab ab cd ac/ad/bc/bd
-                len(ch_grand_inter) == 2: (freq1 + freq2) * (2 - (freq1 + freq2)),  # ab ab ab an/bn
-                len(ch_grand_inter) == 1 and len(grandparent_set) == 2: c.F(freq1) + 2 * freq2 * freq3,  # ab ab ac an/bc
-                len(ch_grand_inter) == 1 and len(grandparent_set) == 1: c.F(freq1)  # ab ab aa an
-            }
-            return self.make_result(locus, c.get_lr_from_cond_dict(answers), dict_make_result)
+        if child_set != known_set:  # and heterozygous child
+            for genotype in supposed_genotypes:
+                if len(genotype) == 1:
+                    lr = c.get_lr_from_possible(genotype, freq_dict)
+                    return self.make_result(locus, 1 / lr, dict_make_result)
+            if type(supposed_genotypes) == list and supposed_set not in supposed_genotypes:
+                return self.make_result(locus, 0, dict_make_result)  # checked if parent's combination is proper for counting lr, if not => lr=0
+            lr = c.get_lr_from_possible(supposed_genotypes, freq_dict)
+            return self.make_result(locus, 1 / lr, dict_make_result)
 
-        child_b_allele = list(child_set - ch_known_inter)[0]
-        answers = {
-            len(ch_grand_inter) == 0 and len(grandparent_set) == 1: 2 * freq2 * freq3,  # ab an (n!=b) cc bc
-            len(ch_grand_inter) == 0 and len(grandparent_set) == 2: 2 * freq2 * (freq3 + freq4),  # ab an (n!=b) cd bc/bd
-            len(ch_grand_inter) != 0 and child_b_allele in grandparent_alleles: c.F(freq2),  # ab an (n!=b) bn bn
-            len(ch_grand_inter) != 0 and child_b_allele not in grandparent_alleles and len(grandparent_set) == 1: 2 * freq1 * freq2,  # ab an (n!=b) aa ab
-            len(ch_grand_inter) != 0 and child_b_allele not in grandparent_alleles and len(grandparent_set) == 2: 2 * freq2 * (freq1 + freq3)  # ab an (n!=b) ac ab/bc
-        }
-        return self.make_result(locus, c.get_lr_from_cond_dict(answers), dict_make_result)
-
-    @staticmethod
-    def get_freqs_order(target_sets, target_alleles, freq_dict, target_inters):
-        child_set, known_set, grandparent_set = target_sets
-        child_alleles, grandparent_alleles = target_alleles
-        ch_known_inter, ch_grand_inter = target_inters
-        if len(child_set) == 1:  # Homozygous child
-            freq1, freq2, freq3 = freq_dict[child_alleles[0]], freq_dict[grandparent_alleles[0]], freq_dict[grandparent_alleles[1]]
-            return freq1, freq2, freq3, 1
-
-        if known_set == child_set:
+        if len(ch_grand_inter) == 1 and len(grandparent_set) == 1:  # ab ab aa an
+            lr = c.F(freq_dict[grandparent_alleles[0]])
+            return self.make_result(locus, 1 / lr, dict_make_result)
+        if grandparent_set == child_set:  # ab ab ab an/bn
             freq1, freq2 = freq_dict[child_alleles[0]], freq_dict[child_alleles[1]]
-            if len(ch_grand_inter) == 0:
-                freq3, freq4 = freq_dict[grandparent_alleles[0]], freq_dict[grandparent_alleles[1]]
-                return freq1, freq2, freq3, freq4
-            if len(ch_grand_inter) == 1:
-                freq1, freq2 = freq_dict[list(ch_grand_inter)[0]], freq_dict[list(child_set - ch_grand_inter)[0]]
-                if len(grandparent_set) == 2:
-                    freq3 = freq_dict[list(grandparent_set - ch_grand_inter)[0]]
-                    return freq1, freq2, freq3, 1
-                return freq1, freq2, 1, 1
-            return freq1, freq2, 1, 1
-        freq1, freq2 = freq_dict[list(ch_known_inter)[0]], freq_dict[list(child_set - ch_known_inter)[0]]
-        freq3, freq4 = freq_dict[grandparent_alleles[0]], freq_dict[grandparent_alleles[1]]
-        if len(grandparent_set) == 2 and len(ch_grand_inter) == 1:
-            freq3 = freq_dict[list(grandparent_set - child_set)[0]]
-            return freq1, freq2, freq3, freq4
-        return freq1, freq2, freq3, freq4
+            lr = (freq1 + freq2) * (2 - (freq1 + freq2))
+            return self.make_result(locus, 1 / lr, dict_make_result)
+        if len(ch_grand_inter) == 1 and len(grandparent_set) == 2:  # ab ab ac an/bc
+            freq1 = freq_dict[list(ch_grand_inter)[0]]
+            freq2, freq3 = freq_dict[list(child_set - grandparent_set)[0]], freq_dict[list(grandparent_set - child_set)[0]]
+            lr = c.F(freq1) + 2 * freq2 * freq3
+            return self.make_result(locus, 1 / lr, dict_make_result)
+
+        if supposed_set not in supposed_genotypes:
+            return self.make_result(locus, 0, dict_make_result)
+        lr = c.get_lr_from_possible(supposed_genotypes, freq_dict)
+        return self.make_result(locus, 1 / lr, dict_make_result)
