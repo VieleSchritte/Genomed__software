@@ -441,7 +441,8 @@ class Calculations:
             return new_combinations
         return combinations
 
-    def is_len_one(self, combinations):
+    @staticmethod
+    def is_len_one(combinations):
         for combination in combinations:
             if len(combination) == 1:
                 return combination
@@ -513,7 +514,7 @@ class Calculations:
                         return target_dict[length]
 
     @staticmethod
-    def get_lr_from_cond_dict(answers):
+    def get_lr_from_cond_dict_long(answers):
         counter = 0
         for condition in answers.keys():
             if not condition:
@@ -522,3 +523,9 @@ class Calculations:
                 return 1 / answers[condition]
         if counter == len(answers.keys()):
             return 0
+
+    @staticmethod
+    def get_lr_from_cond_dict_short(answers):
+        for key in answers.keys():
+            if key:
+                return answers[key]

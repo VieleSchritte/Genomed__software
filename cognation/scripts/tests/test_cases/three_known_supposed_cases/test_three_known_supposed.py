@@ -34,21 +34,18 @@ class TestFormula(TestCase):
         ]
 
         short_path = 'cognation/scripts/tests/test_cases/three_known_supposed_cases/'
-
         get_ref = GetData()
-        self.overall_ref_dict = {}
-        self.overall_test_dict = {}
+        self.overall_ref_dict, self.overall_test_dict = {}, {}
 
         for i in range(len(self.reference_paths)):
-            ref_path = self.reference_paths[i]
-            self.overall_ref_dict[ref_path] = get_ref.get_reference_data(short_path, ref_path, 5)
-
-            test_path = self.test_paths[i]
+            ref_path, test_path = self.reference_paths[i], self.test_paths[i]
+            self.overall_ref_dict[ref_path] = get_ref.get_reference_data(short_path, ref_path)
             self.overall_test_dict[test_path] = get_ref.get_test_data(short_path, test_path, 6)
 
     def test_formula(self):
         for i in range(len(self.reference_paths)):
             ref_path, test_path = self.reference_paths[i], self.test_paths[i]
+            print(ref_path)
             ref_tuple, test_tuple = self.overall_ref_dict[ref_path], self.overall_test_dict[test_path]
             dict_loci_lrs_ref, dict_loci_lrs_test = ref_tuple[0], test_tuple[0]
 

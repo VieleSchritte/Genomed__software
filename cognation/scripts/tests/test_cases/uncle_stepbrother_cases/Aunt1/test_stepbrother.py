@@ -3,8 +3,8 @@ from django.test import TestCase
 from cognation.scripts.tests import GetData
 
 # all possible test cases
-doc_refnames_list = ['Aunt1/aunt_ref.txt']
-doc_testnames_list = ['Aunt1/aunt_test.txt']
+doc_refnames_list = ['Aunt1/aunt_ref']
+doc_testnames_list = ['Aunt1/aunt_test']
 short_path = 'cognation/scripts/tests/test_cases/uncle_stepbrother_cases/'
 
 overall_ref_dict = {}

@@ -92,21 +92,17 @@ class GetData:
             return test_dict, test_cpi, processed_prob
 
     @staticmethod
-    def get_reference_data(short_path, doc_name, part_number):
+    def get_reference_data(short_path, doc_name):
         ref_dict, cpi, p = {}, 0, 0.0
         with open(short_path + doc_name, 'r') as ref_data:
             for line in ref_data:
                 line = line.strip().split('\t')
-                if len(line) != 1:  # not gender specific loci - there is int meaning of lr
+                if len(line) != 1:  # only lines with genotypes
                     locus, lr = line[0], line[-1]
-                    if part_number == 3:
-                        lr = line[4]
-                    if lr == '-':  # case of gender specific loci
-                        ref_dict[locus] = lr
-                        continue
-                    else:  # case of int lr meanings of loci
+                    if lr != '-':
                         lr = float(lr) * 100 / 100
-                        ref_dict[locus] = lr
+                    ref_dict[locus] = lr
+
                 elif len(line) == 1 and line[0] != '':  # case for getting cpi and p meanings
                     line = line[0].split('=')
                     if line[0] == 'CPI':

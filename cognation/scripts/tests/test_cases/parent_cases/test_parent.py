@@ -12,12 +12,12 @@ logger = logging.getLogger('django.db.backends')
 class TestParentFormula(TestCase):
     def setUp(self):
 
-        self.reference_paths = ['parent1/reference_data_parent1.txt',
-                                'parent2/reference_data_parent2.txt',
+        self.reference_paths = ['parent1/reference_data_parent1',
+                                'parent2/reference_data_parent2',
                                 'parent3/reference_data_parent3_veri']
         self.test_paths = [
-                           'parent1/test_data_parent1.txt',
-                           'parent2/test_data_parent2.txt',
+                           'parent1/test_data_parent1',
+                           'parent2/test_data_parent2',
                            'parent3/test_data_parent3_veri'
         ]
         short_path = 'cognation/scripts/tests/test_cases/parent_cases/'
@@ -26,7 +26,7 @@ class TestParentFormula(TestCase):
 
         for i in range(len(self.reference_paths)):
             ref_path, test_path = self.reference_paths[i], self.test_paths[i]
-            self.overall_ref_dict[ref_path] = get_ref.get_reference_data(short_path, ref_path, 2)
+            self.overall_ref_dict[ref_path] = get_ref.get_reference_data(short_path, ref_path)
             self.overall_test_dict[test_path] = get_ref.get_test_data(short_path, test_path, 1)
         pass
 
