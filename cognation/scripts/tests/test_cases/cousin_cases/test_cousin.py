@@ -19,13 +19,14 @@ class TestCousinFormula(TestCase):
         for i in range(len(self.reference_paths)):
             ref_path, test_path = self.reference_paths[i], self.test_paths[i]
             self.overall_ref_dict[ref_path] = get_ref.get_reference_data(short_path, ref_path, 2)
-            self.overall_test_dict[test_path] = get_ref.get_test_data(short_path, test_path, 12)
+            self.overall_test_dict[test_path] = get_ref.get_test_data(short_path, test_path, 14)
         pass
 
     def test_final_assertion(self):
         for i in range(len(self.reference_paths)):
             ref_path, test_path = self.reference_paths[i], self.test_paths[i]
-            brother_ref_tuple, brother_test_tuple = self.overall_ref_dict[ref_path], self.overall_test_dict[test_path]
+            brother_ref_tuple = self.overall_ref_dict[ref_path]
+            brother_test_tuple = self.overall_test_dict[test_path]
             dict_loci_lrs_ref, dict_loci_lrs_test = brother_ref_tuple[0], brother_test_tuple[0]
 
             for key in dict_loci_lrs_ref.keys():
