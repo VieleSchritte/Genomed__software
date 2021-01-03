@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from .base import Formula
+from .base import Formula, Calculations
 
 
 class StepbrotherFormula(Formula):
@@ -9,29 +9,23 @@ class StepbrotherFormula(Formula):
         intersection = intersections[0]
 
         if self.is_gender_specific(locus):
-            return self.preparation_check(locus, dict_make_result)
-
+            return self.result_gender_specific(locus, dict_make_result)
         freq_dict = self.get_frequencies(locus, intersection)
-
         lr = 0.5
         if len(intersection) == 0:
             return self.make_result(locus, lr, dict_make_result)
 
         if len(intersection) == 2:
-            freq1 = freq_dict[list(intersection)[0]]
-            freq2 = freq_dict[list(intersection)[1]]
+            freq1, freq2 = freq_dict[list(intersection)[0]], freq_dict[list(intersection)[1]]
             lr += 0.25 * (freq1 + freq2) / (2 * (freq1 * freq2))
             return self.make_result(locus, lr, dict_make_result)
 
         freq = freq_dict[list(intersection)[0]]
-
-        if len(insp_set) == len(step_bro) == 2:
-            lr += 0.25 / (2 * freq)
-
-        if len(insp_set) == len(step_bro) == 1:
-            lr += 0.5 / freq
-
-        if len(insp_set) != len(step_bro):
-            lr += 0.25 / freq
-
+        answers = {
+            len(insp_set) == len(step_bro) == 2: 0.5 + 0.25 / (2 * freq),
+            len(insp_set) == len(step_bro) == 1: 0.5 + 0.5 / freq,
+            len(insp_set) != len(step_bro): 0.5 + 0.25 / freq
+        }
+        c = Calculations()
+        lr = c.get_lr_from_cond_dict_short(answers)
         return self.make_result(locus, lr, dict_make_result)

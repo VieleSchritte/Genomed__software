@@ -16,7 +16,7 @@ class TwoBrothersFormula(Formula):
         all_alleles = c.get_overall_alleles(alleles)
 
         if self.is_gender_specific(locus):
-            return self.preparation_check(locus, dict_make_result)
+            return self.result_gender_specific(locus, dict_make_result)
         zero_conditions = [
             inters_lens == (1, 0, 0) and inspected_set not in brothers_sets,  # aa ab cc/cd, ab aa cc/cd
             inters_lens == (0, 1, 0) and inspected_set not in brothers_sets,  # aa ab cc/cd

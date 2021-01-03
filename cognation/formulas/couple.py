@@ -8,7 +8,7 @@ class CoupleFormula(Formula):
         child_alleles, child_set = alleles[2], sets[2]
 
         if self.is_gender_specific(locus):
-            return self.preparation_check(locus, dict_make_result)
+            return self.result_gender_specific(locus, dict_make_result)
 
         freq_dict = self.get_frequencies(locus, child_alleles)
         freq1, freq2 = freq_dict[child_alleles[0]], freq_dict[child_alleles[1]]

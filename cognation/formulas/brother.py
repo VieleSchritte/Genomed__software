@@ -8,7 +8,7 @@ class BrotherFormula(Formula):
         insp_set = sets[0]
 
         if self.is_gender_specific(locus):
-            return self.preparation_check(locus, dict_make_result)
+            return self.result_gender_specific(locus, dict_make_result)
 
         c = Calculations()
         all_alleles, homo_counter = c.get_overall_alleles(alleles), c.homo_counter(sets)

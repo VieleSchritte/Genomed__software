@@ -97,7 +97,7 @@ class Formula(abc.ABC):
                 return True
         return False
 
-    def preparation_check(self, locus, dict_make_result):
+    def result_gender_specific(self, locus, dict_make_result):
         if locus == 'AMEL':
             return self.make_result(locus, 1, dict_make_result)
         return self.make_result(locus, '-', dict_make_result)
@@ -110,11 +110,11 @@ class Formula(abc.ABC):
         if len(raw_values) > part_number + 1:
             locus += ' ' + raw_values[1]
             for i in range(2, part_number + 2):
-                part_alleles.append(self.split_sat(raw_values[i]))
+                part_alleles.append(self.split_alleles(raw_values[i]))
                 dict_make_result['part' + str(i - 1)] = '/'.join(part_alleles[i - 2])
         else:
             for i in range(1, part_number + 1):
-                part_alleles.append(self.split_sat(raw_values[i]))
+                part_alleles.append(self.split_alleles(raw_values[i]))
                 dict_make_result['part' + str(i)] = '/'.join(part_alleles[i - 1])
 
         part_sets, intersections = [], []
@@ -124,7 +124,7 @@ class Formula(abc.ABC):
             part_sets.append(set(part))
 
         if not self.is_gender_specific(locus):
-            self.get_frequencies(locus, part_alleles[0] + part_alleles[1])
+            self.get_frequencies(locus, part_alleles[0] + part_alleles[1])  # to see exception if needed
         for i in range(len(part_alleles)):
             for j in range(len(part_alleles)):
                 if j > i:
@@ -204,8 +204,10 @@ class Formula(abc.ABC):
                                 alleles.append(line[i])
                 self.alleles_check(alleles, locus)
                 alleles = '/'.join(alleles)
-                homozygous_cases = [not self.is_gender_specific(locus) and '/' not in alleles,
-                                    locus == 'AMEL' and '/' not in alleles]
+                homozygous_cases = [
+                    not self.is_gender_specific(locus) and '/' not in alleles,
+                    locus == 'AMEL' and '/' not in alleles
+                ]
                 for condition in homozygous_cases:
                     if condition:
                         alleles += '/' + alleles
@@ -245,19 +247,19 @@ class Formula(abc.ABC):
 
     # getting allele frequencies from DB
     @staticmethod
-    def get_frequencies(locus, sat_set):
+    def get_frequencies(locus, alleles_list):
         result = {}
-        for sat in sat_set:
+        for allele in alleles_list:
             try:
-                locus_object = Locus.objects.get(locus=locus, sat=float(sat))
-                result[sat] = locus_object.freq
+                locus_object = Locus.objects.get(locus=locus, sat=float(allele))
+                result[allele] = locus_object.freq
             except Locus.DoesNotExist:
-                raise UnknownAlleleException(locus, sat)
+                raise UnknownAlleleException(locus, allele)
         return result
 
     @staticmethod
-    def split_sat(sat_string):
-        return re.split(r'/', sat_string)
+    def split_alleles(alleles_string):
+        return re.split(r'/', alleles_string)
 
     def get_template(self):
         return 'cognation/formula/' + self.__class__.__name__.lower()[:-7] + '.html'
@@ -271,10 +273,11 @@ class Formula(abc.ABC):
         c = Calculations()
         freq_dict = self.get_frequencies(locus, alleles_list)
         freq1, freq2 = freq_dict[alleles_list[0]], freq_dict[alleles_list[1]]
-        if len(key_set) == 1:
-            refutation = c.homo_refutation(freq1)
-        else:
-            refutation = c.hetero_refutation(freq1, freq2)
+        answers = {
+            len(key_set) == 1: c.homo_refutation(freq1),
+            len(key_set) != 1: c.hetero_refutation(freq1, freq2)
+        }
+        refutation = c.get_lr_from_cond_dict_short(answers)
         return confirmation / refutation
 
     # Abstract methods

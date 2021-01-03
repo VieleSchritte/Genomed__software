@@ -9,7 +9,7 @@ class BothGrandparents(Formula):
         grandchild_alleles = alleles[0]
         grandchild_set, grandparents_sets = sets[0], [sets[1], sets[2]]
         if self.is_gender_specific(locus):
-            return self.preparation_check(locus, dict_make_result)
+            return self.result_gender_specific(locus, dict_make_result)
 
         calc, c = Calculations(), Confirmations()
         freq_dict = self.get_frequencies(locus, grandchild_alleles)

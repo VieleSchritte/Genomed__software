@@ -11,7 +11,7 @@ class ThreeChildrenFormula(Formula):
         parent_set = sets[0]
 
         if self.is_gender_specific(locus):
-            return self.preparation_check(locus, dict_make_result)
+            return self.result_gender_specific(locus, dict_make_result)
 
         for i in range(3):  # no intersections between children and parent => return lr = 0
             if len(intersections[i]) == 0:

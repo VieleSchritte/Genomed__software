@@ -9,7 +9,7 @@ class NoBothGrandsParent(Formula):
         child_alleles, child_set = alleles[0], sets[0]
 
         if self.is_gender_specific(locus):
-            return self.preparation_check(locus, dict_make_result)
+            return self.result_gender_specific(locus, dict_make_result)
         if intersections[0] == 0:
             return self.make_result(locus, 0, dict_make_result)
 
@@ -25,16 +25,15 @@ class NoBothGrandsParent(Formula):
         for key in situations.keys():
             if len(child_set) == key:
                 refutation, confirmation = situations[key]
-        lr = confirmation / refutation
-        return self.make_result(locus, lr, dict_make_result)
+        return self.make_result(locus, confirmation / refutation, dict_make_result)
 
 
 class Confirmations:
     @staticmethod
     def homo_confirmation(sets, child_set):
+        c, counter = Calculations(), 0
         grandparents_sets = [sets[2], sets[3]]
         child_allele = list(child_set)[0]
-        counter = 0
         for grandparent_set in grandparents_sets:
             if grandparent_set == child_set:  # aa an aa any
                 return 1
@@ -44,9 +43,7 @@ class Confirmations:
             counter == 2: 0.75,  # aa an ab an, n != b
             counter != 2: 0.5  # aa an ab any != an
         }
-        for key in answers.keys():
-            if key:
-                return answers[key]
+        return c.get_lr_from_cond_dict_short(answers)
 
     @staticmethod
     def hetero_confirmation(sets, child_alleles):

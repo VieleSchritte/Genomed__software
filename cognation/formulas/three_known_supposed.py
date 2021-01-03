@@ -11,7 +11,7 @@ class ThreeKnownSupposed(Formula):
         known_set, supposed_set, children_sets = sets[0], sets[1], sets[2:]
 
         if self.is_gender_specific(locus):
-            return self.preparation_check(locus, dict_make_result)
+            return self.result_gender_specific(locus, dict_make_result)
 
         c = Calculations()
         children_alleles = c.get_overall_alleles(children_genotypes)

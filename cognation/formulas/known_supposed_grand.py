@@ -15,7 +15,7 @@ class GrandKnownSupposed(Formula):
             if len(intersections[item]) == 0:
                 return self.make_result(locus, 0, dict_make_result)
         if self.is_gender_specific(locus):
-            return self.preparation_check(locus, dict_make_result)
+            return self.result_gender_specific(locus, dict_make_result)
         c = Calculations()
         all_alleles = c.get_overall_alleles(target_alleles)
         freq_dict = self.get_frequencies(locus, all_alleles)

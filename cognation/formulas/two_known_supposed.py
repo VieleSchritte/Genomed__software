@@ -10,7 +10,7 @@ class TwoKnownSupposedFormula(Formula):
         known_set, children_sets = sets[0], sets[2:]
 
         if self.is_gender_specific(locus):
-            return self.preparation_check(locus, dict_make_result)
+            return self.result_gender_specific(locus, dict_make_result)
 
         # If there are no intersections between children and parents, return lr = 0 and start counting mutations
         for i in range(1, 3):

@@ -9,7 +9,7 @@ class YesGrandParent(Formula):
         child_set, grandparent_set = sets[0], sets[1]
 
         if self.is_gender_specific(locus):
-            return self.preparation_check(locus, dict_make_result)
+            return self.result_gender_specific(locus, dict_make_result)
         for i in range(1, 3):
             if len(intersections[i]) == 0:
                 return self.make_result(locus, 0, dict_make_result)
@@ -44,11 +44,9 @@ class YesGrandParent(Formula):
         child_alleles, grandparent_alleles = alleles[0], alleles[1]
         if len(cg_inter) != 0:
             if len(grandparent_set) == 1:
-                freq1, freq2 = freq_dict[grandparent_alleles[0]], freq_dict[list(child_set - grandparent_set)[0]]
-                return freq1, freq2, 1, 1
+                return freq_dict[grandparent_alleles[0]], freq_dict[list(child_set - grandparent_set)[0]], 1, 1
             elif grandparent_set == child_set:
-                freq1, freq2 = freq_dict[child_alleles[0]], freq_dict[child_alleles[1]]
-                return freq1, freq2, 1, 1
+                return freq_dict[child_alleles[0]], freq_dict[child_alleles[1]], 1, 1
             else:
                 freq1, freq2 = freq_dict[list(cg_inter)[0]], freq_dict[list(child_set - cg_inter)[0]]
                 freq3 = freq_dict[list(grandparent_set - cg_inter)[0]]

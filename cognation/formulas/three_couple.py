@@ -11,7 +11,7 @@ class ThreeCoupleFormula(Formula):
         children_sets = sets[2:]
 
         if self.is_gender_specific(locus):
-            return self.preparation_check(locus, dict_make_result)
+            return self.result_gender_specific(locus, dict_make_result)
         c = Calculations()
         hetero_counter = c.hetero_counter(children_sets)
         children_alleles = c.get_overall_alleles(children_genotypes)

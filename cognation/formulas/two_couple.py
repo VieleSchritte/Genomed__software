@@ -11,7 +11,7 @@ class TwoCoupleFormula(Formula):
         children_sets = sets[2:]
 
         if self.is_gender_specific(locus):
-            return self.preparation_check(locus, dict_make_result)
+            return self.result_gender_specific(locus, dict_make_result)
         for i in range(1, 5):
             if len(intersections[i]) == 0:
                 return self.make_result(locus, 0, dict_make_result)

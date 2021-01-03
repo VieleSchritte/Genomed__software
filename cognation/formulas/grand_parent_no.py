@@ -10,7 +10,7 @@ class NoGrandParent(Formula):
         cp_inter, cg_inter = intersections[0], intersections[1]
 
         if self.is_gender_specific(locus):
-            return self.preparation_check(locus, dict_make_result)
+            return self.result_gender_specific(locus, dict_make_result)
         if cp_inter == 0:
             return self.make_result(locus, 0, dict_make_result)
         calc, c = Calculations(), Confirmations

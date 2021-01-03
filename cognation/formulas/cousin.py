@@ -9,7 +9,7 @@ class CousinFormula(Formula):
         inspected_genotype, intersection, inspected_set = alleles[0], intersections[0], sets[0]
 
         if self.is_gender_specific(locus):
-            return self.preparation_check(locus, dict_make_result)
+            return self.result_gender_specific(locus, dict_make_result)
         freq_dict = self.get_frequencies(locus, inspected_genotype)
         c = Calculations()
         alleles_number = len(c.get_overall_alleles(alleles))
