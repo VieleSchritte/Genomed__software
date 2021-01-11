@@ -21,7 +21,6 @@ ALLOWED_HOSTS = [
     'localhost',
     'paternity.genomed.ru',
     u'194.177.22.202',
-    u'0.0.0.0'
 ]
 
 LOGGING = {
