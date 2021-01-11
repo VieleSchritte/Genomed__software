@@ -11,7 +11,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '595qt8=yf*%mp%3e0y+w3t^m&fs-*3u82w0k#-0ldn!b1-6w*5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'genomed-paternity.ru',
@@ -174,4 +174,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static/css"),
     os.path.join(BASE_DIR, "static/button_images"),
+    os.path.join(BASE_DIR, "static/js"),
 )
