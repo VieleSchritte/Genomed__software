@@ -80,4 +80,8 @@
   <img src="https://github.com/VieleSchritte/Genomed__software/blob/master/readme_files/frequency_addition.png">
   <p>После нажатия на кнопку "Save" частота будет занесена в базу, а расчет - переделан с учетом введенной величины.</p>
  </li>
+ <li>
+  <p>Допущена опечатка в названии локуса:</p>
+ </li>
+ 
 </ol>
