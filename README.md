@@ -69,8 +69,8 @@
 <ol>
  <li>
   <p>Введена длина, которой нет в базе данных - в данном случае - в локусе TPOX:</p>
-  <img src="">
+  <img src="https://github.com/VieleSchritte/Genomed__software/blob/master/readme_files/wrong_length_exception.png">
   <p>В этом случае в строке таблицы результатов, соответствующей этому локусу, будет выведено следующее:</p>
-  <img src="">
+  <img src="https://github.com/VieleSchritte/Genomed__software/blob/master/readme_files/wrong_length_raw.png">
  </li>
 </ol>
