@@ -72,9 +72,12 @@
 <p>Реализована обработка возможных ошибок ввода гаплотипов. Так, приложение подскажет, что было введено неправильно, и в каком локусе была допущена ошибка. Примеры возможных ошибок представлены ниже.</p>
 <ol>
  <li>
-  <p>Введена длина, которой нет в базе данных - в данном случае - в локусе TPOX:</p>
+  <h3>Введена длина, которой нет в базе данных - в данном случае - в локусе TPOX:</h3>
   <img src="https://github.com/VieleSchritte/Genomed__software/blob/master/readme_files/wrong_length_exception.png">
   <p>В этом случае в строке таблицы результатов, соответствующей этому локусу, будет выведено следующее:</p>
   <img src="https://github.com/VieleSchritte/Genomed__software/blob/master/readme_files/wrong_length_raw.png">
+  <p>При нажатии на кнопку "ADD" появится окно для ручного ввода частоты:</p>
+  <img src="https://github.com/VieleSchritte/Genomed__software/blob/master/readme_files/frequency_addition.png">
+  <p>После нажатия на кнопку "Save" частота будет занесена в базу, а расчет - переделан с учетом введенной величины.</p>
  </li>
 </ol>
