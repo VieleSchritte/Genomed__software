@@ -11,7 +11,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '595qt8=yf*%mp%3e0y+w3t^m&fs-*3u82w0k#-0ldn!b1-6w*5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'genomed-paternity.ru',
@@ -19,6 +19,8 @@ ALLOWED_HOSTS = [
     u'127.0.0.1',
     u'104.248.249.103',
     'localhost',
+    'paternity.genomed.ru',
+    u'194.177.22.202'
 ]
 
 LOGGING = {
