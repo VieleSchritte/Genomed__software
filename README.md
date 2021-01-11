@@ -1,12 +1,8 @@
 # Genomed__software
 
-Service for determining the probability of relationship. The following rypes of relations are available:
-<ol>
- <li>Paternity (for 2 participants: parent and child)</li>
- <li>Relation between grandmother/grandfater and a grandchild</li>
- <li>Relation between 2 cousins</li>
- <li>Relation between uncle/aunt and nephew/niece</li>
- <li>Relation between stepbroters/stepsisters</li>
- <li>Relation between 3 siblings</li>
-</ol>
-
+<h1>Описание</h1>
+Данное приложение определяет вероятность родства в различных случаях. Полное описание формул, используемых в каждом случае, находится <a href='https://github.com/VieleSchritte/Genomed__software/tree/master/books'>в этих источниках</a>.
+Доступны следующие случаи определения родства:
+<li>
+ <ol>Отцовство/материнство для двух участников</ol>
+</li>
