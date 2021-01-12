@@ -3,7 +3,7 @@ import sys
 import os
 import django
 sys.path.append('')
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "genomed_software.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "paternity_app.settings")
 django.setup()
 
 from cognation.models import Locus
