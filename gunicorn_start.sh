@@ -2,7 +2,7 @@
 
 ROOT=/var/www/cog.doccard.club
 
-NAME="genomed_software"                            #Name of the application (*)
+NAME="paternity_app"                            #Name of the application (*)
 DJANGODIR=${ROOT}/${NAME}             # Django project directory (*)
 SOCKFILE=${ROOT}/run/gunicorn.sock        # we will communicate using this unix socket (*)
 USER=www-data                                        # the user to run as (*)
