@@ -4,4 +4,4 @@ __pycache__
 genenv
 .DS_Store
 db.sqlite3
-.idea
+.idea*
