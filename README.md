@@ -68,11 +68,11 @@
  <li>Для скачивания таблицы в формате .xlsx необходимо нажать "Сохранить результаты". По кнопке "К выбору родства" можно при необходимости перейти на стартовую страницу</li>
 </ol>
 Если получена таблица с результатами расчета, то все сделано правильно.
-<h1>3. Ошибки ввода</h1>
+<h1>3. Обработка исключений</h1>
 <p>Реализована обработка возможных ошибок ввода гаплотипов. Так, приложение подскажет, что было введено неправильно, и в каком локусе была допущена ошибка. Примеры возможных ошибок представлены ниже.</p>
 <ol>
  <li>
-  <h3>Введена длина, которой нет в базе данных - в данном случае - в локусе TPOX:</h3>
+  <h3>Введен аллель, которого нет в базе данных - в данном случае - в локусе TPOX:</h3>
   <img src="https://github.com/VieleSchritte/Genomed__software/blob/master/readme_files/wrong_length_exception.png">
   <p>В этом случае в строке таблицы результатов, соответствующей этому локусу, будет выведено следующее:</p>
   <img src="https://github.com/VieleSchritte/Genomed__software/blob/master/readme_files/wrong_length_raw.png">
@@ -82,7 +82,16 @@
  </li>
  <li>
   <h3>Допущена опечатка в названии локуса:</h3>
-  
+  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/wrong_locus.png">
+  <p>В этом случае при отправке данных на сервер исключение будет обработано через рендер страницы исключений, на которой будет отображено, в каком локусе была допущена ошибка - выведется неправильно введенное название локуса.</p>
+  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/wrong_locus_exception.png">
+ </li>
+ <li>
+  <h3>При вводе длины допущена ошибка: символ, не являющийся числом, и не являющийся разделителем:</h3>
+  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/wrong_symbol_allele.png">
+  <p>Такие ошибки также обрабатываются через рендер страницы исключений. При этом будет выведен символ, который является ошибочным, локус и пара аллелей, в которых допущена ошибка:</p>
+  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/wrong_symbol_allele_exception.png">
+  <p></p>
  </li>
  
 </ol>
