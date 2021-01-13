@@ -102,20 +102,20 @@
  <li>
   <h3>Допущена опечатка в названии локуса:</h3>
   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/wrong_locus.png">
-  <p>В этом случае при отправке данных на сервер исключение будет обработано через рендер страницы исключений, на которой будет отображено, в каком локусе была допущена ошибка - выведется неправильно введенное название локуса.</p>
+  <p>В этом случае будет отображено, в каком локусе была допущена ошибка - выведется неправильно введенное название локуса.</p>
   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/wrong_locus_exception.png">
  </li>
  <li>
-  <h3>При вводе длины допущена ошибка: символ, не являющийся числом, и не являющийся разделителем:</h3>
+  <h3>При вводе длины допущена ошибка: символ, не являющийся числом или разделителем:</h3>
   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/wrong_symbol_allele.png">
-  <p>Такие ошибки также обрабатываются через рендер страницы исключений. При этом будет выведен символ, который является ошибочным, локус и пара аллелей, в которых допущена ошибка:</p>
+  <p>При этом также будет выведен символ, который является ошибочным, локус и пара аллелей, в которых допущена ошибка:</p>
   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/wrong_symbol_allele_exception.png">
  </li>
  <li>
   <h3>Нет символов после разделителя или разделяющий символ стоит первым:</h3>
   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_first.png">
   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_last.png">
-  <p>Данная ошибка обрабатывается также через рендер страницы исключений, на которой происходит ее визуализация с указанием локуса:</p>
+  <p>На странице исключений происходит визуализация ошибки с указанием локуса:</p>
   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_first_exception.png">
   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_last_exception.png">
  </li>
@@ -125,6 +125,18 @@
   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/empty_alleles.png">
   <p>В данном случае на странице исключений будет выведен локус, в котором это произошло: </p>
   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/empty_alleles_exception.png">
+ </li>
+ <li>
+  <h3>Введено слишком большое число аллелей</h3>
+  <p>Данный случай частично рассматривался в разделе 4 "Ввод аллелей при работе с полоспецифичными локусами". Для локусов, не являющихся полоспецифичными, неправильным является число аллелей, большее 2:</p>
+  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/too_much_alleles_enter.png">
+  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/too_much_alleles_output.png">
+ </li>
+ <li>
+  <h3>Неправильный формат строки</h3>
+  <p>Если формат строки не соответствует введению локуса и аллелей, то приложение уведомит об этом:</p>
+  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/bullshit_enter.png">
+  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/bullshit_exception.png">
  </li>
 </ol>
 
