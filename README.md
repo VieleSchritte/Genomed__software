@@ -58,6 +58,9 @@
  <li>
   <p>Для каждого гаплотипа предусмотрено отдельное поле ввода с описанием, так что перепутать гаплотипы не получится. Вводим каждый гаплотип в свое окно:</p>
   <img src="https://github.com/VieleSchritte/Genomed__software/blob/master/readme_files/genotypes_enter.png">
+  <p>Программа поддерживает возможность ввода дробных значений аллелей. В качестве разделителя принимаются как запятые, так и точки. При вводе запятой в качестве разделяющего символа программа проведет расчет, заменив в таблице результатов запятую на точку:</p>
+  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/comma_delimiting.png">
+  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/comma_del_res.png">
  </li>
  <li>В данном случае всего два участника, но в случаях, предполагающих большее количество лиц, нужно будет нажать кнопку "Далее" для дальнейшего ввода гаплотипов. Если гаплотипы введены неправильно, но кнопка "Далее" уже нажата, можно вернуться на предыдущий ввод по кнопке "Назад". При этом все гаплотипы сохранятся. Также гаплотипы сохраняются, если по кнопкам "Назад" был совершен переход к описанию. Гаплотипы удаляются, если с описания совершен переход назад к выбору родства, т.к. при выборе другого вида родства необходимо корректно передать данные на сервер.</li>
  <li>
@@ -91,9 +94,14 @@
   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/wrong_symbol_allele.png">
   <p>Такие ошибки также обрабатываются через рендер страницы исключений. При этом будет выведен символ, который является ошибочным, локус и пара аллелей, в которых допущена ошибка:</p>
   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/wrong_symbol_allele_exception.png">
-  <p>При вводе запятой в качестве разделяющего символа программа все равно проведет расчет, заменив в таблице результатов запятую на точку:</p>
-  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/comma_delimiting.png">
-  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/comma_del_res.png">
+ </li>
+ <li>
+  <h3>Нет символов после разделителя или разделяющий символ стоит первым:</h3>
+  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_first.png">
+  <ing_src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_last.png">
+  <p>Данная ошибка обрабатывается также через рендер страницы исключений, на которой выводится локус, в котором произошла ошибка, и происходит ее визуализация:</p>
+   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_first_exception.png">
+   <img_src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_last_exception.png">
  </li>
  
 </ol>
