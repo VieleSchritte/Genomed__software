@@ -87,6 +87,10 @@
 <p>В случае амелогенина (AMEL) поддерживается дополнение гомозиготного состояния:</p>
 <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/AMEL_homozygous.png">
 <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/AMEL_homozygous_output.png">
+<p></p>
+<p>Случаи, в которых введено два аллеля, являются для полоспецифичных локусов ошибочными. Эти случаи обрабатываются в исключении, предусмотренном для слишком большого числа аллелей, которое обрабатывается через рендер страницы исключений:</p>
+<img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/2_alleles_gender_spec.png">
+<img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/2_alleles_gender_spec_exception.png">
 <h1>3. Обработка исключений</h1>
 <p>Реализована обработка возможных ошибок ввода гаплотипов. Так, приложение подскажет, что было введено неправильно, и в каком локусе была допущена ошибка. Примеры возможных ошибок представлены ниже.</p>
 <ol>
