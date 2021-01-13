@@ -98,7 +98,7 @@
  <li>
   <h3>Нет символов после разделителя или разделяющий символ стоит первым:</h3>
   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_first.png">
-  <ing_src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_last.png">
+  <img_src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_last.png">
   <p>Данная ошибка обрабатывается также через рендер страницы исключений, на которой выводится локус, в котором произошла ошибка, и происходит ее визуализация:</p>
    <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_first_exception.png">
    <img_src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_last_exception.png">
