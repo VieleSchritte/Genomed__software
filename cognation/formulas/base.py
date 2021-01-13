@@ -83,6 +83,14 @@ class LociSetDoesNotEqual(Exception):
         return "Числа локусов участников не совпадают. Введите одинаковое количество локусов для каждого участника"
 
 
+class UnknownLocus(Exception):
+    def __init__(self, locus):
+        self.locus = locus
+
+    def __str__(self):
+        return "Введен неизвестный локус: " + str(self.locus) + ". Проверьте правильность вводимых данных."
+
+
 # Abstract parent class
 class Formula(abc.ABC):
     def __init__(self, user_data):
@@ -177,6 +185,14 @@ class Formula(abc.ABC):
         if len(alleles) > 2:
             raise AllelesException(locus, alleles)
 
+    @staticmethod
+    def locus_check(locus):
+        possible_loci = ['AMEL', 'D3S1358', 'vWA', 'D16S539', 'CSF1PO', 'TPOX', 'D8S1179', 'D21S11', 'SE33', 'D18S51',
+                         'Penta E', 'D2S441', 'D19S433', 'TH01', 'FGA', 'D22S1045', 'D5S818', 'D13S317', 'D7S820',
+                         'D6S1043', 'D10S1248', 'D1S1656', 'D12S391', 'D2S1338', 'Penta D', 'Yindel', 'DYS391', 'SRY']
+        if locus not in possible_loci:
+            raise UnknownLocus(locus)
+
     def calculate(self):
         result = OrderedDict()
         processed_user_data = []
@@ -191,6 +207,7 @@ class Formula(abc.ABC):
                     raise LineFormatException(line)
 
                 locus, alleles = line[0], []
+                self.locus_check(locus)
                 if locus == 'AMEL':
                     alleles = line[1:]
                 else:

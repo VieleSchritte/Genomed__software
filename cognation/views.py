@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.template.defaultfilters import register
-from .formulas.base import LineFormatException, AllelesException, DelimitingFirst, TooManyDelimitingSymbols, UnknownSymbolInAlleles, DelimitingLast, LociSetDoesNotEqual
+from .formulas.base import LineFormatException, AllelesException, DelimitingFirst, TooManyDelimitingSymbols, UnknownSymbolInAlleles, DelimitingLast, LociSetDoesNotEqual, UnknownLocus
 import json
 # from django.core.serializers.json import DjangoJSONEncoder
 
@@ -340,7 +340,7 @@ def calculate(request):
 
         return render(request, formula.get_template(), ctx)
     except (LineFormatException, AllelesException, UnknownSymbolInAlleles,
-            TooManyDelimitingSymbols, DelimitingLast, DelimitingFirst, LociSetDoesNotEqual) as exception:
+            TooManyDelimitingSymbols, DelimitingLast, DelimitingFirst, LociSetDoesNotEqual, UnknownLocus) as exception:
         return render(request, 'cognation/exception.html', {"exception": exception})
 
 
