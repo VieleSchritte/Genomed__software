@@ -187,11 +187,13 @@ class Formula(abc.ABC):
                         raise TooManyDelimitingSymbols(locus, alleles)
             elif self.is_gender_specific(locus):
                 return
-
-            if allele[-1] == '.':
-                raise DelimitingLast(allele, locus)
-            if allele[0] == '.':
-                raise DelimitingFirst(allele, locus)
+            exceptions_dict = {
+                allele[-1] == '.': DelimitingLast(allele, locus),
+                allele[0] == '.': DelimitingFirst(allele, locus)
+            }
+            for key in exceptions_dict.keys():
+                if key:
+                    raise exceptions_dict[key]
         if len(alleles) > 2:
             raise AllelesException(locus, alleles)
 
@@ -222,13 +224,10 @@ class Formula(abc.ABC):
                 if len(line) == 0:  # Skip empty line
                     continue
                 line = re.split(r'[\s\t]+', line.strip())
-                print(line)
                 if len(line) == 1:
-                    if self.is_locus(line[0]):
-                        print('should raise empty alleles!')
+                    if self.is_locus(line[0]):  # if line is a locus with empty alleles
                         raise EmptyAlleles(line[0])
-                    print('went to line format')
-                    raise LineFormatException(line)
+                    raise LineFormatException(line)  # if just a bullshit entered :)
 
                 locus, alleles = line[0], []
                 self.locus_check(locus)
@@ -245,6 +244,8 @@ class Formula(abc.ABC):
                                 alleles.append(line[i])
                 self.alleles_check(alleles, locus)
                 alleles = '/'.join(alleles)
+                if self.is_gender_specific(locus):
+                    alleles += '/'
                 homozygous_cases = [
                     not self.is_gender_specific(locus) and '/' not in alleles,
                     locus == 'AMEL' and '/' not in alleles
