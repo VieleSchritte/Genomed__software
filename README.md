@@ -84,6 +84,9 @@
 <p>Данные локусы выводятся в конце таблицы результатов и не участвуют в расчете. Все они, кроме амелогенина (AMEL), представлены одной копией, т.к. представлены только на Y-хромосоме, поэтому для них корректно выводить в финальную таблицу только один аллель. Таким образом, приложение проверяет все локусы, введенные для обоих участников, и, если находит среди них полоспецифичные, не добавляет через слэш еще один аллель, как в случае с гомозиготным состоянием:</p>
 <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/correct_enter_gender_specific.png">
 <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/correct_gender_specific_output.png">
+<p>В случае амелогенина (AMEL) поддерживается дополнение гомозиготного состояния:</p>
+<img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/AMEL_homozygous.png">
+<img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/AMEL_homozygous_output.png">
 <h1>3. Обработка исключений</h1>
 <p>Реализована обработка возможных ошибок ввода гаплотипов. Так, приложение подскажет, что было введено неправильно, и в каком локусе была допущена ошибка. Примеры возможных ошибок представлены ниже.</p>
 <ol>
