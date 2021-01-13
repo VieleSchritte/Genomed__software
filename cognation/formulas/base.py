@@ -23,7 +23,7 @@ class LineFormatException(Exception):
             return return_string + ' ' + self.line
 
 
-class AllelesException(Exception):
+class TooMuchAllelesException(Exception):
     def __init__(self, locus, part):
         self.locus = locus
         self.len_part = len(part)
@@ -138,7 +138,7 @@ class Formula(abc.ABC):
         part_sets, intersections = [], []
         for part in part_alleles:
             if not self.is_gender_specific(locus) and len(part) != 2:
-                raise AllelesException(locus, part)
+                raise TooMuchAllelesException(locus, part)
             part_sets.append(set(part))
 
         if not self.is_gender_specific(locus):
@@ -177,7 +177,7 @@ class Formula(abc.ABC):
                         raise LineFormatException(alleles)
             elif self.is_gender_specific(locus):  # 2 alleles is too much for gender specific loci
                 if len(alleles) == 2:
-                    raise AllelesException(locus, alleles)
+                    raise TooMuchAllelesException(locus, alleles)
             elif not self.is_gender_specific(locus):
                 exception_counter = 0
                 if not self.is_digit(allele):
@@ -198,7 +198,7 @@ class Formula(abc.ABC):
                 if key:
                     raise exceptions_dict[key]
         if len(alleles) > 2:
-            raise AllelesException(locus, alleles)
+            raise TooMuchAllelesException(locus, alleles)
 
     @staticmethod
     def locus_check(locus):
@@ -285,7 +285,7 @@ class Formula(abc.ABC):
             try:
                 relation = self.calculate_relation(line)
                 result[relation['locus']] = relation
-            except (LineFormatException, AllelesException, UnknownAlleleException, UnknownSymbolInAlleles,
+            except (LineFormatException, TooMuchAllelesException, UnknownAlleleException, UnknownSymbolInAlleles,
                     TooManyDelimitingSymbols, DelimitingLast, DelimitingFirst, LociSetDoesNotEqual) as exception:
                 result[hash(str(line))] = {'exception': exception, 'line': str(line)}
         return result
