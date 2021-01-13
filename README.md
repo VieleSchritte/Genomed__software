@@ -68,9 +68,22 @@
   <img src="https://github.com/VieleSchritte/Genomed__software/blob/master/readme_files/final_table.png">
  </li>
  <li>В отчете представлены гаплотипы участников по каждому локусу и вероятность родства, обозначенная аббревиатурой LR (Likehood Ratio). Также в конце таблицы представлены значения CPI (Combined Paternity Index - комбинированного индекса отцовства, полученного произведением всех значений LR в таблице) и вероятности отцовства, вычисляемой по формуле: P = CPI / (1 + CPI)</li>
- <li>Для скачивания таблицы в формате .xlsx необходимо нажать "Сохранить результаты". По кнопке "К выбору родства" можно при необходимости перейти на стартовую страницу</li>
+ <li>
+  <p>Для скачивания таблицы в формате .xlsx необходимо нажать "Сохранить результаты". По кнопке "К выбору родства" можно при необходимости перейти на стартовую страницу.</p>
+  <p>Если получена таблица с результатами расчета, то все сделано правильно.</p>
+ </li>
 </ol>
-Если получена таблица с результатами расчета, то все сделано правильно.
+<h1>3. Ввод аллелей при работе с полоспецифичными локусами.</h1>
+<p>В наборах, поддерживаемых данным приложением, используются следующие полоспецифичные локусы:</p>
+<ul>
+ <li>AMEL</li>
+ <li>Yindel</li>
+ <li>DYS391</li>
+ <li>SRY</li>
+</ul>
+<p>Данные локусы выводятся в конце таблицы результатов и не участвуют в расчете. Все они, кроме амелогенина (AMEL), представлены одной копией, т.к. представлены только на Y-хромосоме, поэтому для них корректно выводить в финальную таблицу только один аллель. Таким образом, приложение проверяет все локусы, введенные для обоих участников, и, если находит среди них полоспецифичные, не добавляет через слэш еще один аллель, как в случае с гомозиготным состоянием:</p>
+<img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/correct_enter_gender_specific.png">
+<img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/correct_gender_specific_output.png">
 <h1>3. Обработка исключений</h1>
 <p>Реализована обработка возможных ошибок ввода гаплотипов. Так, приложение подскажет, что было введено неправильно, и в каком локусе была допущена ошибка. Примеры возможных ошибок представлены ниже.</p>
 <ol>
@@ -98,10 +111,16 @@
  <li>
   <h3>Нет символов после разделителя или разделяющий символ стоит первым:</h3>
   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_first.png">
-  <img_src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_last.png">
-  <p>Данная ошибка обрабатывается также через рендер страницы исключений, на которой выводится локус, в котором произошла ошибка, и происходит ее визуализация:</p>
-   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_first_exception.png">
-   <img_src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_last_exception.png">
+  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_last.png">
+  <p>Данная ошибка обрабатывается также через рендер страницы исключений, на которой происходит ее визуализация с указанием локуса:</p>
+  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_first_exception.png">
+  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/del_last_exception.png">
  </li>
- 
+ <li>
+  <h3>Аллели не введены</h3>
+  <p>Ошибка покрывает случай, когда введен локус, но не введены соответствующие ему аллели. При этом могут быть введены пробельные символы:</p>
+  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/empty_alleles.png">
+  <p>В данном случае на странице исключений будет выведен локус, в котором это произошло: </p>
+  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/empty_alleles_exception.png">
+ </li>
 </ol>
