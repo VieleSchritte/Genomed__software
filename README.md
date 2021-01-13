@@ -1,4 +1,4 @@
-# Genomed__software
+# paternity_genomed
 
 <h1>1. Описание</h1>
 <p>Данное приложение определяет вероятность родства в различных случаях. Полное описание формул, используемых в каждом случае, находится <a href='https://github.com/VieleSchritte/Genomed__software/tree/master/references'>в этих источниках</a>.</p>
@@ -91,7 +91,9 @@
   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/wrong_symbol_allele.png">
   <p>Такие ошибки также обрабатываются через рендер страницы исключений. При этом будет выведен символ, который является ошибочным, локус и пара аллелей, в которых допущена ошибка:</p>
   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/wrong_symbol_allele_exception.png">
-  <p></p>
+  <p>При вводе запятой в качестве разделяющего символа программа все равно проведет расчет, заменив в таблице результатов запятую на точку:</p>
+  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/comma_delimiting.png">
+  <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/comma_del_res.png">
  </li>
  
 </ol>
