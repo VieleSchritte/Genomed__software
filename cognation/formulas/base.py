@@ -26,10 +26,10 @@ class LineFormatException(Exception):
 class AllelesException(Exception):
     def __init__(self, locus, part):
         self.locus = locus
-        self.part = part
+        self.len_part = len(part)
 
     def __str__(self):
-        return "Неверное число аллелей: " + str(self.part) + " в локусе " + str(self.locus)
+        return "Неверное число аллелей в локусе " + str(self.locus) + ": " + str(self.len_part)
 
 
 class UnknownAlleleException(Exception):
@@ -175,6 +175,9 @@ class Formula(abc.ABC):
                             counter += 1
                     if counter > 1:
                         raise LineFormatException(alleles)
+            elif self.is_gender_specific(locus):  # 2 alleles is too much for gender specific loci
+                if len(alleles) == 2:
+                    raise AllelesException(locus, alleles)
             elif not self.is_gender_specific(locus):
                 exception_counter = 0
                 if not self.is_digit(allele):
