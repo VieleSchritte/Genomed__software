@@ -91,18 +91,10 @@
 <p>Случаи, в которых введено два аллеля, являются для полоспецифичных локусов ошибочными. Эти случаи обрабатываются в исключении, предусмотренном для слишком большого числа аллелей, которое обрабатывается через рендер страницы исключений:</p>
 <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/2_alleles_gender_spec.png">
 <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/2_alleles_gender_spec_exception.png">
+<p>Подробнее об ошибках, требующих обработки исключений, - в следующем разделе.</p>
 <h1>3. Обработка исключений</h1>
-<p>Реализована обработка возможных ошибок ввода гаплотипов. Так, приложение подскажет, что было введено неправильно, и в каком локусе была допущена ошибка. Примеры возможных ошибок представлены ниже.</p>
+<p>Реализована обработка возможных ошибок ввода гаплотипов. Так, приложение подскажет, что было введено неправильно, и в каком локусе была допущена ошибка. Данные ошибки обрабатываются через рендер страницы исключений. Примеры возможных ошибок представлены ниже.</p>
 <ol>
- <li>
-  <h3>Введен аллель, которого нет в базе данных - в данном случае - в локусе TPOX:</h3>
-  <img src="https://github.com/VieleSchritte/Genomed__software/blob/master/readme_files/wrong_length_exception.png">
-  <p>В этом случае в строке таблицы результатов, соответствующей этому локусу, будет выведено следующее:</p>
-  <img src="https://github.com/VieleSchritte/Genomed__software/blob/master/readme_files/wrong_length_raw.png">
-  <p>При нажатии на кнопку "ADD" появится окно для ручного ввода частоты:</p>
-  <img src="https://github.com/VieleSchritte/Genomed__software/blob/master/readme_files/frequency_addition.png">
-  <p>После нажатия на кнопку "Save" частота будет занесена в базу, а расчет - переделан с учетом введенной величины.</p>
- </li>
  <li>
   <h3>Допущена опечатка в названии локуса:</h3>
   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/wrong_locus.png">
@@ -131,3 +123,12 @@
   <img src="https://github.com/VieleSchritte/paternity_genomed/blob/master/readme_files/empty_alleles_exception.png">
  </li>
 </ol>
+
+<h1>4. Специфичный случай исключения</h1>
+<p>Приложение поддерживает добавление нового значения аллеля. Разберем такое добавление на примере локуса TPOX:</p>
+  <img src="https://github.com/VieleSchritte/Genomed__software/blob/master/readme_files/wrong_length_exception.png">
+  <p>В этом случае в строке таблицы результатов, соответствующей этому локусу, будет выведено следующее:</p>
+  <img src="https://github.com/VieleSchritte/Genomed__software/blob/master/readme_files/wrong_length_raw.png">
+  <p>При нажатии на кнопку "ADD" появится окно для ручного ввода частоты:</p>
+  <img src="https://github.com/VieleSchritte/Genomed__software/blob/master/readme_files/frequency_addition.png">
+  <p>После нажатия на кнопку "Save" частота будет занесена в базу, а расчет - переделан с учетом введенной величины.</p>
