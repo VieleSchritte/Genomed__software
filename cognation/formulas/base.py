@@ -63,19 +63,21 @@ class TooManyDelimitingSymbols(Exception):
 
 
 class DelimitingLast(Exception):
-    def __init__(self, alleles):
+    def __init__(self, alleles, locus):
         self.alleles = alleles
+        self.locus = locus
 
     def __str__(self):
-        return "Разделяющий символ в конце числа: " + str(self.alleles)
+        return "Разделяющий символ в конце числа в локусе " + str(self.locus) + ": " + str(self.alleles)
 
 
 class DelimitingFirst(Exception):
-    def __init__(self, alleles):
+    def __init__(self, alleles, locus):
         self.alleles = alleles
+        self.locus = locus
 
     def __str__(self):
-        return "Разделяющий символ в начале числа: " + str(self.alleles)
+        return "Разделяющий символ в начале числа в локусе : " + str(self.locus) + ": " + str(self.alleles)
 
 
 class LociSetDoesNotEqual(Exception):
@@ -179,9 +181,9 @@ class Formula(abc.ABC):
                 return
 
             if allele[-1] == '.':
-                raise DelimitingLast(allele)
+                raise DelimitingLast(allele, locus)
             if allele[0] == '.':
-                raise DelimitingFirst(allele)
+                raise DelimitingFirst(allele, locus)
         if len(alleles) > 2:
             raise AllelesException(locus, alleles)
 
