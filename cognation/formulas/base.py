@@ -247,8 +247,6 @@ class Formula(abc.ABC):
                 self.alleles_check(alleles, locus)
                 self.locus_check(locus)
                 alleles = '/'.join(alleles)
-                if self.is_gender_specific(locus) and locus != 'AMEL':
-                    alleles += '/'
                 homozygous_cases = [
                     not self.is_gender_specific(locus) and '/' not in alleles,
                     locus == 'AMEL' and '/' not in alleles
