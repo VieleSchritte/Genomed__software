@@ -233,7 +233,6 @@ class Formula(abc.ABC):
                     raise LineFormatException(line)  # if just a bullshit entered :)
 
                 locus, alleles = line[0], []
-                self.locus_check(locus)
                 if locus == 'AMEL':
                     alleles = line[1:]
                 else:
@@ -246,6 +245,7 @@ class Formula(abc.ABC):
                             else:
                                 alleles.append(line[i])
                 self.alleles_check(alleles, locus)
+                self.locus_check(locus)
                 alleles = '/'.join(alleles)
                 if self.is_gender_specific(locus) and locus != 'AMEL':
                     alleles += '/'
