@@ -16,7 +16,6 @@ class SiblingFormula(Formula):
         c = Calculations()
         all_alleles, set_all, homo_counter = c.get_overall_alleles(alleles), set(c.get_overall_alleles(alleles)), c.homo_counter(sets)
         freq_dict = self.get_frequencies(locus, all_alleles)
-        print(freq_dict)
         if len(child_set) == 1:  # Homozygous child
             refutation = c.homo_refutation(freq_dict[list(child_set)[0]])
             freq1, freq2, freq3 = self.get_freq_order(sets, freq_dict, set_all)
@@ -28,7 +27,6 @@ class SiblingFormula(Formula):
                 (3, 1, 2): c.M(freq3, freq1)  # aa ab ac/bc
             }
             if (len(all_alleles), homo_counter, len(sibling_set)) in conf_dict.keys():
-                print((len(all_alleles), homo_counter, len(sibling_set)))
                 lr = conf_dict[(len(all_alleles), homo_counter, len(sibling_set))] / refutation
                 return self.make_result(locus, lr, dict_make_result)
 
@@ -53,9 +51,6 @@ class SiblingFormula(Formula):
                 (4, 0, 2, 0): c.M(freq4, freq2)  # ab ac cd
             }
             trial_key = (len(all_alleles), homo_counter, len(sibling_set), len(sc_inter))
-            print(freq_dict)
-            print(trial_key, freq2, freq4)
-            print('child, parent, sibling: ', child_set, parent_set, sibling_set)
             if trial_key in answers.keys():
                 target = answers[trial_key]
                 if type(target) == dict:
