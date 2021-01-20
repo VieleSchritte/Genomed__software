@@ -57,6 +57,8 @@ class Confirmations:
             for key in int_counts_dict.keys():
                 if intersections_counter == key:
                     return int_counts_dict[key]
+                else:
+                    return 0
 
     @staticmethod
     def hetero_gc_confirmation(grandparents_sets, grandchild_set, inters_lens, freq1, freq2):
@@ -112,5 +114,11 @@ class Confirmations:
                         for grandparent_set in grandparents_sets:
                             if len(grandparent_set) == 1 and len(grandparent_set & grandchild_set) == 0:
                                 return 0.5 * calc.F(freq2)
+                            else:
+                                return 0
                     if key == tuple(inters_lens):
                         return target_dict[key]
+                    else:
+                        return 0
+            else:
+                return 0
