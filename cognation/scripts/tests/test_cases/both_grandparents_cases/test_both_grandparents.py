@@ -13,13 +13,13 @@ class TestFormula(TestCase):
     def setUp(self):
 
         self.reference_paths = [
-            'hetero_1/both_hetero_ref1',
-            'hetero_2/both_hetero_ref2',
+            #'hetero_1/both_hetero_ref1',
+            #'hetero_2/both_hetero_ref2',
             'homo/homo_ref'
         ]
         self.test_paths = [
-            'hetero_1/both_hetero_test1',
-            'hetero_2/both_hetero_test2',
+            #'hetero_1/both_hetero_test1',
+            #'hetero_2/both_hetero_test2',
             'homo/homo_test'
         ]
         short_path = 'cognation/scripts/tests/test_cases/both_grandparents_cases/'
